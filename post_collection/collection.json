@@ -1,0 +1,1597 @@
+{
+	"info": {
+		"_postman_id": "b27a821c-4db4-4a18-993d-d1c6202f36c8",
+		"name": "nftGame",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8081/api/test/all",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-length": true,
+					"content-type": true,
+					"accept": true,
+					"host": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"moderator\",\n    \"email\":\"moderator@admin.com\",\n    \"password\": \"12345678\",\n    \"roles\": [\"user\", \"mod\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/test/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"test",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/auth/signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"username\": \"userPlain\", \"email\": \"userPlain@ad.ru\", \"password\": \"1234567890\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/auth/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/auth/signin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"username\": \"usr\", \"password\": \"1234567890\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/auth/signin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/test/user",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyUGxhaW4iLCJpYXQiOjE2NDQwNTg4ODAsImV4cCI6MTY0NDE0NTI4MH0.KaMAFIv7HlgHy4GCTNyD-HpxTQD1M_GTzueC0tgj63d2xZXrkg3JCZIvK4UTpzq3dId_Z4GUyUQaWEBF-SUjvg",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8081/api/test/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"test",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/changeCertainNFT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQwNzQxMTcsImV4cCI6MTY0NDE2MDUxN30.MmeqRyjlUIbUkM9HYTC34oJF58QuTTDVkbvwXDNuzc-dDO5gxdRMkEQ0J1O-fbQQLIW3tdNYKCIQ0yO4rFvSag",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"losharik\",\n    \"origin\": \"KAVKAZ\",\n    \"status\": \"active\",\n    \"age\": 11,\n    \"breed\": 3.1415,\n    \"skills\": { \"sexy\": 100000, \"lucky\": 10, \"brave\": 1, \"healthy\": 2, \"smart\": 55, \"skilled\": 89 }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/changeCertainNFT",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"changeCertainNFT"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/getBoxTypes",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQwODcxMTIsImV4cCI6MTY0NDE3MzUxMn0.DjoAb-eWZlNY320_-ayYdGUAPA1gZbsyDYwNh5PUs6OxuObV6Q03lmwIqILvmJwNw-qj1-v4QWJnZ7ZkoIKJUw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8081/getBoxTypes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"getBoxTypes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/addBox",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDY3MzIyMTQsImV4cCI6MTY0NjgxODYxNH0.cLvy5DtcpY_1GeDh40-1xQwYX2LjHk4rIewl09M80xcWFtmxmNBP9D3VPWYXosDHYwXQjJnFEYXdB_XnQBZ5-g",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"serial\": 11239, \"number\": 765769, \"type\": \"Mystery\", \"filled\": true, \"probabilityStatus\": \"rfsessc\", \"itemPicture\": \"http://dcsdc.scodck\", \"feature\": {\"zhopa\" : true}, \"comment\": \"3fvdv34\", \"priceToOpen\": 540, \"distributionStatus\": true, \"operationalStatus\": false, \"filledWith\": {\"item\": \"powerbank\"}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/nft/addBox",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"nft",
+						"addBox"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/getCertainBox",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQzMTIwNzQsImV4cCI6MTY0NDM5ODQ3NH0.r53N-6A6wkhSIoy8ZBCWQcF6QzKI4GGs5PAebLDQfy6pF-lc08k_IYlSR0YEW010VBrkLS7tJ9PItnZRBs8z3A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"boxId\" : 1}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/nft/getCertainBox",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"nft",
+						"getCertainBox"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/addInfo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQyMzIxOTEsImV4cCI6MTY0NDMxODU5MX0.LTsVEKX0jOuEQSZuqePi2bJSRwYYbt3ErZT5KOi_EyXkFLh4cPJokDPy-voJ2bjUlqSSJbUcfrobdtq3GgPlGw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"index\": 2,\n    \"name\": \"losharik\",\n    \"origin\": \"KAVKAZ\",\n    \"status\": \"active\",\n    \"age\": 11,\n    \"breed\": 3.1415,\n    \"skills\": { \"sexy\": 100000, \"lucky\": 10, \"brave\": 1, \"healthy\": 2, \"smart\": 55, \"skilled\": 89 }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/addInfo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"addInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/deleteCertainBox",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQxODAwMDksImV4cCI6MTY0NDI2NjQwOX0.JJ6I7lbU3_cbQ9Pfr4insDtefFpso9bKvepLVvguwxRTJatrEr2pHNyEKMfHXZR5qUdtWGIEzd7YAsfqueQYYw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"serial\": 11234, \"number\": 765765, \"type\": \"Mystery\", \"filled\": false, \"probabilityStatus\": \"rfsessc\", \"itemPicture\": \"http://dcsdc.scodck\", \"feature\": \"first\", \"comment\": \"3fvdv34\", \"priceToOpen\": 540, \"distributionStatus\": true, \"operationalStatus\": false}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/deleteCertainBox",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"deleteCertainBox"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/deleteCertainNFT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQxODAwMDksImV4cCI6MTY0NDI2NjQwOX0.JJ6I7lbU3_cbQ9Pfr4insDtefFpso9bKvepLVvguwxRTJatrEr2pHNyEKMfHXZR5qUdtWGIEzd7YAsfqueQYYw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"losharik\",\n    \"origin\": \"KAVKAZ\",\n    \"status\": \"active\",\n    \"age\": 11,\n    \"breed\": 3.1415,\n    \"skills\": { \"sexy\": 100000, \"lucky\": 10, \"brave\": 1, \"healthy\": 2, \"smart\": 55, \"skilled\": 89 }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/deleteCertainNFT",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"deleteCertainNFT"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/getCertainInfo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQyMzIxOTEsImV4cCI6MTY0NDMxODU5MX0.LTsVEKX0jOuEQSZuqePi2bJSRwYYbt3ErZT5KOi_EyXkFLh4cPJokDPy-voJ2bjUlqSSJbUcfrobdtq3GgPlGw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"index\" : 2}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/getCertainInfo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"getCertainInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/getInfo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQyMzIxOTEsImV4cCI6MTY0NDMxODU5MX0.LTsVEKX0jOuEQSZuqePi2bJSRwYYbt3ErZT5KOi_EyXkFLh4cPJokDPy-voJ2bjUlqSSJbUcfrobdtq3GgPlGw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/getInfo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"getInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://projectslocal.hopto.org/api/auth/signin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"username\": \"usr\", \"password\": \"1234567890\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://projectslocal.hopto.org/api/auth/signin",
+					"protocol": "http",
+					"host": [
+						"projectslocal",
+						"hopto",
+						"org"
+					],
+					"path": [
+						"api",
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/changeCertainNFT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQyMzIxOTEsImV4cCI6MTY0NDMxODU5MX0.LTsVEKX0jOuEQSZuqePi2bJSRwYYbt3ErZT5KOi_EyXkFLh4cPJokDPy-voJ2bjUlqSSJbUcfrobdtq3GgPlGw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"index\": 2,\n    \"name\": \"losharik\",\n    \"origin\": \"Kazahstan\",\n    \"status\": \"active\",\n    \"age\": 11,\n    \"breed\": 3.1415,\n    \"skills\": { \"sexy\": 100000, \"lucky\": 10, \"brave\": 1, \"healthy\": 2, \"smart\": 55, \"skilled\": 89 }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/changeCertainNFT",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"changeCertainNFT"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://projectslocal.hopto.org/api/nft/getInfo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQyNDYyNjgsImV4cCI6MTY0NDMzMjY2OH0.PTeuBDqNzvajW0VY0tQbO4B_nuR0_3iHxadSGKrFX4l7TqHoQYe208i0CErWt2Xxtpa5t4S9QMEtDPBeOhaTuw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://projectslocal.hopto.org/api/nft/getInfo",
+					"protocol": "http",
+					"host": [
+						"projectslocal",
+						"hopto",
+						"org"
+					],
+					"path": [
+						"api",
+						"nft",
+						"getInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/userActions/burnBox",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQ2ODk5MjAsImV4cCI6MTY0NDc3NjMyMH0.X9kC_Rog6wT4L7vTrwTXxtb8nHjf8pjaG3-C4mqaOqEUItHXgmvAlA1DXvEGhnplB8DDXiTTyxoYEliwb3myyQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"serial\": 11234, \"number\": 765765, \"type\": \"BOX_BURN\", \"status\": \"owned\", \"index\": 1 }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/userActions/burnBox",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userActions",
+						"burnBox"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/userActions/openBox",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDY3MzM4MjAsImV4cCI6MTY0NjgyMDIyMH0.b1al3-s7acsfa_DwmIlW4q6ElrphwgvmqGtEjcoMmmdFpRttbk8ihOT82axLSd3db1jYkfdcwftUq2nE2oEEOA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"serial\": 543,\n    \"number\": 453534, \n    \"boxId\": 37, \n    \"heroId\": 7,\n    \"userAddress\": \"0xDB1944De1e0656b0a07CDdC295db2b44FDBD66E1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/userActions/openBox",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userActions",
+						"openBox"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/userActions/getBox",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQ2ODk5MjAsImV4cCI6MTY0NDc3NjMyMH0.X9kC_Rog6wT4L7vTrwTXxtb8nHjf8pjaG3-C4mqaOqEUItHXgmvAlA1DXvEGhnplB8DDXiTTyxoYEliwb3myyQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"index\": 1 }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/userActions/getBox",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userActions",
+						"getBox"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/nft/changeCertainBox",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDQzMTIwNzQsImV4cCI6MTY0NDM5ODQ3NH0.r53N-6A6wkhSIoy8ZBCWQcF6QzKI4GGs5PAebLDQfy6pF-lc08k_IYlSR0YEW010VBrkLS7tJ9PItnZRBs8z3A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"620237331ff0701db77dcb91\",\n        \"serial\": 11234,\n        \"number\": 765765,\n        \"type\": \"Lucky\",\n        \"filled\": true,\n        \"filledWith\": null,\n        \"boxId\": 1,\n        \"probabilityStatus\": \"rfsessc\",\n        \"itemPicture\": \"http://dcsdc.scodck\",\n        \"feature\": \"first\",\n        \"comment\": \"3fvdv34\",\n        \"priceToOpen\": 540,\n        \"distributionStatus\": true,\n        \"operationalStatus\": false\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/nft/changeCertainBox",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"nft",
+						"changeCertainBox"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/userActions/addBalance",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDU2MzU4MDUsImV4cCI6MTY0NTcyMjIwNX0.M6_2SQ5KcjN1BvWxy82Qndfropah6Mdd0hCvmjPb141FRDuH5ZDcG3kKAykl0pu4otlH2m8n64d0v8EnsL7nJg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userAddress\":\"0xDB1944De1e0656b0a07CDdC295db2b44FDBD66E1\",\n    \"username\":\"usr\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/userActions/addBalance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userActions",
+						"addBalance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/userActions/getBoxesByHeroId",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDU2MzU4MDUsImV4cCI6MTY0NTcyMjIwNX0.M6_2SQ5KcjN1BvWxy82Qndfropah6Mdd0hCvmjPb141FRDuH5ZDcG3kKAykl0pu4otlH2m8n64d0v8EnsL7nJg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"heroId\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/userActions/getBoxesByHeroId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userActions",
+						"getBoxesByHeroId"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/nft/distributeBoxToHero",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDU4NzUzMDAsImV4cCI6MTY0NTk2MTcwMH0.NwEKRNMvKSQsCex3Kb_FvHQpP0fc8A9O6W_jeDzTWwHtjbD8NMw-cek9WJMXWNF5SUAsTwP1pfnSx0OoSGRdEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"boxType\": \"Lucky\",\n    \"boxSerial\": \"799546\",\n    \"heroID\": 4\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/nft/distributeBoxToHero",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"nft",
+						"distributeBoxToHero"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/nft/distributeBoxByRandom",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDU4NzUzMDAsImV4cCI6MTY0NTk2MTcwMH0.NwEKRNMvKSQsCex3Kb_FvHQpP0fc8A9O6W_jeDzTWwHtjbD8NMw-cek9WJMXWNF5SUAsTwP1pfnSx0OoSGRdEw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"boxType\": \"Lucky\",\n    \"boxSerial\": \"799546\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/nft/distributeBoxByRandom",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"nft",
+						"distributeBoxByRandom"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/userActions/getAllNews",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDU4ODk1MTYsImV4cCI6MTY0NTk3NTkxNn0.95LBJgCLN2RN_ArYWkW1sWk1QwIKwjhQb15bCGYoHMlXrf8ko68iBeLxWyyYbj9rEWCCMdkk21IikLzriNR1nA",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8081/api/userActions/getAllNews",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userActions",
+						"getAllNews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/userActions/getBalance",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDU5NDYzOTUsImV4cCI6MTY0NjAzMjc5NX0.Buq9Z6vbsl82DTpOZLz-sT-Uoa6k7eschmVDwK4RB2LVFGZ3VxH8tPnC639C--dvF7RifYMpaY-NtpKTayBPpQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\" : \"usr\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/userActions/getBalance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userActions",
+						"getBalance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/userActions/getDepositHistory",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDYxMjg1MzksImV4cCI6MTY0NjIxNDkzOX0.TMYPickeFWSKc9KATdDkA9p38PSy6TVoY0cB7zQD2HNYvnZtg_Qoil9q9xxnQSUs8AtPXa3etKDXf8KJtqt2Bg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userAddress\" : \"0xdb1944de1e0656b0a07cddc295db2b44fdbd66e1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/userActions/getDepositHistory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userActions",
+						"getDepositHistory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "axietracker.tw1.ru/api/nft/addBox",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDY3MzM2OTIsImV4cCI6MTY0NjgyMDA5Mn0.1FLEf2BIDNIhaFJel5eUZ4OEmFOtSHHb98zN6ke8h30Z6ML93FvYVOREuxIbqOjadRoHNgc3crs5GuSRGma9HA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"serial\": 6546, \"number\": 4534, \"type\": \"Mystery\", \"filled\": true, \"probabilityStatus\": \"rfsessc\", \"itemPicture\": \"http://dcsdc.scodck\", \"feature\": {\"zhopa\" : true}, \"comment\": \"3fvdv34\", \"priceToOpen\": 540, \"distributionStatus\": true, \"operationalStatus\": false, \"filledWith\": {\"item\": \"another one powerbank\"}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "axietracker.tw1.ru/api/nft/addBox",
+					"host": [
+						"axietracker",
+						"tw1",
+						"ru"
+					],
+					"path": [
+						"api",
+						"nft",
+						"addBox"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/api/userActions/setTransferDetails",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8081/api/userActions/setTransferDetails",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userActions",
+						"setTransferDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "axietracker.tw1.ru/api/userActions/debug",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDc2MzM1NzYsImV4cCI6MTY0NzcxOTk3Nn0.RgAv2d-NAv0bTr2uVu6YhCVQanWU0ZzfiUexhl7nKjKQzgEmZL5r0H1sDYQGcTogIz7bRcqjWtRmoHxRrzPsGw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "axietracker.tw1.ru/api/userActions/debug",
+					"host": [
+						"axietracker",
+						"tw1",
+						"ru"
+					],
+					"path": [
+						"api",
+						"userActions",
+						"debug"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "axietracker.tw1.ru/api/userActions/verifyRefund",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDc2MzM1NzYsImV4cCI6MTY0NzcxOTk3Nn0.RgAv2d-NAv0bTr2uVu6YhCVQanWU0ZzfiUexhl7nKjKQzgEmZL5r0H1sDYQGcTogIz7bRcqjWtRmoHxRrzPsGw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 100,\n    \"code\": \"603257\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "axietracker.tw1.ru/api/userActions/verifyRefund",
+					"host": [
+						"axietracker",
+						"tw1",
+						"ru"
+					],
+					"path": [
+						"api",
+						"userActions",
+						"verifyRefund"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "axietracker.tw1.ru/api/nft/getDevTransfers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDc2MzM1NzYsImV4cCI6MTY0NzcxOTk3Nn0.RgAv2d-NAv0bTr2uVu6YhCVQanWU0ZzfiUexhl7nKjKQzgEmZL5r0H1sDYQGcTogIz7bRcqjWtRmoHxRrzPsGw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "axietracker.tw1.ru/api/nft/getDevTransfers",
+					"host": [
+						"axietracker",
+						"tw1",
+						"ru"
+					],
+					"path": [
+						"api",
+						"nft",
+						"getDevTransfers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "axietracker.tw1.ru/api/userActions/debug",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDgwNjUyNDgsImV4cCI6MTY0ODE1MTY0OH0.hVPJpASi_QlW1wi8ODtSYZRMenRwePPrkPeBrsqtQsprAu4iUIz67eS69ernXH3zuOA0fU5kSJ_sTtX8VxDlcQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "axietracker.tw1.ru/api/userActions/debug",
+					"host": [
+						"axietracker",
+						"tw1",
+						"ru"
+					],
+					"path": [
+						"api",
+						"userActions",
+						"debug"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "axietracker.tw1.ru/api/nft/addComics",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDgxMjQyODcsImV4cCI6MTY0ODIxMDY4N30.KSs_5qS4Jy5MsbweQt5pm4RyWOoS6Mgn3aCLetcEioOpLHFehLFuGfzWzpJB7AbdyJWqlXiPPt5-hupdsh8vgw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"usr\",\n  \"heading\": \"adawd\",\n  \"articleText\": \"<p>awdawda</p>\",\n  \"previewImage\": \"awawdad\",\n  \"shortDescription\": \"awdawd\",\n  \"tags\": [\n    \"\"\n  ],\n  \"type\": \"comics\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "axietracker.tw1.ru/api/nft/addComics",
+					"host": [
+						"axietracker",
+						"tw1",
+						"ru"
+					],
+					"path": [
+						"api",
+						"nft",
+						"addComics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "axietracker.tw1.ru/api/userActions/getNewsByIndexes",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDgxMjQyODcsImV4cCI6MTY0ODIxMDY4N30.KSs_5qS4Jy5MsbweQt5pm4RyWOoS6Mgn3aCLetcEioOpLHFehLFuGfzWzpJB7AbdyJWqlXiPPt5-hupdsh8vgw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"index\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "axietracker.tw1.ru/api/userActions/getNewsByIndexes",
+					"host": [
+						"axietracker",
+						"tw1",
+						"ru"
+					],
+					"path": [
+						"api",
+						"userActions",
+						"getNewsByIndexes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "axietracker.tw1.ru/api/auth/resetPassword",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"usr\",\n    \"password\": \"1234567890\",\n    \"code\": 828289,\n    \"captchaToken\": \"03AGdBq243xN80EvRJVoW8Xx_WssAue2XmexE73J3dr5a0TlRF2OWnhSk2dx6ps_xAu2qTBz_mMTnAfb_t8HJBRQACeKgjHmMF-BGxwOCpqXINvVCdfJYMhwrwxHbuWxP2FlhZK9hs6Zb1IibM5jFERk2bSFFLZm3FnIQ6Y5IPDVMkvHm7i5j0BdAqJZLJcBlQ9y-ubgtA82GLa6dMbifXsfDvwxzVT5VBk5HL0nNh616mG7fxPy2CGURdqwscFJJ_4C6b-ZRfxsB0bZggI90fwDjNwcyLY96ai4rendpAn-ntGIXPT_I1_MWZxC7Qa9z4Y8dE_59gXIgQckwU9TcHJVaJvhSBo8TP_W92-GHkz0e8SF1CMvnFaDoFE_TUyK4JyMPGcZqnxw4aTMwZy_nR80xtDxfxAeEuvPKklpX7oT_YHgLh4EcKCZiQMj6dJPEpl3fquZpB2iTuaneRXoaRp1oJij63bq-d40xxcMp0dBgnVcdX5xMjyQ2C6iUquNXc6Cl8NLqWN0vm\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "axietracker.tw1.ru/api/auth/resetPassword",
+					"host": [
+						"axietracker",
+						"tw1",
+						"ru"
+					],
+					"path": [
+						"api",
+						"auth",
+						"resetPassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "axietracker.tw1.ru/api/nft/addBox",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDgyMTMwMjEsImV4cCI6MTY0ODI5OTQyMX0.qdg_vy1z3kKj1yqyXQc14JSJHD5WhhhIblHaBoVF10U6GDtnzjZ7ZgIO-dpuyFvziXwkuYteY0aFGEoYNYGuEQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"serial\": 54354, \"number\": 5343, \"type\": \"Lucky\", \"filled\": true, \"probabilityStatus\": \"rfsessc\", \"itemPicture\": \"http://dcsdc.scodck\", \"feature\": {\"zhopa\" : true}, \"comment\": \"3fvdv34\", \"priceToOpen\": 540, \"distributionStatus\": true, \"operationalStatus\": false, \"filledWith\": {\n    \"name\": \"test\",\n    \"comment\": \"test comment\",\n    \"features\": {\"test\": \"feature\"},\n    \"rarity\": \"common\",\n    \"type\": \"physical\",\n    \"quantity\": 1,\n    \"boxItemsId\": 0\n}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "axietracker.tw1.ru/api/nft/addBox",
+					"host": [
+						"axietracker",
+						"tw1",
+						"ru"
+					],
+					"path": [
+						"api",
+						"nft",
+						"addBox"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "axietracker.tw1.ru/api/nft/createNewBoxItem",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJpYXQiOjE2NDgyMTMwMjEsImV4cCI6MTY0ODI5OTQyMX0.qdg_vy1z3kKj1yqyXQc14JSJHD5WhhhIblHaBoVF10U6GDtnzjZ7ZgIO-dpuyFvziXwkuYteY0aFGEoYNYGuEQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"test\",\n    \"comment\": \"test comment\",\n    \"features\": {\"test\": \"feature\"},\n    \"rarity\": \"common\",\n    \"type\": \"physical\",\n    \"quantity\": 1,\n    \"boxItemsId\": 0,\n    \"chanse\": 50\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "axietracker.tw1.ru/api/nft/createNewBoxItem",
+					"host": [
+						"axietracker",
+						"tw1",
+						"ru"
+					],
+					"path": [
+						"api",
+						"nft",
+						"createNewBoxItem"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "89.223.126.183:49151/api/nft/changeUser/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJleHAiOjE2NDg4MTcxOTEsImlhdCI6MTY0ODczMDc5MX0.fnIurZQTSWQRS9dYpH7bSDW_l_yAQuj6JfRl2CLOfKhGpXfoG7g0UXPCyF9eE66DU8galZ8WRZrmbM8akgIpfw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"username\": \"cajger\",\n        \"email\": \"vjekorad@gmail.com\",\n        \"balance\": 0,\n        \"status\": \"active\",\n        \"roles\": [\"user\", \"moderator\"],\n        \"userNumber\": 0\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "89.223.126.183:49151/api/nft/changeUser/",
+					"host": [
+						"89",
+						"223",
+						"126",
+						"183"
+					],
+					"port": "49151",
+					"path": [
+						"api",
+						"nft",
+						"changeUser",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "89.223.126.183:49151/api/nft/getQuantityOfUsers/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJleHAiOjE2NDg4MTcxOTEsImlhdCI6MTY0ODczMDc5MX0.fnIurZQTSWQRS9dYpH7bSDW_l_yAQuj6JfRl2CLOfKhGpXfoG7g0UXPCyF9eE66DU8galZ8WRZrmbM8akgIpfw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "89.223.126.183:49151/api/nft/getQuantityOfUsers/",
+					"host": [
+						"89",
+						"223",
+						"126",
+						"183"
+					],
+					"port": "49151",
+					"path": [
+						"api",
+						"nft",
+						"getQuantityOfUsers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "89.223.126.183:49151/api/nft/getUsersByIndex/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJleHAiOjE2NDg4MjQxMjQsImlhdCI6MTY0ODczNzcyNH0.X35cvRbLxBUy4wsXU9fiL9Gy0HNLNKfHfUar73LqooYJ13zBPF6-1-EYd-fCnNngAgKh2dL0Ha-OaYpS73phrg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"firstIndex\": 0, \"secondIndex\": 19}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "89.223.126.183:49151/api/nft/getUsersByIndex/",
+					"host": [
+						"89",
+						"223",
+						"126",
+						"183"
+					],
+					"port": "49151",
+					"path": [
+						"api",
+						"nft",
+						"getUsersByIndex",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "89.223.126.183:49151/api/nft/getUsersToAdmin/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJleHAiOjE2NDg4MjQxMjQsImlhdCI6MTY0ODczNzcyNH0.X35cvRbLxBUy4wsXU9fiL9Gy0HNLNKfHfUar73LqooYJ13zBPF6-1-EYd-fCnNngAgKh2dL0Ha-OaYpS73phrg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "89.223.126.183:49151/api/nft/getUsersToAdmin/",
+					"host": [
+						"89",
+						"223",
+						"126",
+						"183"
+					],
+					"port": "49151",
+					"path": [
+						"api",
+						"nft",
+						"getUsersToAdmin",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "89.223.126.183:49151/api/nft/getRoles/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJleHAiOjE2NDg4MjQxMjQsImlhdCI6MTY0ODczNzcyNH0.X35cvRbLxBUy4wsXU9fiL9Gy0HNLNKfHfUar73LqooYJ13zBPF6-1-EYd-fCnNngAgKh2dL0Ha-OaYpS73phrg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "89.223.126.183:49151/api/nft/getRoles/",
+					"host": [
+						"89",
+						"223",
+						"126",
+						"183"
+					],
+					"port": "49151",
+					"path": [
+						"api",
+						"nft",
+						"getRoles",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "89.223.126.183:49151/api/nft/deleteUpdate/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJleHAiOjE2NDg5MTExODYsImlhdCI6MTY0ODgyNDc4Nn0.B08wC6U0nmo0repnrycGqaZ6vwXfNMxCp2w7xJAj6Jvhb0Oz-xPm7LjhE8b-Uc2iNBmshdktP3b9qVW1R-ZhFA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"timeStart\": 1648824864000,\n    \"timeEnd\": 1648824889000,\n    \"status\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "89.223.126.183:49151/api/nft/deleteUpdate/",
+					"host": [
+						"89",
+						"223",
+						"126",
+						"183"
+					],
+					"port": "49151",
+					"path": [
+						"api",
+						"nft",
+						"deleteUpdate",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "89.223.126.183:49151/api/nft/updateUpdate/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJleHAiOjE2NDg5MTExODYsImlhdCI6MTY0ODgyNDc4Nn0.B08wC6U0nmo0repnrycGqaZ6vwXfNMxCp2w7xJAj6Jvhb0Oz-xPm7LjhE8b-Uc2iNBmshdktP3b9qVW1R-ZhFA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"timeStart\": 1648824864000,\n    \"timeEnd\": 1648824889000,\n    \"status\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "89.223.126.183:49151/api/nft/updateUpdate/",
+					"host": [
+						"89",
+						"223",
+						"126",
+						"183"
+					],
+					"port": "49151",
+					"path": [
+						"api",
+						"nft",
+						"updateUpdate",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "89.223.126.183:49151/api/nft/setUpdate/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3IiLCJleHAiOjE2NDg5MTExODYsImlhdCI6MTY0ODgyNDc4Nn0.B08wC6U0nmo0repnrycGqaZ6vwXfNMxCp2w7xJAj6Jvhb0Oz-xPm7LjhE8b-Uc2iNBmshdktP3b9qVW1R-ZhFA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"timeStart\": 1648824864000,\n    \"timeEnd\": 1648824884000,\n    \"status\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "89.223.126.183:49151/api/nft/setUpdate/",
+					"host": [
+						"89",
+						"223",
+						"126",
+						"183"
+					],
+					"port": "49151",
+					"path": [
+						"api",
+						"nft",
+						"setUpdate",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
