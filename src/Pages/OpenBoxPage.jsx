@@ -12,6 +12,7 @@ import { openBox_EP, safeAuthorize_header } from "../Utils/EndpointsUtil";
 import { getDataFromResponse } from "../Utils/NetworkUtil";
 
 import party from "party-js";
+import { sleepFor } from "../Utils/CodeUtils";
 
 export default function OpenBoxPage() {
     const params = useParams();
@@ -23,9 +24,9 @@ export default function OpenBoxPage() {
     const userBalance = useStoreState(UserBalanceStorage);
     const tempLink = useStoreState(TempLinkStorage);
 
-    const [activate, setActivate] = useState(false);
     const [isWinner, setIsWinner] = useState(false);
     const [itemData, setItemData] = useState({});
+    const [playing, setPlaying] = useState(false);
 
     const tempItem = {
         comment: "Nazko wears this backpack every day to travel to his job & home.",
@@ -36,7 +37,8 @@ export default function OpenBoxPage() {
     };
 
     async function startup() {
-        if (params && params.boxIndex && params.hash && params.heroIndex && userData.isLoggedIn) {
+        console.log(params);
+        if (params && params.boxIndex && params.hash && params.heroIndex && userData.isLoggedIn && params.boxType) {
             if (!metamask.isConnected) {
                 ui.showError("Please, connect metamask and try again!");
                 tempLink.removeLink();
@@ -47,22 +49,24 @@ export default function OpenBoxPage() {
                     let realBoxIndex = params.boxIndex / 77 - 12;
                     let realHeroIndex = params.heroIndex / 77 - 12;
                     try {
-                        // let response = await axios.post(
-                        //     openBox_EP(),
-                        //     {
-                        //         userAddress: metamask.wallet,
-                        //         heroId: realHeroIndex,
-                        //         boxId: realBoxIndex,
-                        //     },
-                        //     safeAuthorize_header()
-                        // );
-                        // let data = getDataFromResponse(response);
-                        setItemData(tempItem);
+                        let response = await axios.post(
+                            openBox_EP(),
+                            {
+                                userAddress: metamask.wallet,
+                                heroId: realHeroIndex,
+                                boxId: realBoxIndex,
+                            },
+                            safeAuthorize_header()
+                        );
+                        let data = getDataFromResponse(response);
+                        // let data = tempItem;
+                        setItemData(data);
                         setIsWinner(true);
-                        setActivate(true);
+                        await sleepFor(500);
                         ui.hideContentLoading();
+                        setPlaying(true);
                         userBalance.updateUserBalance();
-                        // console.log("you win: ", JSON.stringify(tempItem));
+                        console.log("you win: ", data, "from box", params.boxType);
                     } catch (error) {
                         console.log(error);
                         ui.showError(error.message);
@@ -81,13 +85,15 @@ export default function OpenBoxPage() {
     }
 
     useEffect(() => {
-        // startup();
-        setActivate(true)
+        startup();
+        // setActivate(true)
     }, []);
 
-    return activate ? (<div className="w-full h-full p-4 flex justify-center items-center text-white">
-      <div className="w-[70vw] h-[70vw] md:w-[600px] md:h-[600px] flex relative bg-white overflow-x-hidden overflow-y-hidden">
-        <OpenBoxCarousel />
-      </div>
-    </div>):<></>;
+    return (
+        <div className="w-full h-full p-4 flex justify-center items-center text-white">
+            <div className="w-[70vw] h-[70vw] md:w-[600px] md:h-[600px] flex relative overflow-x-hidden overflow-y-hidden">
+                <OpenBoxCarousel boxType={params.boxType} item={itemData} winner={isWinner} startPlaying={playing} />
+            </div>
+        </div>
+    );
 }

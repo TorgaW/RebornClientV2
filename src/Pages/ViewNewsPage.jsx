@@ -39,6 +39,10 @@ export default function ViewNewsPage() {
         };
     }, []);
 
+    useEffect(()=>{
+        document.getElementById("content-wrapper").scrollTop = 0;
+    },[])
+
     return (
         <div className="w-full flex p-4 justify-center text-white">
             <div className="w-full max-w-[1200px] p-4 gap-4 flex flex-col rounded-lg bg-dark-purple-100 bg-opacity-10">

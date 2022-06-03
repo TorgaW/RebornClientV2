@@ -19,6 +19,10 @@ export default function InventoryPage() {
 
     const [selectedOption, setSelectedOption] = useState("boxes");
 
+    useEffect(()=>{
+        document.getElementById("content-wrapper").scrollTop = 0;
+    },[])
+
     return (
         <div className="w-full flex flex-col items-center px-2 gap-4 text-white">
             <div className="w-full flex justify-center text-xl gap-4">
@@ -57,14 +61,11 @@ function BoxTab() {
             if (a.status === "Burned" && b.status !== "Burned") return -1;
             return 0;
         });
+        // console.log(copyBoxes);
         for (const i of copyBoxes) {
-            let safeType = i.type?.name?.slice(5) ?? "";
-            i.type = safeType;
-            console.log(i.status);
             if (i.status === "Opened" && !filter.opened) continue;
             if (i.status === "Burned" && !filter.burned) continue;
             if (i.status === "Owned" && !filter.unopened) continue;
-            // console.log(i.status);
             t.push(<BoxTile key={getRandomString(12)} {...i} />);
         }
         setBoxesComponents(t);
@@ -110,6 +111,8 @@ function BoxTab() {
                 let response = await axios.post(getBoxesByHeroId_EP(), { heroId: i }, safeAuthorize_header());
                 let data = getDataFromResponse(response);
                 for (const j of data) {
+                    let safeType = j.type.name.slice(5);
+                    j.type = safeType;
                     finalBoxes.push({ ...j, owner: normalHeroes[c] });
                 }
                 c++;
@@ -219,5 +222,25 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId 
                 </div>
             </div>
         </Link>
+    );
+}
+
+function ItemsTab() {
+    const userData = useStoreState(UserDataStorage);
+
+    
+
+    return userData.isLoggedIn ? (
+        <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
+            <div className="w-full flex flex-wrap items-center justify-center gap-2 p-4">
+                
+            </div>
+        </div>
+    ) : (
+        <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
+            <div className="w-full flex flex-wrap items-center justify-center gap-2 p-4">
+                <span>Please, sign in to see your inventory.</span>
+            </div>
+        </div>
     );
 }

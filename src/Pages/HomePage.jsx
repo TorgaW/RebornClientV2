@@ -159,6 +159,10 @@ export default function HomePage() {
         setTimeout(()=>{setSelectedComicsPage(newPage)},100);
     }
 
+    useEffect(()=>{
+        document.getElementById("content-wrapper").scrollTop = 0;
+    },[])
+
     return (
         <div className="w-full flex flex-col items-center px-2 gap-4">
             <div className="w-full lg:w-[1000px] bg-dark-purple-100 bg-opacity-10 shadow-lg mt-10 rounded-xl flex flex-col p-4 text-white items-center justify-center gap-5">

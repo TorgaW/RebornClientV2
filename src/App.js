@@ -71,7 +71,7 @@ function App() {
             <CurrenciesUpdateComponent />
             <UserBalanceComponent />
             <TemporaryLinkComponent />
-            <div id="content-wrapper" className="absolute inset-0 top-[120px] flex flex-col justify-between bg-dark-purple-500 overflow-y-auto">
+            <div id="content-wrapper" className={"absolute inset-0 flex flex-col justify-between bg-dark-purple-500 overflow-y-auto " + (isTabletOrMobileBrowser() ? 'top-[80px]':'top-[120px]')}>
                 {/* loading component */}
                 {showLoading ? <AbsoluteLoadingComponent /> : <></>}
 
@@ -86,7 +86,7 @@ function App() {
                     <Route path="/profile/deposit" element={<DepositOption />} />
                     <Route path="/news/:newsIndex" element={<ViewNewsPage />} />
                     <Route path="/comics/:comicsIndex" element={<ViewComicsPage />} />
-                    <Route path="/box/:boxIndex/:heroIndex/open/:hash" element={<OpenBoxPage />} />
+                    <Route exact path="/box/:boxIndex/:heroIndex/:boxType/open/:hash" element={<OpenBoxPage />} />
                     <Route path="/box/:boxIndex" element={<BoxPage />} />
                     <Route path="/heroes" element={<HeroesPage />} />
                     <Route path="/inventory" element={<InventoryPage />} />

@@ -11,7 +11,7 @@ import AdaptiveLoadingComponent from "../Components/UI/AdaptiveLoadingComponent"
 import { UserDataStorage } from "../Storages/UserDataStorage";
 import { MetaMaskStorage } from "../Storages/MetaMaskStorage";
 import { ethers } from "ethers";
-import { ERC721Abi, NFTAddress } from "../Utils/BlockchainUtils";
+import { ERC721Abi, getUserHeroesID, NFTAddress } from "../Utils/BlockchainUtils";
 import { getRandomString } from "../Utils/RandomUtil";
 import { TempLinkStorage } from "../Storages/Stuff/TempLinkStorage";
 import { sleepFor } from "../Utils/CodeUtils";
@@ -42,14 +42,8 @@ export default function BoxPage() {
                 response = await axios.post(getHeroById_EP(), { index: data.heroId });
                 data = getDataFromResponse(response);
                 setOwnerHero(data);
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                const signer = provider.getSigner();
-                const contract = new ethers.Contract(NFTAddress(), ERC721Abi(), signer);
-                const address = await signer.getAddress();
-                let bigNumberHeroes = await contract.getUsersTokens(address);
-                let normalHeroes = [];
-                for (const i of bigNumberHeroes) normalHeroes.push(i.toNumber());
-                if (normalHeroes.includes(data.index)) setIsOwner(true);
+                let userHeroes = await getUserHeroesID();
+                if (userHeroes.includes(data.index)) setIsOwner(true);
                 setTimeout(() => {
                     ui.hideContentLoading();
                 }, 200);
@@ -67,7 +61,7 @@ export default function BoxPage() {
             tempLink.setLinkFor(link, 600);
             await sleepFor(500);
             // console.log('/box/'+((boxInfo.boxId+12) * 77)+'/open/'+link);
-            navigate('/box/'+((boxInfo.boxId+12) * 77)+'/'+((ownerHero.index+12) * 77)+'/open/'+link);
+            navigate('/box/'+((boxInfo.boxId+12) * 77)+'/'+((ownerHero.index+12) * 77)+'/' + boxInfo.type + '/open/'+link);
         } else ui.showError("You are not the owner.");
     }
 
