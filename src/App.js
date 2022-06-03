@@ -33,6 +33,7 @@ import BoxPage from "./Pages/BoxPage";
 import { getRandomString } from "./Utils/RandomUtil";
 import TemporaryLinkComponent from "./Components/TemporaryLinks/TemporaryLinkComponent";
 import OpenBoxPage from "./Pages/OpenBoxPage";
+import MarketplacePage from "./Pages/Marketplace/MarketplacePage";
 
 function App() {
     const [showLoading, setShowLoading] = useState(false);
@@ -84,6 +85,7 @@ function App() {
                     {/* <Route path="/profile/privacysettings" element={<UserProfilePage />}/> */}
                     <Route path="/profile/uisettings" element={<UIOption />} />
                     <Route path="/profile/deposit" element={<DepositOption />} />
+                    <Route path="/marketplace" element={<MarketplacePage />} />
                     <Route path="/news/:newsIndex" element={<ViewNewsPage />} />
                     <Route path="/comics/:comicsIndex" element={<ViewComicsPage />} />
                     <Route path="/box/:boxIndex/:heroIndex/open/:hash" element={<OpenBoxPage />} />

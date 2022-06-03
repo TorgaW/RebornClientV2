@@ -81,13 +81,17 @@ function BoxTab() {
         }
         try {
             ui.showContentLoading();
-            // console.log('hello');
+            console.log('hello');
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const contract = new ethers.Contract(NFTAddress(), ERC721Abi(), signer);
             const address = await signer.getAddress();
+            console.log(provider, signer, contract, address);
             let bigNumberHeroes = await contract.getUsersTokens(address);
             if (bigNumberHeroes.length === 0) {
+                setTimeout(() => {
+                    ui.hideContentLoading();
+                }, 250);
                 return;
             }
             let normalIndexes = [];
