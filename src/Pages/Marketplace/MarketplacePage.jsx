@@ -5,13 +5,13 @@ import box from "../../Images/Boxes/luckyBox.png";
 import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
 
 const rarityColor = {
-    guarantee: "border-gray-400 border-opacity-50",
-    common: "border-blue-100 border-opacity-50",
+    guarantee: "text-gray-400 border-gray-400 border-opacity-50",
+    common: "text-blue-100 border-blue-100 border-opacity-50",
     rare: "text-green-300 border-green-300 border-opacity-50",
-    epic: "border-blue-400 border-opacity-50",
-    mythical: "border-purple-400 border-opacity-50",
+    epic: "text-blue-400 border-blue-400 border-opacity-50",
+    mythical: "text-purple-400 border-purple-400 border-opacity-50",
     legendary: "text-yellow-300 border-yellow-300 border-opacity-50",
-    heroic: "border-red-500 border-opacity-50",
+    heroic: "text-red-500 border-red-500 border-opacity-50",
 };
 
 export default function MarketplacePage() {
@@ -26,21 +26,21 @@ export default function MarketplacePage() {
                 </div>
                 <div className="flex justify-center items-center gap-2">
                     <div className="group flex flex-col justify-center">
-                        <button className="relative hover:bg-zinc-800 px-4 animated-200 rounded-md text-white flex flex-shrink-0 items-center gap-2 justify-center w-[100px] h-[42px]">
+                        <button className="relative hover:bg-zinc-800 px-4 animated-100 rounded-md text-white flex flex-shrink-0 items-center gap-2 justify-center w-[100px] h-[42px]">
                             <span>Rarity</span>
                             <ArrowIcon />
                         </button>
-                        <div className="absolute flex flex-col animated-200 bg-black top-14 pointer-events-none opacity-0 group-hover:opacity-100">
-                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
-                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
-                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
-                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
-                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
-                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
-                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
+                        <div className="absolute flex flex-col animated-200 bg-gray-900 w-[140px] rounded-b-md top-14 pointer-events-none opacity-0 group-hover:opacity-100">
+                            <button className={"text-white p-3 pointer-events-none group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["quarantee"]}>Quarantee</button>
+                            <button className={"text-white p-3 pointer-events-none group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["common"]}>Common</button>
+                            <button className={"text-white p-3 pointer-events-none group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["rare"]}>Rare</button>
+                            <button className={"text-white p-3 pointer-events-none group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["epic"]}>Epic</button>
+                            <button className={"text-white p-3 pointer-events-none group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["mythical"]}>Mythical</button>
+                            <button className={"text-white p-3 pointer-events-none group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["legendary"]}>Legendary</button>
+                            <button className={"text-white p-3 pointer-events-none group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["heroic"]}>Heroic</button>
                         </div>
                     </div>
-                    <button className="hover:bg-zinc-800 px-4 animated-200 rounded-md text-white flex flex-shrink-0 items-center gap-2 justify-center w-[100px] h-[42px]">
+                    <button className="hover:bg-zinc-800 px-4 animated-100 rounded-md text-white flex flex-shrink-0 items-center gap-2 justify-center w-[100px] h-[42px]">
                         <span>Price</span>
                         <ArrowIcon />
                     </button>
@@ -66,12 +66,18 @@ function SearchBar() {
         let t = document.getElementsByTagName("input")[0];
         let val = t.value;
         isStringEmptyOrSpaces(val) ? t.classList.remove("w-[275px]") : t.classList.add("w-[275px]");
-    };
+    }
 
     return (
         <input
-            onChange={() => {checkText();}}
-            className="search-border animated-300 pl-10 placeholder:italic placeholder:text-slate-500 text-white rounded-md shadow-none bg-black bg-opacity-70 border-teal-600 focus:ring-teal-500 focus:border-teal-400 w-[141px] focus:w-[275px]" placeholder="Search for rabbits..." type="text" name="search" />
+            onChange={() => {
+                checkText();
+            }}
+            className="search-border animated-300 pl-10 placeholder:italic placeholder:text-slate-500 text-white rounded-md shadow-none bg-black bg-opacity-70 border-teal-600 focus:ring-teal-500 focus:border-teal-400 w-[141px] focus:w-[275px]"
+            placeholder="Search for rabbits..."
+            type="text"
+            name="search"
+        />
     );
 }
 
