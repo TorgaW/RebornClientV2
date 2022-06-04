@@ -1,5 +1,8 @@
 import React from "react";
+import ArrowIcon from "../../Icons/FilterArrow";
+import SearchIcon from "../../Icons/Search";
 import box from "../../Images/Boxes/luckyBox.png";
+import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
 
 const rarityColor = {
     guarantee: "border-gray-400 border-opacity-50",
@@ -13,14 +16,34 @@ const rarityColor = {
 
 export default function MarketplacePage() {
     return (
-        <div className="w-full flex items-center flex-col relative h-full">
-            <div className="w-full lg:w-[1000px] shadow-lg rounded-xl bg-opacity-10 bg-dark-purple-100 flex justify-between p-4 pb-2">
-                <div className="w-[300px] flex justify-start">
-                    <img src="" alt="" />
-                    <input className="placeholder:italic placeholder:text-slate-500 rounded-md bg-black focus:border-green-500 focus:ring-blue-400 focus:ring-2" placeholder="Search for rabbits..." type="text" name="search"/>
+        <div className="w-full flex items-center flex-col relative">
+            <div className="w-full lg:w-[1000px] shadow-lg rounded-xl bg-opacity-10 bg-dark-purple-100 flex items-center justify-between p-4 pb-2">
+                <div className="flex justify-start items-center relative">
+                    <div className="absolute left-1">
+                        <SearchIcon />
+                    </div>
+                    <SearchBar />
                 </div>
-                <div>
-
+                <div className="flex justify-center items-center gap-2">
+                    <div className="group flex flex-col justify-center">
+                        <button className="relative hover:bg-zinc-800 px-4 animated-200 rounded-md text-white flex flex-shrink-0 items-center gap-2 justify-center w-[100px] h-[42px]">
+                            <span>Rarity</span>
+                            <ArrowIcon />
+                        </button>
+                        <div className="flex-col justify-center absolute hidden animated-200 group-hover:opacity-100 group-hover:flex">
+                            <button className="text-white p-3 bg-white"></button>
+                            <button className="text-white p-3 bg-white"></button>
+                            <button className="text-white p-3 bg-white"></button>
+                            <button className="text-white p-3 bg-white"></button>
+                            <button className="text-white p-3 bg-white"></button>
+                            <button className="text-white p-3 bg-white"></button>
+                            <button className="text-white p-3 bg-white"></button>
+                        </div>
+                    </div>
+                    <button className="hover:bg-zinc-800 px-4 animated-200 rounded-md text-white flex flex-shrink-0 items-center gap-2 justify-center w-[100px] h-[42px]">
+                        <span>Price</span>
+                        <ArrowIcon />
+                    </button>
                 </div>
             </div>
             <div className="w-full lg:w-[1000px] shadow-lg rounded-xl bg-opacity-10 bg-dark-purple-100 flex justify-center p-4 flex-wrap gap-6">
@@ -38,14 +61,34 @@ export default function MarketplacePage() {
     );
 }
 
+function SearchBar() {
+    function checkText() {
+        let t = document.getElementsByTagName("input")[0];
+        let val = t.value;
+        isStringEmptyOrSpaces(val) ? t.classList.remove("w-[270px]") : t.classList.add("w-[270px]");
+    }
+
+    return (
+        <input
+            onChange={() => {
+                checkText();
+            }}
+            className="search-border animated-300 pl-10 placeholder:italic placeholder:text-slate-500 text-white rounded-md shadow-none bg-black bg-opacity-70 border-teal-600 focus:ring-teal-500 focus:border-teal-400 w-[141px] focus:w-[270px]"
+            placeholder="Search for rabbits..."
+            type="text"
+            name="search"
+        />
+    );
+}
+
 function ItemTile() {
     return (
-        <div className={"w-[250px] h-[290px] px-4 items-center flex flex-col rounded-md hover:bg-dark-purple-300 hover:mt-[-10px] animated-200 cursor-pointer border-2 justify-center " + rarityColor["legendary"]}>
+        <div className={"w-[250px] h-[290px] px-4 items-center flex flex-col rounded-md group hover:bg-dark-purple-300 animated-200 cursor-pointer border-2 justify-center " + rarityColor["legendary"]}>
             <div className="text-white w-full text-center py-2 font-bold text-2xl">
                 <span>Rabbit</span>
             </div>
             <div className="flex w-[150px] h-[150px]">
-                <img className="h-full w-full object-cover" src={box} alt="" />
+                <img className="h-full w-full object-cover animated-200 group-hover:rotate-[5deg] group-hover:scale-[1.2]" src={box} alt="" />
             </div>
             <div className="w-full justify-between flex py-2 border-t-2 border-b-2 border-gray-800 items-center">
                 <div className="">
