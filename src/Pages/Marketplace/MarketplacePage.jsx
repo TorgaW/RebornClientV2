@@ -65,19 +65,13 @@ function SearchBar() {
     function checkText() {
         let t = document.getElementsByTagName("input")[0];
         let val = t.value;
-        isStringEmptyOrSpaces(val) ? t.classList.remove("w-[270px]") : t.classList.add("w-[270px]");
-    }
+        isStringEmptyOrSpaces(val) ? t.classList.remove("w-[275px]") : t.classList.add("w-[275px]");
+    };
 
     return (
         <input
-            onChange={() => {
-                checkText();
-            }}
-            className="search-border animated-300 pl-10 placeholder:italic placeholder:text-slate-500 text-white rounded-md shadow-none bg-black bg-opacity-70 border-teal-600 focus:ring-teal-500 focus:border-teal-400 w-[141px] focus:w-[270px]"
-            placeholder="Search for rabbits..."
-            type="text"
-            name="search"
-        />
+            onChange={() => {checkText();}}
+            className="search-border animated-300 pl-10 placeholder:italic placeholder:text-slate-500 text-white rounded-md shadow-none bg-black bg-opacity-70 border-teal-600 focus:ring-teal-500 focus:border-teal-400 w-[141px] focus:w-[275px]" placeholder="Search for rabbits..." type="text" name="search" />
     );
 }
 
