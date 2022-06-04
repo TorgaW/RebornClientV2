@@ -30,14 +30,14 @@ export default function MarketplacePage() {
                             <span>Rarity</span>
                             <ArrowIcon />
                         </button>
-                        <div className="flex-col justify-center absolute hidden animated-200 group-hover:opacity-100 group-hover:flex">
-                            <button className="text-white p-3 bg-white"></button>
-                            <button className="text-white p-3 bg-white"></button>
-                            <button className="text-white p-3 bg-white"></button>
-                            <button className="text-white p-3 bg-white"></button>
-                            <button className="text-white p-3 bg-white"></button>
-                            <button className="text-white p-3 bg-white"></button>
-                            <button className="text-white p-3 bg-white"></button>
+                        <div className="absolute flex flex-col animated-200 bg-black top-14 pointer-events-none opacity-0 group-hover:opacity-100">
+                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
+                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
+                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
+                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
+                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
+                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
+                            <button className="text-white p-3 pointer-events-none group-hover:pointer-events-auto w-[110px] hover:bg-zinc-800 rounded-md animated-200"></button>
                         </div>
                     </div>
                     <button className="hover:bg-zinc-800 px-4 animated-200 rounded-md text-white flex flex-shrink-0 items-center gap-2 justify-center w-[100px] h-[42px]">
