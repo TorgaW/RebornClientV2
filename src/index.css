@@ -51,9 +51,6 @@
 
 .search-border {
 }
-.search-border:focus {
-  perspective: none;
-}
 
 .grecaptcha-badge {
     display: none;
