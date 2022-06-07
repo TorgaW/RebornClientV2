@@ -33,6 +33,10 @@ export function signIn_EP() {
     return serverAddress + "/api/auth/signin";
 }
 
+export function signUp_EP() {
+    return serverAddress + "/api/auth/signup";
+}
+
 export function verify2FA_EP(){
     return serverAddress + "/api/userActions/verifyCode";
 }

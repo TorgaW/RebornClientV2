@@ -17,6 +17,7 @@ import { getRandomString } from "../Utils/RandomUtil";
 import { Link, useNavigate } from "react-router-dom";
 import { clampNumber } from "../Utils/MathUtils";
 import AdaptiveLoadingComponent from "../Components/UI/AdaptiveLoadingComponent";
+import PageSelector from "../Components/UI/PageSelector";
 
 export default function HomePage() {
     const ui = useStoreState(UIStorage);
@@ -116,7 +117,7 @@ export default function HomePage() {
     useEffect(() => {
         async function s() {
             try {
-                let news = await axios.post(getNewsByIndex_EP(), { index: (selectedNewsPage-1)*5 });
+                let news = await axios.post(getNewsByIndex_EP(), { index: (selectedNewsPage - 1) * 5 });
                 news = getDataFromResponse(news);
                 let copyNews = Array.from(news);
                 copyNews.sort((a, b) => new Date(b.currentDate) - new Date(a.currentDate));
@@ -133,7 +134,7 @@ export default function HomePage() {
     useEffect(() => {
         async function s() {
             try {
-                let comics = await axios.post(getComicsByIndex_EP(), { index: (selectedComicsPage-1)*5 });
+                let comics = await axios.post(getComicsByIndex_EP(), { index: (selectedComicsPage - 1) * 5 });
                 comics = getDataFromResponse(comics);
                 let copyComics = Array.from(comics);
                 copyComics.sort((a, b) => new Date(b.currentDate) - new Date(a.currentDate));
@@ -147,16 +148,26 @@ export default function HomePage() {
         s();
     }, [selectedComicsPage]);
 
-    function newsPageChanged(newPage) {
-        if(newPage === selectedNewsPage) return;
-        setInWait(true);
-        setTimeout(()=>{setSelectedNewsPage(newPage)},100);
+    // function newsPageChanged(newPage) {
+    //     if(newPage === selectedNewsPage) return;
+    //     setInWait(true);
+    //     setTimeout(()=>{setSelectedNewsPage(newPage)},100);
+    // }
+
+    // function comicsPageChanged(newPage) {
+    //     if(newPage === selectedComicsPage) return;
+    //     setInWait(true);
+    //     setTimeout(()=>{setSelectedComicsPage(newPage)},100);
+    // }
+
+    function newsPageChangedCallback(newPage) {
+        console.log("callback from page selector", newPage);
+        setSelectedNewsPage(newPage);
     }
 
-    function comicsPageChanged(newPage) {
-        if(newPage === selectedComicsPage) return;
-        setInWait(true);
-        setTimeout(()=>{setSelectedComicsPage(newPage)},100);
+    function comicsPageChangedCallback(newPage) {
+        console.log("callback from page selector", newPage);
+        setSelectedComicsPage(newPage);
     }
 
     return (
@@ -190,17 +201,36 @@ export default function HomePage() {
                 ) : (
                     <></>
                 )}
-                {selectedOption === "news" ? newsTiles : comicsTiles}
-                <div className="w-full flex justify-center">
-                    {selectedOption === "news" ? (
-                        <NewsPageSelector number={numberOfNewsPages} callback={newsPageChanged} />
-                    ) : (
-                        <ComicsPageSelector number={numberOfComicsPages} callback={comicsPageChanged} />
-                    )}
-                </div>
+                {selectedOption === "news" ? (
+                    <NewsSelector maxPages={numberOfNewsPages} news={newsTiles} callback={newsPageChangedCallback} />
+                ) : (
+                    <ComicsSelector maxPages={numberOfComicsPages} comics={comicsTiles} callback={comicsPageChangedCallback} />
+                )}
             </div>
         </div>
     );
+}
+
+function NewsSelector({maxPages, news, callback}) {
+    return (
+        <div>
+        {news}
+        <div className="w-full flex justify-center">
+            <PageSelector maxPages={maxPages} callback={callback} />
+        </div>
+    </div>
+    )
+}
+
+function ComicsSelector({maxPages, comics, callback}) {
+    return (
+        <div>
+        {comics}
+        <div className="w-full flex justify-center">
+            <PageSelector maxPages={maxPages} callback={callback} />
+        </div>
+    </div>
+    )
 }
 
 function NewsPageSelector({ number, callback }) {
@@ -259,7 +289,10 @@ function NewsPageSelector({ number, callback }) {
                 </div>
             );
             pages.push(
-                <button key={getRandomString(12)} className="w-12 h-12 flex-shrink-0 border-teal-400 border-[1px] rounded-md bg-dark-purple-100 bg-opacity-50 select-none">
+                <button
+                    key={getRandomString(12)}
+                    className="w-12 h-12 flex-shrink-0 border-teal-400 border-[1px] rounded-md bg-dark-purple-100 bg-opacity-50 select-none"
+                >
                     {selectedPage}
                 </button>
             );
@@ -448,7 +481,10 @@ function ComicsPageSelector({ number, callback }) {
                 </div>
             );
             pages.push(
-                <button key={getRandomString(12)} className="w-12 h-12 flex-shrink-0 border-teal-400 border-[1px] rounded-md bg-dark-purple-100 bg-opacity-50 select-none">
+                <button
+                    key={getRandomString(12)}
+                    className="w-12 h-12 flex-shrink-0 border-teal-400 border-[1px] rounded-md bg-dark-purple-100 bg-opacity-50 select-none"
+                >
                     {selectedPage}
                 </button>
             );
