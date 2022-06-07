@@ -31,7 +31,10 @@ export default function MarketplacePage() {
         { name: "Rabbit", price: 300, owner: "TorgaW", rarity: "Heroic" },
         { name: "Poop Rabbit", price: 200, owner: "TorgaW", rarity: "Common" },
         { name: "Mommy Rabbit", price: 500, owner: "FarHowl", rarity: "Legendary" },
-        { name: "Cool Poop Rabbit", price: 600, owner: "FarHowl", rarity: "Epic" },
+        { name: "Rabbit`s Carrot", price: 600, owner: "FarHowl", rarity: "Epic" },
+        { name: "Big Black Rabbit", price: 250, owner: "Nat", rarity: "Mythical" },
+        { name: "Poor Rabbit", price: 10, owner: "Kirusha", rarity: "Guarantee" },
+        { name: "Ultra Rabbit", price: 900, owner: "Mom", rarity: "Rare" },
     ]);
 
     const [filter, setFilter] = useState({ rarity: null, price: null, rarityColor: "" });
@@ -245,8 +248,9 @@ function SearchBar() {
 }
 
 function ItemTile({ price, name, rarity, owner }) {
+    // let rarityUpperCase = String(rarity).charAt(0).toUpperCase() + rarity.slice(1);
     return (
-        <div className={"w-[250px] h-[290px] px-4 py-2 items-center flex flex-col rounded-md group hover:bg-dark-purple-300 animated-200 cursor-pointer border-2 justify-center " + rarityColor["legendary"]}>
+        <div className={"w-[250px] h-[290px] px-4 py-2 items-center flex flex-col rounded-md group hover:bg-dark-purple-300 animated-200 cursor-pointer border-2 justify-center " + rarityColor[rarity.toLowerCase()]}>
             <div className="text-white w-full text-center font-bold text-2xl">
                 <span>{name}</span>
             </div>
