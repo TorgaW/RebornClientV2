@@ -39,31 +39,30 @@ export default function MarketplacePage() {
 
     const [filter, setFilter] = useState({ rarity: null, price: null, rarityColor: "" });
 
-    useEffect(()=>{
+    useEffect(() => {
         if (lotsData.length > 0) {
             let t = Array.from(lotsData);
             if (filter.price === "To lowest") {
-                t.sort((prev,next)=>{
+                t.sort((prev, next) => {
                     return next.price - prev.price;
                 });
-            }
-            else {
-                t.sort((prev,next)=>{
+            } else {
+                t.sort((prev, next) => {
                     return prev.price - next.price;
                 });
             }
             if (filter.rarity) {
-                t = t.filter((a)=>{
+                t = t.filter((a) => {
                     return a.rarity.toLowerCase() === filter.rarity.toLowerCase();
-                })
+                });
             }
             let a = [];
             for (const i of t) {
-                a.push(<ItemTile key={getRandomString(12)} {...i}/>)
+                a.push(<ItemTile key={getRandomString(12)} {...i} />);
             }
             setLotsView(a);
         }
-    },[lotsData,filter])
+    }, [lotsData, filter]);
 
     useEffect(() => {
         ui.showContentLoading();
@@ -81,7 +80,11 @@ export default function MarketplacePage() {
 
     return (
         <div className="w-full flex items-center flex-col relative text-white">
-            <div className="shadow-lg bg-opacity-10 bg-dark-purple-100 rounded-xl pb-4">
+            <div className="w-full flex justify-center items-center gap-4 text-xl">
+                <button className="w-24 h-10 border-b-[1px] animated-100 ">Buy</button>
+                <button className="w-24 h-10 border-b-[1px] animated-100 ">Sell</button>
+            </div>
+            <div className="shadow-lg bg-opacity-10 bg-dark-purple-100 rounded-xl pb-4 mt-8">
                 <div className="w-full lg:w-[1000px] flex items-center justify-between p-4 px-8 pb-2">
                     <div className="flex justify-start items-center relative">
                         <div className="absolute left-1">
