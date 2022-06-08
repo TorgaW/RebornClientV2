@@ -6,7 +6,7 @@ import { MetaMaskStorage } from "../Storages/MetaMaskStorage";
 import { UIStorage } from "../Storages/UIStorage";
 import { ERC721Abi, NFTAddress } from "../Utils/BlockchainUtils";
 import { getBoxesByHeroId_EP, getHeroById_EP, safeAuthorize_header } from "../Utils/EndpointsUtil";
-import { getDataFromResponse } from "../Utils/NetworkUtil";
+import { getDataFromResponse, makePost } from "../Utils/NetworkUtil";
 import luckyBoxImage from "../Images/Boxes/luckyBox.png";
 import mysteryBoxImage from "../Images/Boxes/mysteryBox.png";
 import { getRandomString } from "../Utils/RandomUtil";
@@ -111,8 +111,7 @@ function BoxTab() {
             let finalBoxes = [];
             let c = 0;
             for await (const i of normalIndexes) {
-                let response = await axios.post(getBoxesByHeroId_EP(), { heroId: i }, safeAuthorize_header());
-                let data = getDataFromResponse(response);
+                let [data] = await makePost(getBoxesByHeroId_EP(), { heroId: i }, true);
                 for (const j of data) {
                     finalBoxes.push({ ...j, owner: normalHeroes[c] });
                 }
