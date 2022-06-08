@@ -41,11 +41,14 @@ export default function UpperMenu() {
                         <Link to="/inventory">
                             <div className="flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-800 animated-100">Inventory</div>
                         </Link>
-                        <Link to="/about">
+                        <Link to="/marketplace">
+                            <div className="flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-800 animated-100">Marketplace</div>
+                        </Link>
+                        {/* <Link to="/about">
                             <div className="text-lg text-gray-300 flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-900 animated-100">
                                 About project
                             </div>
-                        </Link>
+                        </Link> */}
                     </div>
 
                     {/* small size window */}

@@ -1,5 +1,4 @@
 export function isStringEmptyOrSpaces(str) {
-
     if(typeof str === 'string')
         return str == null || str?.trim() === "";
     else if (typeof str === 'object')
@@ -7,12 +6,17 @@ export function isStringEmptyOrSpaces(str) {
         if(Array.isArray(str)){
             for (const i of str) {
                 if(i == null || i?.trim() === "") return true;
+    if (typeof str === "string") return str == null || str?.trim() === "";
+    else if (typeof str === "object") {
+        if (Array.isArray(str)) {
+            for (const i of str) {
+                if (i == null || i?.trim() === "") return true;
             }
         }
     }
     return false;
 }
-
+  
 export function insertInString(ins, str, index) {
     if(!str || !ins || typeof index !== 'number') return;
     if( typeof str === 'string' && typeof ins === 'string') {

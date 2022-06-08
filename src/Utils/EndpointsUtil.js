@@ -108,3 +108,9 @@ export function openBox_EP() {
 export function burnBox_EP() {
     return serverAddress + "/api/userActions/burnBox";
 }
+
+// Marketplace
+
+export function marketplace_Load() {
+    return serverAddress + "/api/marketplace/loadLots";
+}
