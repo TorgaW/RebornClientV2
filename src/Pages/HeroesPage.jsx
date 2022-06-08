@@ -118,7 +118,7 @@ export default function HeroesPage() {
 
     return (
         <div id="heroes-page" className="w-full flex flex-col items-center px-2 text-white">
-            <div className="w-full flex justify-center items-center gap-4 text-xl">
+            <div className="w-full flex justify-center items-center gap-4 text-xl my-6">
                 <button
                     onClick={() => {
                         setSelectedOption("all");
@@ -137,7 +137,7 @@ export default function HeroesPage() {
                 </button>:<></>}
             </div>
             {selectedOption === "all" ? (
-                <div className="w-full lg:w-[1000px] bg-dark-purple-100 bg-opacity-10 mt-10 rounded-xl flex flex-col justify-center p-4 gap-5">
+                <div className="w-full lg:w-[1000px] bg-dark-purple-100 bg-opacity-10 rounded-xl flex flex-col justify-center p-4 gap-5">
                     <div className="w-full flex flex-wrap justify-center gap-4">
                         {heroesTiles}
                     </div>

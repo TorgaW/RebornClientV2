@@ -2,6 +2,9 @@ import { useStoreState } from "pullstate";
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import AdaptiveLoadingComponent from "../../Components/UI/AdaptiveLoadingComponent";
+import ButtonDefault from "../../Components/UI/StyledComponents/ButtonDefault";
+import ButtonRed from "../../Components/UI/StyledComponents/ButtonRed";
+import InputDefault from "../../Components/UI/StyledComponents/InputDefault";
 import { MetaMaskStorage } from "../../Storages/MetaMaskStorage";
 import { UIStorage } from "../../Storages/UIStorage";
 import { UserDataStorage } from "../../Storages/UserDataStorage";
@@ -27,10 +30,10 @@ export default function AccountOption() {
 
     function signOut() {
         deleteUserDataFromStorage();
-        UserDataStorage.update((s)=>{
+        UserDataStorage.update((s) => {
             s.isLoggedIn = false;
             s.userData = {};
-        })
+        });
     }
 
     return showProfile ? (
@@ -69,12 +72,12 @@ export default function AccountOption() {
                     {safeUserData.twoFA ? (
                         <div className="w-full flex flex-col gap-2">
                             <span className="text-green-300">You have already connected two-factor authentication!</span>
-                            <button className="p-2 w-48 bg-purple-800 bg-opacity-50 rounded-lg hover:bg-opacity-90 animated-100">Show my QR-code</button>
+                            <ButtonDefault text="Show my QR-code" />
                         </div>
                     ) : (
                         <div className="w-full flex flex-col gap-2">
                             <span className="text-red-300">Two-factor authentication is disabled!</span>
-                            <button className="p-2 w-48 bg-purple-800 bg-opacity-50 rounded-lg hover:bg-opacity-90 animated-100">Enable 2FA</button>
+                            <ButtonDefault text="Enable 2FA" />
                         </div>
                     )}
                     <div className="w-full h-[1px] bg-white"></div>
@@ -83,15 +86,21 @@ export default function AccountOption() {
                     </div>
                     <div className="w-full flex flex-col gap-1">
                         <span className="font-semibold">New password:</span>
-                        <input type="password" className="w-full max-w-[300px] font-semibold p-2 bg-dark-purple-500 rounded-lg hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"/>
+                        <InputDefault type="password" />
                     </div>
                     <div className="w-full flex flex-col">
                         <span className="font-semibold">Authenticator code:</span>
-                        <input type="text" maxLength={6} className="w-full tracking-widest max-w-[300px] font-semibold p-2 bg-dark-purple-500 rounded-lg hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"/>
+                        <InputDefault type="text" />
                     </div>
-                    <button className="p-2 w-48 bg-purple-800 bg-opacity-50 rounded-lg hover:bg-opacity-90 animated-100">Change password</button>
+                    <ButtonDefault text="Change password" />
                     <div className="w-full h-[1px] bg-white"></div>
-                    <button onClick={()=>{signOut(); navigate('/');}} className="p-2 w-48 bg-red-900 bg-opacity-70 rounded-lg hover:bg-opacity-100 self-end animated-100">Sign out</button>
+                    <ButtonRed
+                        click={() => {
+                            signOut();
+                            navigate("/");
+                        }}
+                        text="Sign out"
+                    />
                 </div>
             </div>
         </div>

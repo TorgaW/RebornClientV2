@@ -97,7 +97,7 @@ function App() {
                     <Route path="/" element={<HomePage />}></Route>
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
-                <footer className="w-full h-[200px] pt-8 flex flex-col justify-center items-center bg-black flex-shrink-0 mt-20">
+                <footer className="w-full h-[200px] pt-8 py-8 flex flex-col justify-center items-center bg-black flex-shrink-0 mt-20">
                     <span className="text-teal-800 text-xl font-bold">Reborn.cash</span>
                     <span className="text-teal-800 font-semibold text-center">An experimental, open-ended, NFT-based metaverse.</span>
                     <span className="text-purple-900 font-semibold">Based on $GAME token.</span>
@@ -127,7 +127,7 @@ function App() {
                             <DiscordIcon color={"#1a918a"} />
                         </div>
                     </div>
-                    <span className="text-teal-800 mt-auto">Reborn web-client version: 2022.02</span>
+                    <span className="text-teal-800 mt-auto">Reborn web-client version: 2022, v0.2</span>
                 </footer>
             </div>
             <MessagesProvider />
