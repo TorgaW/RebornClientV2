@@ -9,6 +9,8 @@ import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
 import { UIStorage } from "../../Storages/UIStorage";
 import { UserDataStorage } from "../../Storages/UserDataStorage";
 import { saveUserNonce } from "../../Utils/LocalStorageManager/LocalStorageManager";
+import ButtonDefault from "../../Components/UI/StyledComponents/ButtonDefault";
+import InputDefault from "../../Components/UI/StyledComponents/InputDefault";
 
 export default function SignInPage() {
     let navigate = useNavigate();
@@ -28,6 +30,7 @@ export default function SignInPage() {
     // captcha end
 
     async function login() {
+        ui.showContentLoading();
         let captchaToken = await handleReCaptchaVerify();
 
         let username = document.getElementById("login-username").value;
@@ -35,6 +38,7 @@ export default function SignInPage() {
 
         if (isStringEmptyOrSpaces(username) || isStringEmptyOrSpaces(password)) {
             ui.showError("Please, enter your username and password.");
+            ui.hideContentLoading();
             return;
         }
 
@@ -48,16 +52,19 @@ export default function SignInPage() {
                 s.userData = response.data;
             })
             if(response.data.twoFA){
+                ui.hideContentLoading();
                 let h = authHash.generateHash();
                 navigate("/auth/"+username+"/" + h);
             }
             else{
+                ui.hideContentLoading();
                 saveUserNonce(response.data.nonce);
                 navigate("/");
             }
         } catch (error) {
             console.log(error);
             ui.showError('Error login! Please, ensure your data is correct.');
+            ui.hideContentLoading();
         }
     }
 
@@ -67,19 +74,11 @@ export default function SignInPage() {
                 <h3 className="text-2xl font-semibold">Sign in to your account</h3>
                 <div className="w-full flex flex-col gap-1">
                     <span className="text-gray-300 font-semibold opacity-70 text-sm">Username</span>
-                    <input
-                        id="login-username"
-                        type="text"
-                        className="w-full h-10 rounded-md ring-2 ring-teal-800 focus:ring-teal-400 focus:outline-none bg-dark-purple-500 p-2"
-                    />
+                    <InputDefault id="login-username" type="text" />
                 </div>
                 <div className="w-full flex flex-col gap-1">
                     <span className="text-gray-300 font-semibold opacity-70 text-sm">Password</span>
-                    <input
-                        id="login-password"
-                        type="password"
-                        className="w-full h-10 rounded-md ring-2 ring-teal-800 focus:ring-teal-400 focus:outline-none bg-dark-purple-500 p-2"
-                    />
+                    <InputDefault id="login-password" type="password" />
                     <div className="w-full flex justify-end">
                         <Link to="/forgotpass">
                             <span className="underline text-right text-gray-400 cursor-pointer hover:text-gray-300">I forgot my password</span>
@@ -87,14 +86,7 @@ export default function SignInPage() {
                     </div>
                 </div>
                 <div className="flex flex-col gap-4 items-center">
-                    <button
-                        onClick={() => {
-                            login();
-                        }}
-                        className="h-12 bg-dark-purple-100 bg-opacity-70 hover:bg-opacity-100 animated-100 rounded-md font-semibold w-44"
-                    >
-                        Sign in
-                    </button>
+                    <ButtonDefault text={"Sign in"} click={()=>{login()}} additionalStyle={"p-4 w-44"} />
                     <Link to="/signup">
                         <span className="underline text-teal-400 opacity-70 hover:opacity-100 cursor-pointer animated-100 px-2">Or create a new account</span>
                     </Link>

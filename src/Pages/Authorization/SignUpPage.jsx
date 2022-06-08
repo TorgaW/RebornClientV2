@@ -3,6 +3,7 @@ import { useStoreState } from "pullstate";
 import React from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { Link, useNavigate } from "react-router-dom";
+import ButtonDefault from "../../Components/UI/StyledComponents/ButtonDefault";
 import { UIStorage } from "../../Storages/UIStorage";
 import { signUp_EP } from "../../Utils/EndpointsUtil";
 import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
@@ -108,9 +109,10 @@ export default function SignUpPage() {
                     </div>
                 </div>
                 <div className="flex flex-col gap-4 items-center">
-                    <button onClick={()=>{register()}} className="h-12 bg-dark-purple-100 bg-opacity-70 hover:bg-opacity-100 animated-100 rounded-md font-semibold w-44">
+                    {/* <button onClick={()=>{register()}} className="h-12 bg-dark-purple-100 bg-opacity-70 hover:bg-opacity-100 animated-100 rounded-md font-semibold w-44">
                         Create account
-                    </button>
+                    </button> */}
+                    <ButtonDefault click={()=>{register()}} text="Create account" additionalStyle={"p-4 w-44"} />
                     <Link to="/signin">
                         <span className="underline text-teal-400 opacity-70 hover:opacity-100 cursor-pointer animated-100 px-2">I already have an account</span>
                     </Link>
