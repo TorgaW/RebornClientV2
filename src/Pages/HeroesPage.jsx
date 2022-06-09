@@ -209,6 +209,15 @@ export default function HeroesPage() {
     );
 }
 
+function HeroSelector() {
+
+    const [heroView, setHeroView] = useState([]);
+
+    return (
+        <div></div>
+    );
+}
+
 function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, origin }) {
     const tribePalette = {
         text: {
