@@ -34,6 +34,7 @@ import { getRandomString } from "./Utils/RandomUtil";
 import TemporaryLinkComponent from "./Components/TemporaryLinks/TemporaryLinkComponent";
 import OpenBoxPage from "./Pages/OpenBoxPage";
 import MarketplacePage from "./Pages/Marketplace/MarketplacePage";
+import ViewHeroPage from "./Pages/ViewHeroPage";
 
 function App() {
     const [showLoading, setShowLoading] = useState(false);
@@ -88,6 +89,7 @@ function App() {
                     <Route path="/marketplace" element={<MarketplacePage />} />
                     <Route path="/news/:newsIndex" element={<ViewNewsPage />} />
                     <Route path="/comics/:comicsIndex" element={<ViewComicsPage />} />
+                    <Route path="/hero/:heroIndex" element={<ViewHeroPage />} />
                     <Route path="/box/:boxIndex/:heroIndex/open/:hash" element={<OpenBoxPage />} />
                     <Route path="/box/:boxIndex" element={<BoxPage />} />
                     <Route path="/heroes" element={<HeroesPage />} />
