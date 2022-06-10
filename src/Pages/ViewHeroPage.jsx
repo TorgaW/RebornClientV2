@@ -40,28 +40,11 @@ export default function HeroView() {
             ui.hideContentLoading();
         };
     }, []);
-    useEffect(()=>{
-        fillHero();
-    },[heroData])
-
-    function fillHero() {
-        <HeroTile key={getRandomString(32)} 
-        index={heroData.index}
-        name={heroData.name}
-        tribe={heroData.tribe}
-        status={heroData.status}
-        imageLink={heroData.imageLink}
-        age={heroData.age}
-        breed={heroData.breed}
-        skills={heroData.skills}
-        origin={heroData.origin}
-        />
-    }
 
     return (
         <div className="shadow-lg bg-opacity-10 bg-dark-purple-100 rounded-xl pb-4">
             <div className="w-full lg:w-[1000px] flex items-center justify-center p-4">
-                <HeroTile />
+                <HeroTile {...heroData}/>
             </div>
         </div>
     );
@@ -114,8 +97,8 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
     const [imgLoaded, setImgLoaded] = useState(false);
 
     return (
-        <div className="h-[200px] w-[200px]">
-            <img src={imageLink} alt="" />
+        <div className="h-[200px] w-[200px] text-white">
+            <span>{name}</span>
         </div>      
     );
 }
