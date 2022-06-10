@@ -9,6 +9,7 @@ import { catch401, getDataFromResponse } from "../Utils/NetworkUtil";
 import { getRandomString } from "../Utils/RandomUtil";
 import AdaptiveLoadingComponent from "../Components/UI/AdaptiveLoadingComponent";
 import { MetaMaskStorage } from "../Storages/MetaMaskStorage";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function HeroesPage() {
     const ui = useStoreState(UIStorage);
@@ -265,7 +266,7 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
     const [imgLoaded, setImgLoaded] = useState(false);
 
     return (
-        <div
+        <Link to={"/hero/" + ((index + 1) * 727 + 163 * 172)}
             className={
                 "w-[400px] flex-wrap group flex justify-center p-2 border-y-[1px] border-opacity-50 cursor-pointer animated-200 hover:bg-dark-purple-100 hover:bg-opacity-30 hover:border-opacity-100 " +
                 (tribePalette["border"][tribe] ?? "border-white")
@@ -304,6 +305,6 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
                     <span className={" font-semibold " + (originPalette["text"][origin] ?? "text-white")}>Origin: {origin}</span>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }
