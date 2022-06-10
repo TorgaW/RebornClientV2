@@ -40,8 +40,7 @@ export default function DepositOption() {
                     ui.showError("Your session is too old. Please, sign in again.");
                     logout();
                     return;
-                }
-                else {
+                } else {
                     const provider = new ethers.providers.Web3Provider(window.ethereum);
                     const signer = provider.getSigner();
                     const contract = new ethers.Contract(GAMEAddress(), ERC20Abi(), signer);
@@ -55,13 +54,14 @@ export default function DepositOption() {
                     }
                     ui.showNotification("Processing... Please, don't close your browser until this operation ends!");
                     await tx.wait();
+                    console.log(tx.hash);
                     let address = await signer.getAddress();
                     try {
-                        await axios.post(addBalance_EP(),{userAddress: address.toLowerCase()}, safeAuthorize_header());
+                        await axios.post(addBalance_EP(), { userAddress: address.toLowerCase(), hash: tx.hash }, safeAuthorize_header());
                         ui.hideContentLoading();
                         ui.showSuccess("Thank you for your deposit!");
                         balance.updateUserBalance();
-                        document.getElementById('deposit').value = 0;
+                        document.getElementById("deposit").value = 0;
                         // console.log(userData);
                     } catch (error) {
                         if (catch401(error)) {
@@ -72,8 +72,7 @@ export default function DepositOption() {
                         }
                         // ui.showError(error.message);
                         ui.showError(error.message);
-                        if(error.response)
-                            ui.showError(error.response.message);
+                        if (error.response) ui.showError(error.response.message);
                         ui.hideContentLoading();
                     }
                     // ui.showNotification('Hello!');

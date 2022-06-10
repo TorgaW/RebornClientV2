@@ -74,17 +74,20 @@ function NewsSelector() {
 
     const [selectedPage, setSelectedPage] = useState(1);
     const [numberOfPages, setNumberOfPages] = useState(0);
+    const [numberOfNews, setNumberOfNews] = useState(0);
     const [newsView, setNewsView] = useState([]);
 
     async function updateNumberOfPages() {
         let response = await axios.get(getNewsQuantity_EP());
         let quantity = getDataFromResponse(response);
+        setNumberOfNews(quantity);
+        console.log(numberOfNews);
         if (quantity && quantity > 0) setNumberOfPages(Math.ceil(quantity / 4));
     }
 
     async function updateNews() {
         setShowLoading(true);
-        let [news, status, error] = await makePost(getNewsByIndex_EP(), { index: (selectedPage - 1) * 4 + 1 }, false);
+        let [news, status, error] = await makePost(getNewsByIndex_EP(), { index: numberOfNews }, false);
         if (!error) {
             let copyNews = Array.from(news);
             copyNews.sort((a, b) => new Date(b.currentDate) - new Date(a.currentDate));

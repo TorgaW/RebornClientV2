@@ -6,6 +6,7 @@ import { MetaMaskStorage } from "../../Storages/MetaMaskStorage";
 import { UIStorage } from "../../Storages/UIStorage";
 import { UserDataStorage } from "../../Storages/UserDataStorage";
 import { deleteUserDataFromStorage, getLocalOptions, saveLocalOptions } from "../../Utils/LocalStorageManager/LocalStorageManager";
+import { logout } from "../../Utils/NetworkUtil";
 
 export default function AccountOption() {
     let navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function AccountOption() {
     const [showProfile, setShowProfile] = useState(false);
     const [userSettings, setUserSettings] = useState(getLocalOptions());
     const [safeUserData, setSafeUserData] = useState({});
+    const [showQR, setShowQR] = useState(false);
 
     useEffect(() => {
         if (!userData.getLocalUserData()) navigate("/restricted");
@@ -26,11 +28,7 @@ export default function AccountOption() {
     }, []);
 
     function signOut() {
-        deleteUserDataFromStorage();
-        UserDataStorage.update((s)=>{
-            s.isLoggedIn = false;
-            s.userData = {};
-        })
+        logout();
     }
 
     return showProfile ? (
@@ -70,6 +68,9 @@ export default function AccountOption() {
                         <div className="w-full flex flex-col gap-2">
                             <span className="text-green-300">You have already connected two-factor authentication!</span>
                             <button className="p-2 w-48 bg-purple-800 bg-opacity-50 rounded-lg hover:bg-opacity-90 animated-100">Show my QR-code</button>
+                            <div className="flex w-full h-48 justify-center items-center">
+                                <img src={"https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=200x200&chld=M|0&cht=qr&chl=otpauth://totp/Reborn.Cash(username:%20teo)%3Fsecret%3DZZTU6SFLIL5AMXIK%26digits%3D6"} alt="qr-code" />
+                            </div>
                         </div>
                     ) : (
                         <div className="w-full flex flex-col gap-2">
