@@ -22,7 +22,7 @@ export default function HeroView() {
                 if (!isNaN(idx)) {
                     try {
                         let realIndex = (idx - 163 * 172) / 727 - 1;
-                        let response = await axios.post(getHeroById_EP, { index: realIndex });
+                        let response = await axios.post(getHeroById_EP(), { index: realIndex });
                         let data = getDataFromResponse(response);
                         setHeroData(data);
                         setTimeout(() => {
@@ -115,7 +115,7 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
 
     return (
         <div className="h-[200px] w-[200px]">
-            
+            <img src={imageLink} alt="" />
         </div>      
     );
 }
