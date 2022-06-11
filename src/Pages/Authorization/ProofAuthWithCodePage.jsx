@@ -41,11 +41,6 @@ export default function ProofAuthWithCodePage() {
 
         try {
             let response = await axios.post(verify2FA_EP(), { code }, createAuthorizeHeader(userData.userData.accessToken));
-
-            if (!getDataFromResponse(response)){
-                ui.showError('Incorrect code!');
-                return;
-            }
             saveUserNonce(response.data.data.nonce);
             saveUserDataToStorage(userData.userData, userData.userData.accessToken);
             UserDataStorage.update((s)=>{
@@ -54,7 +49,8 @@ export default function ProofAuthWithCodePage() {
             navigate('/');
 
         } catch (error) {
-
+            ui.showError("Invalid code!");
+            console.log(error?.response?.data?.message);
         }
     }
 
@@ -69,6 +65,9 @@ export default function ProofAuthWithCodePage() {
                         maxLength={6}
                         type="text"
                         autoFocus
+                        onChange={(e)=>{
+                            if(e?.target?.value?.length === 6) submitCode();
+                        }}
                         className="w-full h-16 text-4xl tracking-[0.3em] font-bold rounded-md ring-2 ring-teal-800 focus:ring-teal-400 focus:outline-none bg-dark-purple-500 p-2 text-center"
                     />
                 </div>

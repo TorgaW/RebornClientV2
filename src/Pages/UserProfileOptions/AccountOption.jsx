@@ -2,6 +2,10 @@ import { useStoreState } from "pullstate";
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import AdaptiveLoadingComponent from "../../Components/UI/AdaptiveLoadingComponent";
+import ButtonDefault from "../../Components/UI/StyledComponents/ButtonDefault";
+import ButtonGreen from "../../Components/UI/StyledComponents/ButtonGreen";
+import ButtonRed from "../../Components/UI/StyledComponents/ButtonRed";
+import InputDefault from "../../Components/UI/StyledComponents/InputDefault";
 import { MetaMaskStorage } from "../../Storages/MetaMaskStorage";
 import { UIStorage } from "../../Storages/UIStorage";
 import { UserDataStorage } from "../../Storages/UserDataStorage";
@@ -48,34 +52,40 @@ export default function AccountOption() {
                 </Link>
             </div>
             <div className="w-full flex justify-center p-4">
-                <div className="w-full max-w-[800px] flex flex-col gap-4 p-8 bg-dark-purple-300 rounded-lg">
-                    <div className="w-full flex justify-center">
+                <div className="w-full max-w-[800px] flex flex-col gap-4 p-8 bg-dark-purple-400 rounded-lg">
+                    <div className="w-full flex justify-center text-center">
                         <span className="text-2xl font-semibold">Account information</span>
                     </div>
                     <div className="w-full flex items-center gap-2 text-xl">
                         <span className="font-semibold">Username:</span>
-                        <span className="text-pink-100">{safeUserData.username}</span>
+                        <span className="text-teal-100 text-2xl font-bold">{safeUserData.username}</span>
                     </div>
                     <div className="w-full flex items-center gap-2 text-xl">
                         <span className="font-semibold">Email:</span>
-                        <span className="text-pink-100">{safeUserData.email}</span>
+                        <span className="text-teal-100 text-2xl font-bold">{safeUserData.email}</span>
                     </div>
                     <div className="w-full h-[1px] bg-white"></div>
-                    <div className="w-full flex justify-center">
+                    <div className="w-full flex justify-center text-center">
                         <span className="text-2xl font-semibold">Two-factor authentication</span>
                     </div>
                     {safeUserData.twoFA ? (
-                        <div className="w-full flex flex-col gap-2">
+                        <div className="w-full flex flex-col gap-2 text-center">
                             <span className="text-green-300">You have already connected two-factor authentication!</span>
-                            <button className="p-2 w-48 bg-purple-800 bg-opacity-50 rounded-lg hover:bg-opacity-90 animated-100">Show my QR-code</button>
-                            <div className="flex w-full h-48 justify-center items-center">
-                                <img src={"https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=200x200&chld=M|0&cht=qr&chl=otpauth://totp/Reborn.Cash(username:%20teo)%3Fsecret%3DZZTU6SFLIL5AMXIK%26digits%3D6"} alt="qr-code" />
-                            </div>
+                            <ButtonDefault text={"Show my QR-code"} click={()=>{setShowQR(!showQR)}} />
+                            {showQR ? <div className="flex w-full h-48 justify-center items-center p-2">
+                                <img
+                                    src={
+                                        "https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=200x200&chld=M|0&cht=qr&chl=otpauth://totp/Reborn.Cash(username:%20teo)%3Fsecret%3DZZTU6SFLIL5AMXIK%26digits%3D6"
+                                    }
+                                    alt="qr-code"
+                                    className="h-full object-contain border-2 border-purple-900 p-1"
+                                />
+                            </div>:<></>}
                         </div>
                     ) : (
-                        <div className="w-full flex flex-col gap-2">
+                        <div className="w-full flex flex-col gap-2 text-center">
                             <span className="text-red-300">Two-factor authentication is disabled!</span>
-                            <button className="p-2 w-48 bg-purple-800 bg-opacity-50 rounded-lg hover:bg-opacity-90 animated-100">Enable 2FA</button>
+                            <ButtonGreen text={"Enable Two-factor Authentication"} />
                         </div>
                     )}
                     <div className="w-full h-[1px] bg-white"></div>
@@ -84,15 +94,27 @@ export default function AccountOption() {
                     </div>
                     <div className="w-full flex flex-col gap-1">
                         <span className="font-semibold">New password:</span>
-                        <input type="password" className="w-full max-w-[300px] font-semibold p-2 bg-dark-purple-500 rounded-lg hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"/>
+                        <InputDefault type="password" />
+                    </div>
+                    <div className="w-full flex flex-col gap-1">
+                        <span className="font-semibold">Confirm new password:</span>
+                        <InputDefault type="password" />
                     </div>
                     <div className="w-full flex flex-col">
                         <span className="font-semibold">Authenticator code:</span>
-                        <input type="text" maxLength={6} className="w-full tracking-widest max-w-[300px] font-semibold p-2 bg-dark-purple-500 rounded-lg hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"/>
+                        <InputDefault type="text" additionalStyle={'font-bold tracking-wider'} />
                     </div>
-                    <button className="p-2 w-48 bg-purple-800 bg-opacity-50 rounded-lg hover:bg-opacity-90 animated-100">Change password</button>
+                    {/* <button className="p-2 w-48 bg-purple-800 bg-opacity-50 rounded-lg hover:bg-opacity-90 animated-100">Change password</button> */}
+                    <ButtonDefault text={'Change password'} />
                     <div className="w-full h-[1px] bg-white"></div>
-                    <button onClick={()=>{signOut(); navigate('/');}} className="p-2 w-48 bg-red-900 bg-opacity-70 rounded-lg hover:bg-opacity-100 self-end animated-100">Sign out</button>
+                    {/* <button onClick={()=>{signOut(); navigate('/');}} className="p-2 w-48 bg-red-900 bg-opacity-70 rounded-lg hover:bg-opacity-100 self-end animated-100">Sign out</button> */}
+                    <ButtonRed
+                        text={"Sign out"}
+                        click={() => {
+                            signOut();
+                            navigate("/");
+                        }}
+                    />
                 </div>
             </div>
         </div>
