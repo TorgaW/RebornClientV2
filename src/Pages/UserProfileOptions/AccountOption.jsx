@@ -33,6 +33,11 @@ export default function AccountOption() {
 
     function signOut() {
         logout();
+        deleteUserDataFromStorage();
+        UserDataStorage.update((s) => {
+            s.isLoggedIn = false;
+            s.userData = {};
+        });
     }
 
     return showProfile ? (
@@ -81,11 +86,13 @@ export default function AccountOption() {
                                     className="h-full object-contain border-2 border-purple-900 p-1"
                                 />
                             </div>:<></>}
+                            <ButtonDefault text="Show my QR-code" />
                         </div>
                     ) : (
                         <div className="w-full flex flex-col gap-2 text-center">
                             <span className="text-red-300">Two-factor authentication is disabled!</span>
                             <ButtonGreen text={"Enable Two-factor Authentication"} />
+                            <ButtonDefault text="Enable 2FA" />
                         </div>
                     )}
                     <div className="w-full h-[1px] bg-white"></div>
@@ -110,10 +117,19 @@ export default function AccountOption() {
                     {/* <button onClick={()=>{signOut(); navigate('/');}} className="p-2 w-48 bg-red-900 bg-opacity-70 rounded-lg hover:bg-opacity-100 self-end animated-100">Sign out</button> */}
                     <ButtonRed
                         text={"Sign out"}
+                    </div>
+                    <div className="w-full flex flex-col">
+                        <span className="font-semibold">Authenticator code:</span>
+                        <InputDefault type="text" />
+                    </div>
+                    <ButtonDefault text="Change password" />
+                    <div className="w-full h-[1px] bg-white"></div>
+                    <ButtonRed
                         click={() => {
                             signOut();
                             navigate("/");
                         }}
+                        text="Sign out"
                     />
                 </div>
             </div>

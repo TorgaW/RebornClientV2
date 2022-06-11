@@ -112,7 +112,7 @@ export default function UpperMenu() {
             {/* small size desktop menu */}
             <div
                 id="small-menu-desktop"
-                className="fixed md:hidden w-full h-full flex p-5 bg-black z-30 animated-500 overflow-x-hidden text-white transform -translate-x-full"
+                className="fixed md:hidden w-full h-full flex p-5 bg-black z-[51] animated-500 overflow-x-hidden text-white transform -translate-x-full"
             >
                 <div className="w-full h-full flex flex-col gap-4 relative">
                     <div className="w-full p-2 flex justify-center items-center">
@@ -158,6 +158,18 @@ export default function UpperMenu() {
                                     className="w-full text-3xl p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
                                 >
                                     Inventory
+                                </button>
+                            </div>
+                        </Link>
+                        <Link to="/marketplace">
+                            <div className="w-full flex justify-center items-center">
+                                <button
+                                    onClick={() => {
+                                        toggleSmallSizeMenuDesktop();
+                                    }}
+                                    className="w-full text-3xl p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                >
+                                    Marketplace
                                 </button>
                             </div>
                         </Link>

@@ -79,136 +79,141 @@ export default function MarketplacePage() {
     }
 
     return (
-        <div className="w-full flex items-center flex-col relative text-white">
-            <div className="w-full flex justify-center items-center gap-4 text-xl">
-                <button className="w-24 h-10 border-b-[1px] animated-100 ">Buy</button>
-                <button className="w-24 h-10 border-b-[1px] animated-100 ">Sell</button>
+        <div className="w-full flex items-center flex-col relative text-white px-2">
+            <div className="w-full flex justify-center items-center gap-4 text-xl my-6">
+                <button className="w-[100px] h-10 border-b-[1px] animated-100 hover:text-teal-400 hover:border-teal-400">Buy</button>
+                <button className="w-[100px] h-10 border-b-[1px] animated-100 hover:text-teal-400 hover:border-teal-400">Sell</button>
+                <button className="w-[100px] h-10 border-b-[1px] animated-100 hover:text-teal-400 hover:border-teal-400">My lots</button>
             </div>
-            <div className="shadow-lg bg-opacity-10 bg-dark-purple-100 rounded-xl pb-4 mt-8">
-                <div className="w-full lg:w-[1000px] flex items-center justify-between p-4 px-8 pb-2">
+            <div className="shadow-lg bg-opacity-10 bg-dark-purple-100 rounded-xl pb-4">
+                <div className="w-full lg:w-[1000px] flex items-center flex-wrap md:gap-0 gap-4 justify-center md:justify-between p-4 px-8 pb-2">
                     <div className="flex justify-start items-center relative">
                         <div className="absolute left-1">
                             <SearchIcon />
                         </div>
                         <SearchBar />
                     </div>
-                    <div className="flex justify-center items-center gap-2">
-                        {filter.rarity ? (
-                            <div className="relative h-[42px] px-7 border-2 border-gray-800 rounded-md text-center flex items-center justify-center">
-                                <span className={filter.rarityColor}>{filter.rarity}</span>
-                                <button
-                                    onClick={() => {
-                                        setFilter({ ...filter, rarity: null });
-                                    }}
-                                    className="absolute p-[2px] top-0 right-0"
-                                >
-                                    <CrossIcon />
-                                </button>
-                            </div>
-                        ) : (
-                            <></>
-                        )}
-                        {filter.price ? (
-                            <div className="relative h-[42px] px-7 border-2 border-gray-800 rounded-md text-center flex items-center justify-center">
-                                <span>{filter.price}</span>
-                                <button
-                                    onClick={() => {
-                                        setFilter({ ...filter, price: null });
-                                    }}
-                                    className="absolute p-[2px] top-0 right-0"
-                                >
-                                    <CrossIcon />
-                                </button>
-                            </div>
-                        ) : (
-                            <></>
-                        )}
-                        <div className="relative group">
-                            <button className="hover:bg-zinc-800 px-4 animated-100 rounded-md flex flex-shrink-0 items-center gap-2 justify-center w-[100px] h-[42px]">
-                                <span>Rarity</span>
-                                <ArrowIcon />
-                            </button>
-                            <div className="absolute flex flex-col shadow-lg top-10 animated-200 bg-gray-900 w-[140px] h-[200px] overflow-auto rounded-b-md pointer-events-none hover:pointer-events-auto z-10 opacity-0 group-hover:opacity-100">
-                                <button
-                                    onClick={() => {
-                                        setFilter({ ...filter, rarity: "Guarantee", rarityColor: "text-gray-400" });
-                                    }}
-                                    className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["guarantee"]}
-                                >
-                                    Guarantee
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setFilter({ ...filter, rarity: "Common", rarityColor: "text-blue-100" });
-                                    }}
-                                    className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["common"]}
-                                >
-                                    Common
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setFilter({ ...filter, rarity: "Rare", rarityColor: "text-green-300" });
-                                    }}
-                                    className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["rare"]}
-                                >
-                                    Rare
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setFilter({ ...filter, rarity: "Epic", rarityColor: "text-blue-400" });
-                                    }}
-                                    className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["epic"]}
-                                >
-                                    Epic
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setFilter({ ...filter, rarity: "Mythical", rarityColor: "text-purple-400" });
-                                    }}
-                                    className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["mythical"]}
-                                >
-                                    Mythical
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setFilter({ ...filter, rarity: "Legendary", rarityColor: "text-yellow-300" });
-                                    }}
-                                    className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["legendary"]}
-                                >
-                                    Legendary
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setFilter({ ...filter, rarity: "Heroic", rarityColor: "text-red-500" });
-                                    }}
-                                    className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["heroic"]}
-                                >
-                                    Heroic
-                                </button>
-                            </div>
+                    <div className="flex justify-center flex-wrap items-center gap-2">
+                        <div className="flex justify-center items-center gap-2">
+                            {filter.rarity ? (
+                                <div className="relative h-[42px] px-7 border-2 border-gray-800 rounded-md text-center flex items-center justify-center">
+                                    <span className={filter.rarityColor}>{filter.rarity}</span>
+                                    <button
+                                        onClick={() => {
+                                            setFilter({ ...filter, rarity: null });
+                                        }}
+                                        className="absolute p-[2px] top-0 right-0"
+                                    >
+                                        <CrossIcon />
+                                    </button>
+                                </div>
+                            ) : (
+                                <></>
+                            )}
+                            {filter.price ? (
+                                <div className="relative h-[42px] px-7 border-2 border-gray-800 rounded-md text-center flex items-center justify-center">
+                                    <span>{filter.price}</span>
+                                    <button
+                                        onClick={() => {
+                                            setFilter({ ...filter, price: null });
+                                        }}
+                                        className="absolute p-[2px] top-0 right-0"
+                                    >
+                                        <CrossIcon />
+                                    </button>
+                                </div>
+                            ) : (
+                                <></>
+                            )}
                         </div>
-                        <div className="relative group">
-                            <button className="hover:bg-zinc-800 px-4 animated-100 rounded-md flex flex-shrink-0 items-center gap-2 justify-center w-[100px] h-[42px]">
-                                <span>Price</span>
-                                <ArrowIcon />
-                            </button>
-                            <div className="absolute rounded-r-md flex flex-col shadow-lg animated-200 bg-gray-900 w-[140px] rounded-b-md top-10 pointer-events-none hover:pointer-events-auto z-10 opacity-0 group-hover:opacity-100">
-                                <button
-                                    onClick={() => {
-                                        setFilter({ ...filter, price: "To highest" });
-                                    }}
-                                    className="p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100"
-                                >
-                                    To highest
+                        <div className="flex justify-center items-center gap-2">
+                            <div className="relative group">
+                                <button className="hover:bg-zinc-800 px-4 animated-100 rounded-md flex flex-shrink-0 items-center gap-2 justify-center w-[100px] h-[42px]">
+                                    <span>Rarity</span>
+                                    <ArrowIcon />
                                 </button>
-                                <button
-                                    onClick={() => {
-                                        setFilter({ ...filter, price: "To lowest" });
-                                    }}
-                                    className="p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100"
-                                >
-                                    To lowest
+                                <div className="absolute flex flex-col shadow-lg top-10 animated-200 bg-gray-900 w-[140px] h-[200px] overflow-auto rounded-b-md pointer-events-none hover:pointer-events-auto z-10 opacity-0 group-hover:opacity-100">
+                                    <button
+                                        onClick={() => {
+                                            setFilter({ ...filter, rarity: "Guarantee", rarityColor: "text-gray-400" });
+                                        }}
+                                        className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["guarantee"]}
+                                    >
+                                        Guarantee
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setFilter({ ...filter, rarity: "Common", rarityColor: "text-blue-100" });
+                                        }}
+                                        className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["common"]}
+                                    >
+                                        Common
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setFilter({ ...filter, rarity: "Rare", rarityColor: "text-green-300" });
+                                        }}
+                                        className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["rare"]}
+                                    >
+                                        Rare
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setFilter({ ...filter, rarity: "Epic", rarityColor: "text-blue-400" });
+                                        }}
+                                        className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["epic"]}
+                                    >
+                                        Epic
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setFilter({ ...filter, rarity: "Mythical", rarityColor: "text-purple-400" });
+                                        }}
+                                        className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["mythical"]}
+                                    >
+                                        Mythical
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setFilter({ ...filter, rarity: "Legendary", rarityColor: "text-yellow-300" });
+                                        }}
+                                        className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["legendary"]}
+                                    >
+                                        Legendary
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setFilter({ ...filter, rarity: "Heroic", rarityColor: "text-red-500" });
+                                        }}
+                                        className={"p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100 " + rarityColor["heroic"]}
+                                    >
+                                        Heroic
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="relative group">
+                                <button className="hover:bg-zinc-800 px-4 animated-100 rounded-md flex flex-shrink-0 items-center gap-2 justify-center w-[100px] h-[42px]">
+                                    <span>Price</span>
+                                    <ArrowIcon />
                                 </button>
+                                <div className="absolute rounded-r-md flex flex-col shadow-lg animated-200 bg-gray-900 w-[140px] rounded-b-md top-10 pointer-events-none hover:pointer-events-auto z-10 opacity-0 group-hover:opacity-100">
+                                    <button
+                                        onClick={() => {
+                                            setFilter({ ...filter, price: "To highest" });
+                                        }}
+                                        className="p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100"
+                                    >
+                                        To highest
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setFilter({ ...filter, price: "To lowest" });
+                                        }}
+                                        className="p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100"
+                                    >
+                                        To lowest
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -241,7 +246,7 @@ function SearchBar() {
             onChange={() => {
                 checkText();
             }}
-            className="search-border animated-300 pl-10 placeholder:italic placeholder:text-slate-500 text-white rounded-md shadow-none bg-black bg-opacity-70 border-teal-600 focus:ring-teal-500 focus:border-teal-400 w-[141px] focus:w-[270px]"
+            className="animated-300 pl-10 placeholder:italic placeholder:text-slate-500 text-white rounded-md shadow-none bg-black bg-opacity-70 ring-2 ring-teal-800 focus:ring-teal-400 focus:outline-none w-[141px] focus:w-[270px]"
             placeholder="Search for rabbits..."
             type="text"
             name="search"
@@ -253,7 +258,7 @@ function SearchBar() {
 function ItemTile({ price, name, rarity, owner }) {
     // let rarityUpperCase = String(rarity).charAt(0).toUpperCase() + rarity.slice(1);
     return (
-        <div className={"w-[250px] h-[290px] px-4 py-2 items-center flex flex-col rounded-md group hover:bg-dark-purple-300 animated-200 cursor-pointer border-2 justify-center " + rarityColor[rarity.toLowerCase()]}>
+        <div className={"w-[250px] h-[290px] px-4 py-2 items-center flex flex-col rounded-md group hover:bg-dark-purple-300 hover:border-opacity-100 animated-200 cursor-pointer border-2 justify-center " + rarityColor[rarity.toLowerCase()]}>
             <div className="text-white w-full text-center font-bold text-2xl">
                 <span>{name}</span>
             </div>

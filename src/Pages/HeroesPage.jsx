@@ -9,6 +9,7 @@ import { catch401, getDataFromResponse } from "../Utils/NetworkUtil";
 import { getRandomString } from "../Utils/RandomUtil";
 import AdaptiveLoadingComponent from "../Components/UI/AdaptiveLoadingComponent";
 import { MetaMaskStorage } from "../Storages/MetaMaskStorage";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function HeroesPage() {
     const ui = useStoreState(UIStorage);
@@ -118,7 +119,7 @@ export default function HeroesPage() {
 
     return (
         <div id="heroes-page" className="w-full flex flex-col items-center px-2 text-white">
-            <div className="w-full flex justify-center items-center gap-4 text-xl">
+            <div className="w-full flex justify-center items-center gap-4 text-xl my-6">
                 <button
                     onClick={() => {
                         setSelectedOption("all");
@@ -137,7 +138,7 @@ export default function HeroesPage() {
                 </button>:<></>}
             </div>
             {selectedOption === "all" ? (
-                <div className="w-full lg:w-[1000px] bg-dark-purple-100 bg-opacity-10 mt-10 rounded-xl flex flex-col justify-center p-4 gap-5">
+                <div className="w-full lg:w-[1000px] bg-dark-purple-100 bg-opacity-10 rounded-xl flex flex-col justify-center p-4 gap-5">
                     <div className="w-full flex flex-wrap justify-center gap-4">
                         {heroesTiles}
                     </div>
@@ -209,6 +210,15 @@ export default function HeroesPage() {
     );
 }
 
+function HeroSelector() {
+
+    const [heroView, setHeroView] = useState([]);
+
+    return (
+        <div></div>
+    );
+}
+
 function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, origin }) {
     const tribePalette = {
         text: {
@@ -256,7 +266,7 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
     const [imgLoaded, setImgLoaded] = useState(false);
 
     return (
-        <div
+        <Link to={"/hero/" + ((index + 1) * 727 + 163 * 172)}
             className={
                 "w-[400px] flex-wrap group flex justify-center p-2 border-y-[1px] border-opacity-50 cursor-pointer animated-200 hover:bg-dark-purple-100 hover:bg-opacity-30 hover:border-opacity-100 " +
                 (tribePalette["border"][tribe] ?? "border-white")
@@ -295,6 +305,6 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
                     <span className={" font-semibold " + (originPalette["text"][origin] ?? "text-white")}>Origin: {origin}</span>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }
