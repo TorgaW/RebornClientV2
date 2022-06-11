@@ -9,7 +9,7 @@ import { getBoxesByHeroId_EP, getHeroById_EP, safeAuthorize_header } from "../Ut
 import { getDataFromResponse, makePost } from "../Utils/NetworkUtil";
 import luckyBoxImage from "../Images/Boxes/luckyBox.png";
 import mysteryBoxImage from "../Images/Boxes/mysteryBox.png";
-import { getRandomString } from "../Utils/RandomUtil";
+import { getRandomInt, getRandomString } from "../Utils/RandomUtil";
 import { formatDistanceToNowStrict } from "date-fns";
 import { Link } from "react-router-dom";
 import { UserDataStorage } from "../Storages/UserDataStorage";
@@ -111,7 +111,11 @@ function BoxTab() {
             let finalBoxes = [];
             let c = 0;
             for await (const i of normalIndexes) {
-                let [data] = await makePost(getBoxesByHeroId_EP(), { heroId: i }, true);
+                let [data, status, error] = await makePost(getBoxesByHeroId_EP(), { heroId: i }, true);
+                if(!data) {
+                    ui.showError(error);
+                    return;
+                }
                 for (const j of data) {
                     finalBoxes.push({ ...j, owner: normalHeroes[c] });
                 }
@@ -138,6 +142,8 @@ function BoxTab() {
         if (rawBoxes.length === 0) return;
         fillBoxes();
     }, [rawBoxes, filter]);
+
+    useEffect(()=>{return ()=>{ui.hideContentLoading()}},[])
 
     return userData.isLoggedIn ? (
         <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
@@ -203,7 +209,7 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId 
         <Link to={"/box/" + (boxId * 71 + 41)}>
             <div className="relative group w-[200px] h-[250px] flex flex-shrink-0 rounded-md bg-dark-purple-100 bg-opacity-10 animated-100 hover:bg-opacity-50">
                 <div className="absolute inset-0 flex opacity-70 group-hover:opacity-100 animated-100">
-                    <img src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage} alt="lucky box" className="w-full h-full object-contain" />
+                    <img src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage} alt="lucky box" className={"w-full h-full object-contain animated-100 " + (getRandomInt(0,1) ? 'group-hover:rotate-6':'group-hover:-rotate-6')} />
                 </div>
                 <div className="w-full h-full flex flex-col p-2 z-10 pointer-events-none">
                     <div className="w-full flex flex-col items-start justify-between gap-1">

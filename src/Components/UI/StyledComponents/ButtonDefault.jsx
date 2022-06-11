@@ -18,7 +18,7 @@ export default function ButtonDefault({ text, click, customStyle, additionalStyl
             onClick={() => {
                 if (typeof click === "function") click();
             }}
-            className={"p-2 bg-dark-purple-100 bg-opacity-70 hover:bg-opacity-100 animated-100 rounded-md font-semibold text-white " + (additionalStyle ?? "")}
+            className={"p-2 bg-purple-900 bg-opacity-70 hover:bg-opacity-100 animated-100 rounded-md font-semibold text-white " + (additionalStyle ?? "")}
         >
             {text}
         </button>

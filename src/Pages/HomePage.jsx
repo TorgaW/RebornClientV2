@@ -74,17 +74,20 @@ function NewsSelector() {
 
     const [selectedPage, setSelectedPage] = useState(1);
     const [numberOfPages, setNumberOfPages] = useState(0);
+    const [numberOfNews, setNumberOfNews] = useState(0);
     const [newsView, setNewsView] = useState([]);
 
     async function updateNumberOfPages() {
         let response = await axios.get(getNewsQuantity_EP());
         let quantity = getDataFromResponse(response);
+        setNumberOfNews(quantity);
+        console.log(numberOfNews);
         if (quantity && quantity > 0) setNumberOfPages(Math.ceil(quantity / 4));
     }
 
     async function updateNews() {
         setShowLoading(true);
-        let [news, status, error] = await makePost(getNewsByIndex_EP(), { index: (selectedPage - 1) * 4 + 1 }, false);
+        let [news, status, error] = await makePost(getNewsByIndex_EP(), { index: (numberOfNews - (selectedPage-1)*4) }, false);
         if (!error) {
             let copyNews = Array.from(news);
             copyNews.sort((a, b) => new Date(b.currentDate) - new Date(a.currentDate));
@@ -112,13 +115,13 @@ function NewsSelector() {
 
     useEffect(() => {
         updateNews();
-    }, [selectedPage]);
+    }, [selectedPage, numberOfNews]);
 
     return (
         <>
             <div className="min-h-[1600px] md:min-h-[780px] flex flex-col">
                 {newsView}
-                <div className="w-full flex justify-center mt-10 z-50">
+                <div className="w-full flex justify-center mt-auto z-50">
                     <PageSelector
                         maxPages={numberOfPages}
                         callback={(a) => {
@@ -145,17 +148,19 @@ function ComicsSelector() {
 
     const [selectedPage, setSelectedPage] = useState(1);
     const [numberOfPages, setNumberOfPages] = useState(0);
+    const [numberOfComics, setNumberOfComics] = useState(0);
     const [comicsView, setComicsView] = useState([]);
 
     async function updateNumberOfPages() {
         let response = await axios.get(getComicsQuantity_EP());
         let quantity = getDataFromResponse(response);
+        setNumberOfComics(quantity)
         if (quantity && quantity > 0) setNumberOfPages(Math.ceil(quantity / 4));
     }
 
     async function updateComics() {
         setShowLoading(true);
-        let [comics, status, error] = await makePost(getComicsByIndex_EP(), { index: (selectedPage - 1) * 4 + 1 }, false);
+        let [comics, status, error] = await makePost(getComicsByIndex_EP(), { index: (numberOfComics - ((selectedPage - 1) * 4)) }, false);
         if (!error) {
             let copyComics = Array.from(comics);
             copyComics.sort((a, b) => new Date(b.currentDate) - new Date(a.currentDate));
@@ -183,13 +188,13 @@ function ComicsSelector() {
 
     useEffect(() => {
         updateComics();
-    }, [selectedPage]);
+    }, [selectedPage, numberOfComics]);
 
     return (
         <>
             <div className="min-h-[1600px] md:min-h-[780px] flex flex-col">
                 {comicsView}
-                <div className="w-full flex justify-center mt-10">
+                <div className="w-full flex justify-center mt-auto">
                     <PageSelector
                         maxPages={numberOfPages}
                         callback={(a) => {
