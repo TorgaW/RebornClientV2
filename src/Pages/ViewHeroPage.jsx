@@ -101,7 +101,7 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
     return (
         <div className="w-full mt-6 flex flex-col justify-center items-center gap-6 text-white px-4">
             <div className={"w-full flex flex-col justify-center items-center gap-6 px-6 py-6 border-t-2 border-b-2 border-opacity-80 " + tribePalette["border"][tribe]}>
-                <div className="w-full flex flex-wrap justify-center items-start gap-16 md:gap-20">
+                <div className="w-full flex px-4 flex-col justify-center items-center gap-6">
                     <div className="flex flex-col gap-2 justify-center items-center">
                         <div className={"h-[300px] w-[300px] border-[6px] border-opacity-50 rounded-lg relative " + tribePalette["border"][tribe]}>
                             <img
@@ -126,44 +126,44 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col justify-center bg-gray-800 rounded-xl p-4 py-4 bg-opacity-80">
+                    <div className="flex flex-col w-full max-w-[350px] justify-center bg-gray-800 rounded-xl px-4 py-4 bg-opacity-80">
                         <span className="text-2xl font-semibold">Skills</span>
-                        <div className={"group relative w-[200px] mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["sexy"]}>
+                        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["sexy"]}>
                             <div className="relative z-10 flex justify-between">
                                 <span>Sexy</span>
                                 <span>{skills?.sexy}</span>
                             </div>
                             <div className={"absolute inset-0 h-full rounded-md bg-opacity-40 group-hover:bg-opacity-60 animated-100 " + skillsPalette["sexy"]} style={{ width: skills?.sexy + "%" }}></div>
                         </div>
-                        <div className={"group relative w-[200px] mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["lucky"]}>
+                        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["lucky"]}>
                             <div className="relative z-10 flex justify-between">
                                 <span>Lucky</span>
                                 <span>{skills?.lucky}</span>
                             </div>
                             <div className={"absolute inset-0 h-full rounded-md bg-opacity-40 group-hover:bg-opacity-60 animated-100 " + skillsPalette["lucky"]} style={{ width: skills?.lucky + "%" }}></div>
                         </div>
-                        <div className={"group relative w-[200px] mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["brave"]}>
+                        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["brave"]}>
                             <div className="relative z-10 flex justify-between">
                                 <span>Brave</span>
                                 <span>{skills?.brave}</span>
                             </div>
                             <div className={"absolute inset-0 h-full rounded-md bg-opacity-40 group-hover:bg-opacity-60 animated-100 " + skillsPalette["brave"]} style={{ width: skills?.brave + "%" }}></div>
                         </div>
-                        <div className={"group relative w-[200px] mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["healthy"]}>
+                        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["healthy"]}>
                             <div className="relative z-10 flex justify-between">
                                 <span>Healthy</span>
                                 <span>{skills?.healthy}</span>
                             </div>
                             <div className={"absolute inset-0 h-full rounded-md bg-opacity-40 group-hover:bg-opacity-60 animated-100 " + skillsPalette["healthy"]} style={{ width: skills?.healthy + "%" }}></div>
                         </div>
-                        <div className={"group relative w-[200px] mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["smart"]}>
+                        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["smart"]}>
                             <div className="relative z-10 flex justify-between">
                                 <span>Smart</span>
                                 <span>{skills?.smart}</span>
                             </div>
                             <div className={"absolute inset-0 h-full rounded-md bg-opacity-40 group-hover:bg-opacity-60 animated-100 " + skillsPalette["smart"]} style={{ width: skills?.smart + "%" }}></div>
                         </div>
-                        <div className={"group relative w-[200px] mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["skilled"]}>
+                        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["skilled"]}>
                             <div className="relative z-10 flex justify-between">
                                 <span>Skilled</span>
                                 <span>{skills?.skilled}</span>
