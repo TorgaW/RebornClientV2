@@ -35,6 +35,7 @@ import TemporaryLinkComponent from "./Components/TemporaryLinks/TemporaryLinkCom
 import OpenBoxPage from "./Pages/OpenBoxPage";
 import MarketplacePage from "./Pages/Marketplace/MarketplacePage";
 import ViewHeroPage from "./Pages/ViewHeroPage";
+import MarketplaceSellPage from "./Pages/Marketplace/MarketplaceSellPage";
 
 function App() {
     const [showLoading, setShowLoading] = useState(false);
@@ -87,6 +88,7 @@ function App() {
                     <Route path="/profile/uisettings" element={<UIOption />} />
                     <Route path="/profile/deposit" element={<DepositOption />} />
                     <Route path="/marketplace" element={<MarketplacePage />} />
+                    <Route path="/marketplace/sell" element={<MarketplaceSellPage />} />
                     <Route path="/news/:newsIndex" element={<ViewNewsPage />} />
                     <Route path="/comics/:comicsIndex" element={<ViewComicsPage />} />
                     <Route path="/hero/:heroIndex" element={<ViewHeroPage />} />
