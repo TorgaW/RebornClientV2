@@ -14,6 +14,7 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { Link } from "react-router-dom";
 import { UserDataStorage } from "../Storages/UserDataStorage";
 import { RARITY_PALETTE } from "../Utils/ColorPaletteUtils";
+import { rarityToNumber } from "../Utils/ItemsUtil";
 
 export default function InventoryPage() {
     const ui = useStoreState(UIStorage);
@@ -61,15 +62,16 @@ function BoxTab() {
     function fillBoxes() {
         let t = [];
         let copyBoxes = Array.from(rawBoxes);
+        console.log(copyBoxes, "fuck");
         copyBoxes.sort(function (a, b) {
             if (a.status === "Owned" && b.status !== "Owned") return -1;
             if (a.status === "Burned" && b.status !== "Burned") return -1;
             return 0;
         });
         for (const i of copyBoxes) {
-            let safeType = i.type?.name?.slice(5) ?? "";
+            let safeType = i.type;
+            if (i?.type !== "MYSTERY" && i?.type !== "LUCKY") safeType = i.type?.name?.slice(5) ?? "";
             i.type = safeType;
-            console.log(i.status);
             if (i.status === "Opened" && !filter.opened) continue;
             if (i.status === "Burned" && !filter.burned) continue;
             if (i.status === "Owned" && !filter.unopened) continue;
@@ -281,11 +283,42 @@ function InventoryTab() {
 
     const [rawItems, setRawItems] = useState([]);
     const [itemsView, setItemsView] = useState([]);
-    const [itemsFilter, setItemsFilter] = useState({});
+    const [itemsFilter, setItemsFilter] = useState("heroic,legendary,mythical,epic,rare,common,guarantee");
+
+    function addFilter(item) {
+        let copy = itemsFilter;
+        let splitted = copy.split(",");
+        for (const i of splitted) if (i === item) return;
+        if (splitted[0] === "") splitted = [];
+        splitted.push(item);
+        copy = splitted.join(",");
+        setItemsFilter(copy);
+        console.log(copy);
+    }
+
+    function removeFilter(item) {
+        let copy = itemsFilter;
+        let splitted = copy.split(",");
+        for (const i of splitted) {
+            if (i === item) {
+                copy = splitted.filter((j) => j !== item).join(",");
+                setItemsFilter(copy);
+                console.log(copy);
+                return;
+            }
+        }
+    }
 
     function refillInventory() {
         let t = [];
-        for (const i of rawItems) t.push(<ItemTile {...i} key={getRandomString(32)} />);
+        let filter = itemsFilter.split(',');
+        if (filter[0]==='') filter = [];
+        let rawCopy = Array.from(rawItems);
+        rawCopy.sort((a,b)=>{return rarityToNumber(b.rarity)-rarityToNumber(a.rarity)});
+        for (const i of rawCopy) {
+            if(filter.includes(i?.rarity?.toLowerCase()))
+                t.push(<ItemTile {...i} key={getRandomString(32)} />);
+        }
         setItemsView(t);
     }
 
@@ -307,11 +340,109 @@ function InventoryTab() {
 
     useEffect(() => {
         refillInventory();
-    }, [rawItems]);
+    }, [rawItems, itemsFilter]);
 
     return userData.isLoggedIn ? (
         <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
-            <div className="w-full p-2 border-[1px] border-teal-400">filter</div>
+            <div className="w-full p-8 border-[1px] border-teal-400 rounded-md flex justify-center flex-wrap gap-6">
+                <div className="flex items-center gap-2">
+                    <span className={"text-lg font-semibold" + RARITY_PALETTE.text.guarantee}>Guarantee</span>
+                    <input
+                        defaultChecked={true}
+                        onChange={(e) => {
+                            if (e.target.checked) addFilter("guarantee");
+                            else removeFilter("guarantee");
+                        }}
+                        type="checkbox"
+                        name=""
+                        id=""
+                        className="h-7 w-7 rounded-md hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
+                    />
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className={"text-lg font-semibold" + RARITY_PALETTE.text.common}>Common</span>
+                    <input
+                        defaultChecked={true}
+                        onChange={(e) => {
+                            if (e.target.checked) addFilter("common");
+                            else removeFilter("common");
+                        }}
+                        type="checkbox"
+                        name=""
+                        id=""
+                        className="h-7 w-7 rounded-md hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
+                    />
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className={"text-lg font-semibold" + RARITY_PALETTE.text.rare}>Rare</span>
+                    <input
+                        defaultChecked={true}
+                        onChange={(e) => {
+                            if (e.target.checked) addFilter("rare");
+                            else removeFilter("rare");
+                        }}
+                        type="checkbox"
+                        name=""
+                        id=""
+                        className="h-7 w-7 rounded-md hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
+                    />
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className={"text-lg font-semibold" + RARITY_PALETTE.text.epic}>Epic</span>
+                    <input
+                        defaultChecked={true}
+                        onChange={(e) => {
+                            if (e.target.checked) addFilter("epic");
+                            else removeFilter("epic");
+                        }}
+                        type="checkbox"
+                        name=""
+                        id=""
+                        className="h-7 w-7 rounded-md hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
+                    />
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className={"text-lg font-semibold" + RARITY_PALETTE.text.mythical}>Mythical</span>
+                    <input
+                        defaultChecked={true}
+                        onChange={(e) => {
+                            if (e.target.checked) addFilter("mythical");
+                            else removeFilter("mythical");
+                        }}
+                        type="checkbox"
+                        name=""
+                        id=""
+                        className="h-7 w-7 rounded-md hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
+                    />
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className={"text-lg font-semibold" + RARITY_PALETTE.text.legendary}>Legendary</span>
+                    <input
+                        defaultChecked={true}
+                        onChange={(e) => {
+                            if (e.target.checked) addFilter("legendary");
+                            else removeFilter("legendary");
+                        }}
+                        type="checkbox"
+                        name=""
+                        id=""
+                        className="h-7 w-7 rounded-md hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
+                    />
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className={"text-lg font-semibold" + RARITY_PALETTE.text.heroic}>Heroic</span>
+                    <input
+                        defaultChecked={true}
+                        onChange={(e) => {
+                            addFilter("heroic");
+                        }}
+                        type="checkbox"
+                        name=""
+                        id=""
+                        className="h-7 w-7 rounded-md hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
+                    />
+                </div>
+            </div>
             <div className="w-full flex flex-wrap justify-center gap-2 mt-4">{itemsView}</div>
         </div>
     ) : (
@@ -320,14 +451,28 @@ function InventoryTab() {
 }
 
 function ItemTile({ comment, features, imgLink, name, rarity }) {
-    return (<div className={"w-[250px] h-[440px] cursor-pointer p-2 group flex flex-col text-center items-center relative border-2 rounded-md border-opacity-70 hover:border-opacity-100 bg-dark-purple-100 bg-opacity-0 hover:bg-opacity-50 animated-200 " + (RARITY_PALETTE.border[rarity?.toLowerCase()])}>
-        <span className="font-semibold text-lg h-[100px] no-flick flex-shrink-0">{name}</span>
-        <div className="w-[150px] h-[150px] flex flex-shrink-0">
-            <img src={imgLink} alt="item" className={"w-full h-full object-fill rounded-md animated-200 " + (getRandomInt(0,1) ? "group-hover:rotate-6 group-hover:scale-110":"group-hover:-rotate-6 group-hover:scale-110")} />
+    return (
+        <div
+            className={
+                "w-[250px] h-[440px] cursor-pointer p-2 group flex flex-col text-center items-center relative border-2 rounded-md border-opacity-70 hover:border-opacity-100 bg-dark-purple-100 bg-opacity-0 hover:bg-opacity-50 animated-200 " +
+                RARITY_PALETTE.border[rarity?.toLowerCase()]
+            }
+        >
+            <span className="font-semibold text-lg h-[100px] no-flick flex-shrink-0">{name}</span>
+            <div className="w-[150px] h-[150px] flex flex-shrink-0">
+                <img
+                    src={imgLink}
+                    alt="item"
+                    className={
+                        "w-full h-full object-fill rounded-md animated-200 " +
+                        (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")
+                    }
+                />
+            </div>
+            <span className={"mt-4 no-flick flex-shrink-0 font-bold " + RARITY_PALETTE.text[rarity?.toLowerCase()]}>{rarity?.toUpperCase()}</span>
+            <div className="w-full h-full flex items-center">
+                <span className="text-gray-300 text-sm">{comment}</span>
+            </div>
         </div>
-        <span className={"mt-4 no-flick flex-shrink-0 font-bold "+RARITY_PALETTE.text[rarity?.toLowerCase()]}>{rarity?.toUpperCase()}</span>
-        <div className="w-full h-full flex items-center">
-            <span className="text-gray-300 text-sm">{comment}</span>
-        </div>
-    </div>);
+    );
 }

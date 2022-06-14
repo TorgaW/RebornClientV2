@@ -135,7 +135,7 @@ export default function BoxPage() {
                                             openBox();
                                         }}
                                             className={
-                                                "text-black text-xl font-semibold w-full p-2 rounded-md bg-opacity-80 animated-100 hover:bg-opacity-100 " +
+                                                "text-black text-xl font-semibold w-full p-2 rounded-md bg-opacity-80 mt-1 animated-100 hover:bg-opacity-100 " +
                                                 (boxInfo?.type === "LUCKY" ? "bg-yellow-400" : "bg-teal-400")
                                             }
                                         >
@@ -147,7 +147,7 @@ export default function BoxPage() {
                                                 burnBox();
                                             }}
                                             className={
-                                                "text-white bg-slate-700 font-semibold w-full p-1 rounded-md bg-opacity-50 animated-100 hover:bg-opacity-70 "
+                                                "text-white bg-slate-700 font-semibold w-full p-1 rounded-md bg-opacity-50 mt-1 animated-100 hover:bg-opacity-70 "
                                             }
                                         >
                                             Burn
