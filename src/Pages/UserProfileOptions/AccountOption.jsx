@@ -117,7 +117,7 @@ export default function AccountOption() {
                     {/* <button onClick={()=>{signOut(); navigate('/');}} className="p-2 w-48 bg-red-900 bg-opacity-70 rounded-lg hover:bg-opacity-100 self-end animated-100">Sign out</button> */}
                     <ButtonRed
                         text={"Sign out"}
-                    </div>
+                    />
                     <div className="w-full flex flex-col">
                         <span className="font-semibold">Authenticator code:</span>
                         <InputDefault type="text" />
