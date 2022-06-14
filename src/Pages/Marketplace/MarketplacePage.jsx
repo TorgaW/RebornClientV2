@@ -7,10 +7,11 @@ import SearchIcon from "../../Icons/Search";
 import box from "../../Images/Boxes/luckyBox.png";
 import { UIStorage } from "../../Storages/UIStorage";
 import { marketplace_Load, safeAuthorize_header } from "../../Utils/EndpointsUtil";
-import { getUserDataFromStorage } from "../../Utils/LocalStorageManager/LocalStorageManager";
 import { getDataFromResponse } from "../../Utils/NetworkUtil";
 import { getRandomString } from "../../Utils/RandomUtil";
 import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
+import { Link } from "react-router-dom";
+import { getRandomInt } from "../../Utils/RandomUtil";
 
 const rarityColor = {
     guarantee: "text-gray-400 border-gray-400 border-opacity-50",
@@ -81,8 +82,16 @@ export default function MarketplacePage() {
     return (
         <div className="w-full flex items-center flex-col relative text-white px-2">
             <div className="w-full flex justify-center items-center gap-4 text-xl my-6">
-                <button className="w-[100px] h-10 border-b-[1px] animated-100 hover:text-teal-400 hover:border-teal-400">Buy</button>
-                <button className="w-[100px] h-10 border-b-[1px] animated-100 hover:text-teal-400 hover:border-teal-400">Sell</button>
+                <Link to={"/marketplace"}>
+                    <button className="w-[100px] h-10 border-b-[1px] animated-100 hover:text-teal-400 hover:border-teal-400">
+                        Buy
+                    </button>
+                </Link>
+                <Link to={"/marketplace/sell"}>
+                    <button className="w-[100px] h-10 border-b-[1px] animated-100 hover:text-teal-400 hover:border-teal-400">
+                        Sell
+                    </button>
+                </Link>
                 <button className="w-[100px] h-10 border-b-[1px] animated-100 hover:text-teal-400 hover:border-teal-400">My lots</button>
             </div>
             <div className="shadow-lg bg-opacity-10 bg-dark-purple-100 rounded-xl pb-4">
@@ -263,7 +272,7 @@ function ItemTile({ price, name, rarity, owner }) {
                 <span>{name}</span>
             </div>
             <div className="flex w-[150px] h-[150px]">
-                <img className="h-full w-full object-cover animated-200 group-hover:rotate-[5deg] group-hover:scale-[1.2]" src={box} alt="" />
+                <img className={"h-full w-full object-cover animated-200 group-hover:scale-[1.2]  " + (getRandomInt(0, 1) ? "group-hover:rotate-[-5deg]" : "group-hover:rotate-[5deg]")} src={box} alt="" />
             </div>
             <div className="w-full justify-between flex py-2 border-t-2 border-b-2 border-gray-800 items-center">
                 <div className="">
