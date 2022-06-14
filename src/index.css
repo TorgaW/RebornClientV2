@@ -173,3 +173,10 @@
 }
 
 /* end of scroll bar*/
+
+/* flickering fix */
+.no-flick {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -ms-backface-visibility: hidden;
+}
