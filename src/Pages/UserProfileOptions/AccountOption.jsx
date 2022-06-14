@@ -1,6 +1,8 @@
+import axios from "axios";
 import { useStoreState } from "pullstate";
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import AdaptiveLoadingComponent from "../../Components/UI/AdaptiveLoadingComponent";
 import ButtonDefault from "../../Components/UI/StyledComponents/ButtonDefault";
 import ButtonGreen from "../../Components/UI/StyledComponents/ButtonGreen";
@@ -9,8 +11,10 @@ import InputDefault from "../../Components/UI/StyledComponents/InputDefault";
 import { MetaMaskStorage } from "../../Storages/MetaMaskStorage";
 import { UIStorage } from "../../Storages/UIStorage";
 import { UserDataStorage } from "../../Storages/UserDataStorage";
+import { changePassword_EP, getQr_EP, safeAuthorize_header } from "../../Utils/EndpointsUtil";
 import { deleteUserDataFromStorage, getLocalOptions, saveLocalOptions } from "../../Utils/LocalStorageManager/LocalStorageManager";
-import { logout } from "../../Utils/NetworkUtil";
+import { getDataFromResponse, logout, makePost } from "../../Utils/NetworkUtil";
+import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
 
 export default function AccountOption() {
     let navigate = useNavigate();
@@ -22,7 +26,20 @@ export default function AccountOption() {
     const [showProfile, setShowProfile] = useState(false);
     const [userSettings, setUserSettings] = useState(getLocalOptions());
     const [safeUserData, setSafeUserData] = useState({});
+
     const [showQR, setShowQR] = useState(false);
+    const [QRCode, setQRCode] = useState("");
+    const [QRCodeLoaded, setQRCodeLoaded] = useState(false);
+
+    const { executeRecaptcha } = useGoogleReCaptcha();
+    async function handleReCaptchaVerify() {
+        if (!executeRecaptcha) {
+            ui.showError("Execute recaptcha not yet available");
+            return;
+        }
+        const token = await executeRecaptcha("yourAction");
+        return token;
+    }
 
     useEffect(() => {
         if (!userData.getLocalUserData()) navigate("/restricted");
@@ -31,13 +48,50 @@ export default function AccountOption() {
         setSafeUserData(userData.getLocalUserData());
     }, []);
 
-    function signOut() {
-        logout();
-        deleteUserDataFromStorage();
-        UserDataStorage.update((s) => {
-            s.isLoggedIn = false;
-            s.userData = {};
+    async function getQR() {
+        if (showQR) {
+            setShowQR(false);
+            return;
+        }
+        if (QRCode) {
+            setShowQR(true);
+            return;
+        }
+        let data = getDataFromResponse(await axios.get(getQr_EP(), safeAuthorize_header()));
+        setQRCode(data.qrLink);
+        setShowQR(true);
+    }
+
+    async function changePassword() {
+        // username: cStorage.logData.sub,
+        // password: newP,
+        // code: cod,
+        // captchaToken: captcha,
+        let firstPass = document.getElementById("change-pass-first").value;
+        let secondPass = document.getElementById("change-pass-second").value;
+        let code = document.getElementById("change-pass-code").value;
+
+        if (firstPass !== secondPass) {
+            ui.showError("Passwords are not the same");
+            return;
+        }
+
+        if (isStringEmptyOrSpaces(firstPass)) {
+            ui.showError("Please, enter new password");
+            return;
+        }
+
+        ui.showContentLoading();
+        let captcha = await handleReCaptchaVerify();
+
+        let [d, s, e] = await makePost(changePassword_EP(), {
+            username: userData.userData.username,
+            password: firstPass,
+            code,
+            captchaToken: captcha,
         });
+        ui.hideContentLoading();
+        console.log(d);
     }
 
     return showProfile ? (
@@ -76,17 +130,33 @@ export default function AccountOption() {
                     {safeUserData.twoFA ? (
                         <div className="w-full flex flex-col gap-2 text-center">
                             <span className="text-green-300">You have already connected two-factor authentication!</span>
-                            <ButtonDefault text={"Show my QR-code"} click={()=>{setShowQR(!showQR)}} />
-                            {showQR ? <div className="flex w-full h-48 justify-center items-center p-2">
-                                <img
-                                    src={
-                                        "https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=200x200&chld=M|0&cht=qr&chl=otpauth://totp/Reborn.Cash(username:%20teo)%3Fsecret%3DZZTU6SFLIL5AMXIK%26digits%3D6"
-                                    }
-                                    alt="qr-code"
-                                    className="h-full object-contain border-2 border-purple-900 p-1"
-                                />
-                            </div>:<></>}
-                            <ButtonDefault text="Show my QR-code" />
+                            <ButtonDefault
+                                text={"Show my QR-code"}
+                                click={() => {
+                                    getQR();
+                                }}
+                            />
+                            {showQR ? (
+                                <div className="flex w-full h-48 justify-center items-center p-2 relative">
+                                    <img
+                                        onLoad={() => {
+                                            setQRCodeLoaded(true);
+                                        }}
+                                        src={QRCode}
+                                        alt="qr-code"
+                                        className="h-full object-contain border-2 border-purple-900 p-1"
+                                    />
+                                    {!QRCodeLoaded ? (
+                                        <div className="absolute inset-0 w-full h-full flex">
+                                            <AdaptiveLoadingComponent />
+                                        </div>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </div>
+                            ) : (
+                                <></>
+                            )}
                         </div>
                     ) : (
                         <div className="w-full flex flex-col gap-2 text-center">
@@ -101,35 +171,26 @@ export default function AccountOption() {
                     </div>
                     <div className="w-full flex flex-col gap-1">
                         <span className="font-semibold">New password:</span>
-                        <InputDefault type="password" />
+                        <InputDefault type="password" id={"change-pass-first"} />
                     </div>
                     <div className="w-full flex flex-col gap-1">
                         <span className="font-semibold">Confirm new password:</span>
-                        <InputDefault type="password" />
+                        <InputDefault type="password" id={"change-pass-second"} />
                     </div>
                     <div className="w-full flex flex-col">
                         <span className="font-semibold">Authenticator code:</span>
-                        <InputDefault type="text" additionalStyle={'font-bold tracking-wider'} />
+                        <InputDefault type="text" id={"change-pass-code"} additionalStyle={"font-bold tracking-wider"} />
                     </div>
                     {/* <button className="p-2 w-48 bg-purple-800 bg-opacity-50 rounded-lg hover:bg-opacity-90 animated-100">Change password</button> */}
-                    <ButtonDefault text={'Change password'} />
+                    <ButtonDefault text={"Change password"} click={()=>{changePassword()}} />
                     <div className="w-full h-[1px] bg-white"></div>
                     {/* <button onClick={()=>{signOut(); navigate('/');}} className="p-2 w-48 bg-red-900 bg-opacity-70 rounded-lg hover:bg-opacity-100 self-end animated-100">Sign out</button> */}
                     <ButtonRed
                         text={"Sign out"}
-                    </div>
-                    <div className="w-full flex flex-col">
-                        <span className="font-semibold">Authenticator code:</span>
-                        <InputDefault type="text" />
-                    </div>
-                    <ButtonDefault text="Change password" />
-                    <div className="w-full h-[1px] bg-white"></div>
-                    <ButtonRed
                         click={() => {
-                            signOut();
+                            logout();
                             navigate("/");
                         }}
-                        text="Sign out"
                     />
                 </div>
             </div>

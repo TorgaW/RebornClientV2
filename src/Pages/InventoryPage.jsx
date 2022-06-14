@@ -5,14 +5,15 @@ import React, { useEffect, useState } from "react";
 import { MetaMaskStorage } from "../Storages/MetaMaskStorage";
 import { UIStorage } from "../Storages/UIStorage";
 import { ERC721Abi, NFTAddress } from "../Utils/BlockchainUtils";
-import { getBoxesByHeroId_EP, getHeroById_EP, safeAuthorize_header } from "../Utils/EndpointsUtil";
-import { getDataFromResponse, makePost } from "../Utils/NetworkUtil";
+import { getBoxesByHeroId_EP, getHeroById_EP, getInventory_EP, safeAuthorize_header } from "../Utils/EndpointsUtil";
+import { getAxiosError, getDataFromResponse, makePost } from "../Utils/NetworkUtil";
 import luckyBoxImage from "../Images/Boxes/luckyBox.png";
 import mysteryBoxImage from "../Images/Boxes/mysteryBox.png";
 import { getRandomInt, getRandomString } from "../Utils/RandomUtil";
 import { formatDistanceToNowStrict } from "date-fns";
 import { Link } from "react-router-dom";
 import { UserDataStorage } from "../Storages/UserDataStorage";
+import { RARITY_PALETTE } from "../Utils/ColorPaletteUtils";
 
 export default function InventoryPage() {
     const ui = useStoreState(UIStorage);
@@ -21,7 +22,7 @@ export default function InventoryPage() {
 
     return (
         <div className="w-full flex flex-col items-center px-2 gap-4 text-white">
-            <div className="w-full flex justify-center text-xl gap-4">
+            <div className="w-full flex justify-center text-xl gap-4 mt-8">
                 <button
                     onClick={() => {
                         setSelectedOption("boxes");
@@ -30,9 +31,17 @@ export default function InventoryPage() {
                 >
                     Boxes
                 </button>
+                <button
+                    onClick={() => {
+                        setSelectedOption("items");
+                    }}
+                    className={"w-32 h-10 border-b-[1px] animated-100 " + (selectedOption === "items" ? "text-teal-400 border-teal-400" : "")}
+                >
+                    Items
+                </button>
                 {/* <button onClick={()=>{setSelectedOption('inventory')}} className={"w-32 h-10 border-b-[1px] animated-100 "+(selectedOption === 'inventory' ? 'text-teal-400 border-teal-400':'')}>Inventory</button> */}
             </div>
-            <BoxTab></BoxTab>
+            {selectedOption === "boxes" ? <BoxTab /> : <InventoryTab />}
         </div>
     );
 }
@@ -81,7 +90,7 @@ function BoxTab() {
         }
         try {
             ui.showContentLoading();
-            console.log('hello');
+            console.log("hello");
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const contract = new ethers.Contract(NFTAddress(), ERC721Abi(), signer);
@@ -112,7 +121,7 @@ function BoxTab() {
             let c = 0;
             for await (const i of normalIndexes) {
                 let [data, status, error] = await makePost(getBoxesByHeroId_EP(), { heroId: i }, true);
-                if(!data) {
+                if (!data) {
                     ui.showError(error);
                     return;
                 }
@@ -143,7 +152,11 @@ function BoxTab() {
         fillBoxes();
     }, [rawBoxes, filter]);
 
-    useEffect(()=>{return ()=>{ui.hideContentLoading()}},[])
+    useEffect(() => {
+        return () => {
+            ui.hideContentLoading();
+        };
+    }, []);
 
     return userData.isLoggedIn ? (
         <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
@@ -207,8 +220,13 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId 
     };
     return (
         <Link to={"/box/" + (boxId * 71 + 41)}>
-            <div className="relative group w-[200px] h-[250px] flex flex-shrink-0 rounded-md bg-dark-purple-100 bg-opacity-10 animated-100 hover:bg-opacity-50">
-                <div className="absolute inset-0 flex opacity-70 group-hover:opacity-100 animated-100">
+            <div
+                className={
+                    "relative group w-[230px] h-[390px] p-4 flex flex-col flex-shrink-0 rounded-md bg-dark-purple-100 bg-opacity-10 hover:bg-opacity-50 animated-200 border-[2px] border-opacity-70 hover:border-opacity-100 " +
+                    (type === "LUCKY" ? "border-yellow-500" : "border-teal-400")
+                }
+            >
+                {/* <div className="absolute inset-0 flex opacity-70 group-hover:opacity-100 animated-100">
                     <img src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage} alt="lucky box" className={"w-full h-full object-contain animated-100 " + (getRandomInt(0,1) ? 'group-hover:rotate-6':'group-hover:-rotate-6')} />
                 </div>
                 <div className="w-full h-full flex flex-col p-2 z-10 pointer-events-none">
@@ -225,8 +243,91 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId 
                         </span>
                         <span className="font-semibold text-purple-300">{priceToOpen} G</span>
                     </div>
+                </div> */}
+                <div className="w-full flex flex-col items-start gap-1 text-left">
+                    <span className={"p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md no-flick " + statusPalette[status]}>
+                        {status === "Owned" ? formatDistanceToNowStrict(new Date(eAt)) + " left" : status}
+                    </span>
+                    <span className="text-green-300 p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md">{owner}</span>
+                </div>
+                <div className="w-full flex opacity-70 group-hover:opacity-100 animated-100">
+                    <img
+                        src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage}
+                        alt="lucky box"
+                        className={
+                            "w-full h-full object-contain animated-200 " +
+                            (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")
+                        }
+                    />
+                </div>
+                <div className="w-full mt-auto flex flex-col items-center p-1 bg-dark-purple-100 rounded-md bg-opacity-80">
+                    <span className={"no-flick font-semibold text-sm " + (type === "LUCKY" ? "text-yellow-500" : "text-teal-400")}>
+                        {type.toUpperCase()} BOX
+                    </span>
+                    <span className="no-flick text-sm">
+                        {serial}-{number}
+                    </span>
+                    <span className="no-flick font-semibold text-purple-300">{priceToOpen} G</span>
                 </div>
             </div>
         </Link>
     );
+}
+
+function InventoryTab() {
+    const ui = useStoreState(UIStorage);
+    const metamask = useStoreState(MetaMaskStorage);
+    const userData = useStoreState(UserDataStorage);
+
+    const [rawItems, setRawItems] = useState([]);
+    const [itemsView, setItemsView] = useState([]);
+    const [itemsFilter, setItemsFilter] = useState({});
+
+    function refillInventory() {
+        let t = [];
+        for (const i of rawItems) t.push(<ItemTile {...i} key={getRandomString(32)} />);
+        setItemsView(t);
+    }
+
+    async function getUserInventory() {
+        try {
+            let r = await axios.get(getInventory_EP(), safeAuthorize_header());
+            let data = getDataFromResponse(r);
+            setRawItems(data);
+            console.log(data);
+        } catch (error) {
+            ui.showError(getAxiosError(error));
+            console.log(error.message);
+        }
+    }
+
+    useEffect(() => {
+        getUserInventory();
+    }, []);
+
+    useEffect(() => {
+        refillInventory();
+    }, [rawItems]);
+
+    return userData.isLoggedIn ? (
+        <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
+            <div className="w-full p-2 border-[1px] border-teal-400">filter</div>
+            <div className="w-full flex flex-wrap justify-center gap-2 mt-4">{itemsView}</div>
+        </div>
+    ) : (
+        <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative"></div>
+    );
+}
+
+function ItemTile({ comment, features, imgLink, name, rarity }) {
+    return (<div className={"w-[250px] h-[440px] cursor-pointer p-2 group flex flex-col text-center items-center relative border-2 rounded-md border-opacity-70 hover:border-opacity-100 bg-dark-purple-100 bg-opacity-0 hover:bg-opacity-50 animated-200 " + (RARITY_PALETTE.border[rarity?.toLowerCase()])}>
+        <span className="font-semibold text-lg h-[100px] no-flick flex-shrink-0">{name}</span>
+        <div className="w-[150px] h-[150px] flex flex-shrink-0">
+            <img src={imgLink} alt="item" className={"w-full h-full object-fill rounded-md animated-200 " + (getRandomInt(0,1) ? "group-hover:rotate-6 group-hover:scale-110":"group-hover:-rotate-6 group-hover:scale-110")} />
+        </div>
+        <span className={"mt-4 no-flick flex-shrink-0 font-bold "+RARITY_PALETTE.text[rarity?.toLowerCase()]}>{rarity?.toUpperCase()}</span>
+        <div className="w-full h-full flex items-center">
+            <span className="text-gray-300 text-sm">{comment}</span>
+        </div>
+    </div>);
 }

@@ -41,6 +41,14 @@ export function verify2FA_EP(){
     return serverAddress + "/api/userActions/verifyCode";
 }
 
+export function getQr_EP(){
+    return serverAddress + "/api/userActions/getCode";
+}
+
+export function changePassword_EP(){
+    return serverAddress + "/api/auth/resetPassword";
+}
+
 export function addBalance_EP() {
     return serverAddress + "/api/userActions/addBalance";
 }
@@ -55,6 +63,10 @@ export function signedMessageMetaMask_EP(){
 
 export function getTokenExpiresTime_EP() {
     return serverAddress + "/api/userActions/getExpiresAt";
+}
+
+export function getInventory_EP() {
+    return serverAddress + "/api/userActions/getInventory";
 }
 
 export function getNewsQuantity_EP(){

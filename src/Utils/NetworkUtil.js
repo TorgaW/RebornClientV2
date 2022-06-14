@@ -15,6 +15,10 @@ export function getStatusFromResponse(response) {
     return response?.data?.status;
 }
 
+export function getAxiosError(error) {
+    return error?.response?.data?.message ?? error.message;
+}
+
 export function catch401(error) {
     return typeof error === "object" && error.message === "Request failed with status code 401";
 }
@@ -43,6 +47,7 @@ export async function makePost(address, body, auth){
         status = getStatusFromResponse(t);
         return [data, status, error];
     } catch (er) {
+        if (er.response) return [data, status, getAxiosError(er)];
         return [data, status, er.message];
     }
 }
