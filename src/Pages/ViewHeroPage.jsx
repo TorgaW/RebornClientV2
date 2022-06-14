@@ -6,6 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getNFTsByIndexes_EP, getHeroById_EP, safeAuthorize_header } from "../Utils/EndpointsUtil";
 import { getDataFromResponse } from "../Utils/NetworkUtil";
 import { getRandomString } from "../Utils/RandomUtil";
+import AdaptiveLoadingComponent from "../Components/UI/AdaptiveLoadingComponent";
+import ButtonGreen from "../Components/UI/StyledComponents/ButtonGreen";
 
 export default function HeroView() {
     const params = useParams();
@@ -42,9 +44,9 @@ export default function HeroView() {
     }, []);
 
     return (
-        <div className="shadow-lg bg-opacity-10 bg-dark-purple-100 rounded-xl pb-4">
-            <div className="w-full lg:w-[1000px] flex items-center justify-center p-4">
-                <HeroTile {...heroData}/>
+        <div className="w-full flex justify-center items-center">
+            <div className="w-full lg:w-[1000px] bg-dark-purple-100 bg-opacity-10 flex items-center justify-center p-4">
+                <HeroTile {...heroData} />
             </div>
         </div>
     );
@@ -81,12 +83,12 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
     };
 
     const skillsPalette = {
-        sexy: "bg-pink-500",
-        lucky: "bg-pink-500",
-        brave: "bg-pink-500",
-        healthy: "bg-pink-500",
-        smart: "bg-pink-500",
-        skilled: "bg-pink-500",
+        sexy: "bg-pink-400",
+        lucky: "bg-yellow-300",
+        brave: "bg-slate-200",
+        healthy: "bg-red-500",
+        smart: "bg-blue-500",
+        skilled: "bg-green-500",
     };
 
     const originPalette = {
@@ -97,8 +99,84 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
     const [imgLoaded, setImgLoaded] = useState(false);
 
     return (
-        <div className="h-[200px] w-[200px] text-white">
-            <span>{name}</span>
-        </div>      
+        <div className="w-full mt-6 flex flex-col justify-center items-center gap-6 text-white px-4">
+            <div className={"w-full flex flex-col justify-center items-center gap-6 px-6 py-6 border-t-2 border-b-2 border-opacity-80 " + tribePalette["border"][tribe]}>
+                <div className="w-full flex px-4 flex-col justify-center items-center gap-6">
+                    <div className="flex flex-col gap-2 justify-center items-center">
+                        <div className={"h-[300px] w-[300px] border-[6px] border-opacity-50 rounded-lg relative " + tribePalette["border"][tribe]}>
+                            <img
+                                onLoad={() => {
+                                    setImgLoaded(true);
+                                }}
+                                className="w-full h-full"
+                                src={imageLink}
+                                alt="hero"
+                            />
+                            <div className="absolute inset-0 flex">{imgLoaded ? <></> : <AdaptiveLoadingComponent />}</div>
+                        </div>
+                        <div className="w-full flex flex-col justify-center items-center p-2">
+                            <span className={"text-3xl font-semibold " + (tribePalette["text"][tribe] ?? "text-white")}>
+                                {name} #{index}
+                            </span>
+                            <div className="w-full flex justify-center items-center gap-2 text-center">
+                                <span className={" font-semibold " + (tribePalette["text"][tribe] ?? "text-white")}>
+                                    Age: {age} Breed: {breed}
+                                </span>
+                                <span className={" font-semibold " + (originPalette["text"][origin] ?? "text-white")}>Origin: {origin}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-col w-full max-w-[350px] justify-center bg-gray-800 rounded-xl px-4 py-4 bg-opacity-80">
+                        <span className="text-2xl font-semibold">Skills</span>
+                        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["sexy"]}>
+                            <div className="relative z-10 flex justify-between">
+                                <span>Sexy</span>
+                                <span>{skills?.sexy}</span>
+                            </div>
+                            <div className={"absolute inset-0 h-full rounded-md bg-opacity-40 group-hover:bg-opacity-60 animated-100 " + skillsPalette["sexy"]} style={{ width: skills?.sexy + "%" }}></div>
+                        </div>
+                        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["lucky"]}>
+                            <div className="relative z-10 flex justify-between">
+                                <span>Lucky</span>
+                                <span>{skills?.lucky}</span>
+                            </div>
+                            <div className={"absolute inset-0 h-full rounded-md bg-opacity-40 group-hover:bg-opacity-60 animated-100 " + skillsPalette["lucky"]} style={{ width: skills?.lucky + "%" }}></div>
+                        </div>
+                        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["brave"]}>
+                            <div className="relative z-10 flex justify-between">
+                                <span>Brave</span>
+                                <span>{skills?.brave}</span>
+                            </div>
+                            <div className={"absolute inset-0 h-full rounded-md bg-opacity-40 group-hover:bg-opacity-60 animated-100 " + skillsPalette["brave"]} style={{ width: skills?.brave + "%" }}></div>
+                        </div>
+                        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["healthy"]}>
+                            <div className="relative z-10 flex justify-between">
+                                <span>Healthy</span>
+                                <span>{skills?.healthy}</span>
+                            </div>
+                            <div className={"absolute inset-0 h-full rounded-md bg-opacity-40 group-hover:bg-opacity-60 animated-100 " + skillsPalette["healthy"]} style={{ width: skills?.healthy + "%" }}></div>
+                        </div>
+                        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["smart"]}>
+                            <div className="relative z-10 flex justify-between">
+                                <span>Smart</span>
+                                <span>{skills?.smart}</span>
+                            </div>
+                            <div className={"absolute inset-0 h-full rounded-md bg-opacity-40 group-hover:bg-opacity-60 animated-100 " + skillsPalette["smart"]} style={{ width: skills?.smart + "%" }}></div>
+                        </div>
+                        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette["skilled"]}>
+                            <div className="relative z-10 flex justify-between">
+                                <span>Skilled</span>
+                                <span>{skills?.skilled}</span>
+                            </div>
+                            <div className={"absolute inset-0 h-full rounded-md bg-opacity-40 group-hover:bg-opacity-60 animated-100 " + skillsPalette["skilled"]} style={{ width: skills?.skilled + "%" }}></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-gray-800 bg-opacity-50 w-full text-center p-1 rounded-lg">
+                    <span className={"text-3xl font-bold text-opacity-70 " + tribePalette["text"][tribe]}>{tribe}</span>
+                </div>
+            </div>
+            <ButtonGreen additionalStyle={"md:w-[350px] w-full"} text={"View on Marketplace"} />
+        </div>
     );
 }
