@@ -203,7 +203,7 @@ function BoxTab() {
                     />
                 </div>
             </div>
-            <div className="flex flex-wrap justify-center gap-2 p-4">{boxesComponents}</div>
+            <div className="flex flex-wrap justify-center gap-6 p-4">{boxesComponents}</div>
         </div>
     ) : (
         <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
@@ -443,7 +443,7 @@ function InventoryTab() {
                     />
                 </div>
             </div>
-            <div className="w-full flex flex-wrap justify-center gap-2 mt-4">{itemsView}</div>
+            <div className="w-full flex flex-wrap justify-center gap-6 mt-4">{itemsView}</div>
         </div>
     ) : (
         <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative"></div>
