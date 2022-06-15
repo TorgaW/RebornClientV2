@@ -155,7 +155,7 @@ export default function OpenBoxCarousel({ boxData, win, itemData }) {
                             alt="box"
                             className={"h-full w-full object-contain border-8 rounded-md" + RARITY_PALETTE.border[itemData?.rarity?.toLowerCase()]}
                         />
-                        <div className="absolute inset-0 w-full h-full flex items-center justify-center text-center bg-black bg-opacity-70 target-text">
+                        <div className="absolute inset-0 w-full h-full flex items-center justify-center text-center bg-black bg-opacity-70 target-text px-4">
                             <span className={"font-semibold text-sm md:text-xl lg:text-2xl" + RARITY_PALETTE.text[itemData?.rarity?.toLowerCase()]}>
                                 {itemData?.name}
                             </span>

@@ -70,7 +70,7 @@ function SkillTile({skillVal, skillTitle}) {
             <span>{skillTitle}</span>
             <span>{skillVal}</span>
         </div>
-        <div className={"absolute inset-0 h-full rounded-md bg-opacity-40 group-hover:bg-opacity-60 animated-100 " + skillsPalette[skillTitle.toLowerCase()]} style={{ width: skillVal + "%" }}></div>
+        <div className={"absolute inset-0 h-full rounded-md bg-opacity-30 font-semibold group-hover:bg-opacity-60 animated-100 " + skillsPalette[skillTitle.toLowerCase()]} style={{ width: skillVal + "%" }}></div>
     </div>
     );
 }

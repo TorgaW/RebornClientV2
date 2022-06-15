@@ -163,7 +163,7 @@ function BoxTab() {
 
     return userData.isLoggedIn ? (
         <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
-            <div className="w-full flex flex-wrap items-center justify-center gap-2 p-4">
+            <div className="w-full flex flex-wrap items-center justify-center gap-4 p-4">
                 <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px] border-teal-400 rounded-md">
                     <span>Show unopened boxes</span>
                     <input
@@ -344,8 +344,8 @@ function InventoryTab() {
     }, [rawItems, itemsFilter]);
 
     return userData.isLoggedIn ? (
-        <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
-            <div className="w-full p-8 border-[1px] border-teal-400 rounded-md flex justify-center flex-wrap gap-6">
+        <div className="w-full lg:w-[1000px] px-4 flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
+            <div className="w-full p-8 border-[1px] my-4 border-teal-400 rounded-md flex justify-center flex-wrap gap-6">
                 <div className="flex items-center gap-2">
                     <span className={"text-lg font-semibold" + RARITY_PALETTE.text.guarantee}>Guarantee</span>
                     <input
