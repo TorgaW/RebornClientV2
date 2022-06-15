@@ -135,16 +135,16 @@ export default function BoxPage() {
                                             onClick={() => {
                                                 openBox();
                                             }}
-                                            className={"text-black text-xl font-semibold w-full p-2 rounded-md bg-opacity-80 mt-1 animated-100 hover:bg-opacity-100 " + (boxInfo?.type === "LUCKY" ? "bg-yellow-400" : "bg-teal-400")}
+                                            className={"text-black text-xl font-semibold w-full p-2 rounded-md bg-opacity-80 mt-2 animated-100 hover:bg-opacity-100 " + (boxInfo?.type === "LUCKY" ? "bg-yellow-400" : "bg-teal-400")}
                                         >
                                             Open
                                         </button>
-                                        <span className="text-sm mt-3 opacity-80">or burn for free</span>
+                                        <span className="text-sm mt-5 opacity-80">or burn for free</span>
                                         <button
                                             onClick={() => {
                                                 burnBox();
                                             }}
-                                            className={"text-white bg-slate-700 font-semibold w-full p-1 rounded-md bg-opacity-50 mt-1 animated-100 hover:bg-opacity-70 "}
+                                            className={"text-white bg-slate-700 font-semibold w-full p-1 rounded-md bg-opacity-50 mt-2 animated-100 hover:bg-opacity-70 "}
                                         >
                                             Burn
                                         </button>
