@@ -164,7 +164,7 @@ function BoxTab() {
     return userData.isLoggedIn ? (
         <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
             <div className="w-full flex flex-wrap items-center justify-center gap-4 p-4">
-                <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px] border-teal-400 rounded-md">
+                <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px]  border-teal-600 rounded-md">
                     <span>Show unopened boxes</span>
                     <input
                         type="checkbox"
@@ -177,7 +177,7 @@ function BoxTab() {
                         className="h-5 w-5 rounded-lg hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
                     />
                 </div>
-                <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px] border-teal-400 rounded-md">
+                <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px] border-teal-600 rounded-md">
                     <span>Show burned boxes</span>
                     <input
                         type="checkbox"
@@ -190,7 +190,7 @@ function BoxTab() {
                         className="h-5 w-5 rounded-lg hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
                     />
                 </div>
-                <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px] border-teal-400 rounded-md">
+                <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px] border-teal-600 rounded-md">
                     <span>Show opened boxes</span>
                     <input
                         type="checkbox"
@@ -345,7 +345,7 @@ function InventoryTab() {
 
     return userData.isLoggedIn ? (
         <div className="w-full lg:w-[1000px] px-4 flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
-            <div className="w-full p-8 border-[1px] my-4 border-teal-400 rounded-md flex justify-center flex-wrap gap-6">
+            <div className="w-full p-8 border-[1px] my-4 border-teal-600 rounded-md flex justify-center flex-wrap gap-6">
                 <div className="flex items-center gap-2">
                     <span className={"text-lg font-semibold" + RARITY_PALETTE.text.guarantee}>Guarantee</span>
                     <input
