@@ -45,3 +45,10 @@ export function insertInString(ins, str, index) {
         return t;
     }
 }
+
+export function compactString(str, length) {
+    if(typeof str === 'string' && typeof length === 'number') {
+        return str.slice(0,length)+(str.length > length ? '...':'');
+    }
+    return '';
+}

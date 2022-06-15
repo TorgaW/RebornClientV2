@@ -10,11 +10,14 @@ import { addBalance_EP, getTokenExpiresTime_EP, safeAuthorize_header } from "../
 import { catch401, logout } from "../../Utils/NetworkUtil";
 import { BigNumber, ethers } from "ethers";
 import { Decimals, ERC20Abi, GAMEAddress, HOTAddress } from "../../Utils/BlockchainUtils";
+import { isTabletOrMobileBrowser } from "../../Utils/BrowserUtil";
 // import { deleteUserDataFromStorage } from "../../Utils/LocalStorageManager/LocalStorageManager";
 // import { getUserDataFromStorage } from "../Utils/LocalStorageManager/LocalStorageManager";
 
 export default function DepositOption() {
     let navigate = useNavigate();
+
+    const [isMobile, setIsMobile] = useState(isTabletOrMobileBrowser());
 
     const userData = useStoreState(UserDataStorage);
     const metamask = useStoreState(MetaMaskStorage);
@@ -88,10 +91,14 @@ export default function DepositOption() {
         }
     }
 
+    useEffect(()=>{
+        if(isMobile) navigate('/notfound');
+    },[isMobile])
+
     return showProfile ? (
         <div className="w-full flex flex-col text-white gap-4">
             <div className="w-full flex justify-center p-4">
-                <span className="text-4xl font-semibold">{userData.getLocalUserData()?.username}'s Deposit</span>
+                <span className="text-4xl font-semibold text-center">{userData.getLocalUserData()?.username}'s Deposit</span>
             </div>
             <div className="w-full flex justify-center p-2 gap-4 text-xl">
                 <Link to="/profile/deposit">

@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { UserDataStorage } from "../Storages/UserDataStorage";
 import { RARITY_PALETTE } from "../Utils/ColorPaletteUtils";
 import { rarityToNumber } from "../Utils/ItemsUtil";
+import { compactString } from "../Utils/StringUtil";
 
 export default function InventoryPage() {
     const ui = useStoreState(UIStorage);
@@ -434,7 +435,8 @@ function InventoryTab() {
                     <input
                         defaultChecked={true}
                         onChange={(e) => {
-                            addFilter("heroic");
+                            if (e.target.checked) addFilter("heroic");
+                            else removeFilter("heroic");
                         }}
                         type="checkbox"
                         name=""
@@ -470,8 +472,8 @@ function ItemTile({ comment, features, imgLink, name, rarity }) {
                 />
             </div>
             <span className={"mt-4 no-flick flex-shrink-0 font-bold " + RARITY_PALETTE.text[rarity?.toLowerCase()]}>{rarity?.toUpperCase()}</span>
-            <div className="w-full h-full flex items-center">
-                <span className="text-gray-300 text-sm">{comment}</span>
+            <div className="w-full h-full flex items-center justify-center text-center overflow-y-hidden overflow-x-hidden">
+                <span className="text-gray-300 text-sm">{compactString(comment, 150)}</span>
             </div>
         </div>
     );
