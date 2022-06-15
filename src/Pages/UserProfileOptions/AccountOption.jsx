@@ -15,9 +15,12 @@ import { changePassword_EP, getQr_EP, safeAuthorize_header } from "../../Utils/E
 import { deleteUserDataFromStorage, getLocalOptions, saveLocalOptions } from "../../Utils/LocalStorageManager/LocalStorageManager";
 import { getDataFromResponse, logout, makePost } from "../../Utils/NetworkUtil";
 import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
+import { isTabletOrMobileBrowser } from "../../Utils/BrowserUtil";
 
 export default function AccountOption() {
     let navigate = useNavigate();
+
+    const [isMobile, setIsMobile] = useState(isTabletOrMobileBrowser());
 
     const userData = useStoreState(UserDataStorage);
     // const metamask = useStoreState(MetaMaskStorage);
@@ -96,13 +99,13 @@ export default function AccountOption() {
 
     return showProfile ? (
         <div className="w-full flex flex-col text-white gap-4">
-            <div className="w-full flex justify-center p-4">
+            <div className="w-full flex justify-center p-4 text-center">
                 <span className="text-4xl font-semibold">{userData.getLocalUserData()?.username}'s Account settings</span>
             </div>
             <div className="w-full flex justify-center p-2 gap-4 text-xl">
-                <Link to="/profile/deposit">
+                {!isMobile ? <Link to="/profile/deposit">
                     <button className="p-4 h-full bg-zinc-600 bg-opacity-30 rounded-md hover:bg-opacity-80 animated-100">Deposit</button>
-                </Link>
+                </Link>:<></>}
                 <Link to="/profile/uisettings">
                     <button className="p-4 h-full bg-zinc-600 bg-opacity-30 rounded-md hover:bg-opacity-80 animated-100">Interface settings</button>
                 </Link>

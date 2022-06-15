@@ -15,6 +15,7 @@ import { ERC721Abi, NFTAddress } from "../Utils/BlockchainUtils";
 import { getRandomString } from "../Utils/RandomUtil";
 import { TempLinkStorage } from "../Storages/Stuff/TempLinkStorage";
 import { sleepFor } from "../Utils/CodeUtils";
+import { UserBalanceStorage } from "../Storages/UserBalanceStorage";
 
 export default function BoxPage() {
     const params = useParams();
@@ -22,6 +23,7 @@ export default function BoxPage() {
 
     const ui = useStoreState(UIStorage);
     const userData = useStoreState(UserDataStorage);
+    const userBalance = useStoreState(UserBalanceStorage);
     const metamask = useStoreState(MetaMaskStorage);
     const tempLink = useStoreState(TempLinkStorage);
 
@@ -62,6 +64,11 @@ export default function BoxPage() {
 
     async function openBox() {
         if (isOwner) {
+            if(userBalance.userBalance < boxInfo.priceToOpen)
+            {
+                ui.showError('Not enough balance!');
+                return;
+            }
             ui.showContentLoading();
             let link = getRandomString(64);
             tempLink.setLinkFor(link, 600);

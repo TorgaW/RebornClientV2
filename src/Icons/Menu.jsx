@@ -1,16 +1,15 @@
 import * as React from "react"
 
-const MenuIcon = (props) => (
+const MenuIcon = ({fill}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={96}
     height={96}
     viewBox="0 0 171 171"
     style={{
-      fill: "#fff",
+      fill: fill ?? '#fff',
       pointerEvents: 'none',
     }}
-    {...props}
   >
     <g
       fill="none"

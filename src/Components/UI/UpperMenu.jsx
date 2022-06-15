@@ -26,6 +26,10 @@ export default function UpperMenu() {
         document.getElementById("small-menu-desktop").classList.toggle("-translate-x-full");
     }
 
+    function toggleMobileMenu() {
+        document.getElementById("small-menu-mobile").classList.toggle("-translate-x-full");
+    }
+
     return !isOnMobile ? (
         //desktop menu
         <>
@@ -99,8 +103,8 @@ export default function UpperMenu() {
             <div className="fixed w-full left-0 top-20 h-10 flex justify-center bg-dark-purple-500 overflow-x-auto text-white z-20">
                 <div className="max-w-[1750px] w-full flex px-2">
                     <div className="hidden md:flex gap-4 py-2 text-teal-200">
-                        {ui.UIOptions.showGamePrice ? <span>GAME: {currencies.GAMEPrice}$</span>:<></>}
-                        {ui.UIOptions.showBCHPrice ? <span>BCH: {currencies.BCHPrice}$</span>:<></>}
+                        {ui.UIOptions.showGamePrice ? <span>GAME: {currencies.GAMEPrice}$</span> : <></>}
+                        {ui.UIOptions.showBCHPrice ? <span>BCH: {currencies.BCHPrice}$</span> : <></>}
                     </div>
                     <div className="flex py-2 ml-auto items-center gap-4 text-teal-200">
                         <span>Your deposit: {balance.userBalance}G</span>
@@ -208,6 +212,155 @@ export default function UpperMenu() {
         </>
     ) : (
         // mobile devices menu
-        <></>
+        <>
+            <div className="fixed w-full left-0 top-0 h-[120px] flex flex-col bg-black overflow-x-auto text-white z-20">
+                <div className="w-full h-full flex justify-center items-center relative">
+                    <span className="text-3xl font-bold text-teal-400">BCH Reborn</span>
+                    <div
+                        onClick={() => {
+                            toggleMobileMenu();
+                        }}
+                        className="absolute p-1 rounded-md right-4 top-1/2 h-12 w-12 -translate-y-1/2 flex justify-center items-center animated-100 hover:bg-zinc-800"
+                    >
+                        <MenuIcon />
+                    </div>
+                </div>
+                <div className="w-full h-10 flex justify-center items-center gap-8 flex-shrink-0 text-teal-400">
+                    <span>GAME: {currencies.GAMEPrice}$</span>
+                    <span>BCH: {currencies.BCHPrice}$</span>
+                </div>
+            </div>
+
+            <div
+                id="small-menu-mobile"
+                className="fixed md:hidden w-full h-full flex p-5 bg-black z-[51] animated-500 overflow-x-hidden text-white transform -translate-x-full"
+            >
+                <div className="w-full h-full flex flex-col gap-4 relative">
+                    <div className="w-full p-2 flex justify-center items-center">
+                        <span className="text-4xl font-semibold text-teal-400">Reborn Cash</span>
+                    </div>
+                    <div className="w-full flex items-center justify-center">
+                        <div className="flex gap-4 py-2 text-teal-200">
+                            <span>GAME: {currencies.GAMEPrice}$</span>
+                            <span>BCH: {currencies.BCHPrice}$</span>
+                        </div>
+                    </div>
+                    <div className="flex flex-col w-full h-full gap-2">
+                        {userData.isLoggedIn ? (
+                            <Link to="profile/accountsettings">
+                                <div onClick={()=>{toggleMobileMenu()}} className="h-16 flex justify-center items-center">
+                                    <div className="w-full p-1 border-[1px] rounded-md flex justify-center items-center gap-2">
+                                        <div className="h-14 w-14 flex justify-center items-center">
+                                            <ProfileIcon />
+                                        </div>
+                                        <span className="text-xl">{userData.userData.username}</span>
+                                    </div>
+                                </div>
+                            </Link>
+                        ) : (
+                            <div className="w-full h-12 flex gap-4">
+                                <Link to="/signin" className="w-full h-full">
+                                    <button
+                                        onClick={() => {
+                                            toggleMobileMenu();
+                                        }}
+                                        className="w-full text-xl border-[1px] p-2 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                    >
+                                        Sign in
+                                    </button>
+                                </Link>
+                                <Link to="/signup" className="w-full h-full">
+                                    <button
+                                        onClick={() => {
+                                            toggleMobileMenu();
+                                        }}
+                                        className="w-full text-xl border-[1px] p-2 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                    >
+                                        Sign up
+                                    </button>
+                                </Link>
+                            </div>
+                        )}
+                        <Link to="/" className="mt-8">
+                            <div className="w-full flex justify-center items-center">
+                                <button
+                                    onClick={() => {
+                                        toggleMobileMenu();
+                                    }}
+                                    className="w-full text-3xl border-[1px] border-teal-400 p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                >
+                                    Home
+                                </button>
+                            </div>
+                        </Link>
+                        <Link to="/heroes">
+                            <div className="w-full flex justify-center items-center">
+                                <button
+                                    onClick={() => {
+                                        toggleMobileMenu();
+                                    }}
+                                    className="w-full text-3xl border-[1px] border-teal-400 p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                >
+                                    Heroes
+                                </button>
+                            </div>
+                        </Link>
+                        <Link to="/inventory">
+                            <div className="w-full flex justify-center items-center">
+                                <button
+                                    onClick={() => {
+                                        toggleMobileMenu();
+                                    }}
+                                    className="w-full text-3xl border-[1px] border-teal-400 p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                >
+                                    Inventory
+                                </button>
+                            </div>
+                        </Link>
+                        <Link to="/marketplace">
+                            <div className="w-full flex justify-center items-center">
+                                <button
+                                    onClick={() => {
+                                        toggleMobileMenu();
+                                    }}
+                                    className="w-full text-3xl border-[1px] border-teal-400 p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                >
+                                    Marketplace
+                                </button>
+                            </div>
+                        </Link>
+                        <div className="mt-auto">
+                            <Link to="/about">
+                                <div className="w-full flex justify-center items-center">
+                                    <button
+                                        onClick={() => {
+                                            toggleMobileMenu();
+                                        }}
+                                        className="w-full text-2xl p-2 rounded-md hover:bg-zinc-900 font-semibold text-gray-300 animated-100"
+                                    >
+                                        About project
+                                    </button>
+                                </div>
+                            </Link>
+                        </div>
+                        <div className="w-full flex p-2 justify-center items-center text-teal-400 opacity-70">
+                            <span>BCH Reborn 2022, v0.2</span>
+                        </div>
+                    </div>
+                    <div className="absolute w-12 h-12 right-0 top-0 flex">
+                        <div
+                            onClick={() => {
+                                toggleMobileMenu();
+                            }}
+                            className="w-full h-full flex p-2 rounded-md hover:bg-zinc-800 animated-100 cursor-pointer select-none"
+                        >
+                            <div className="w-full h-full flex justify-center items-center">
+                                <CancelIWhite />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }

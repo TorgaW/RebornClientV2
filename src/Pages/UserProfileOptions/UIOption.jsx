@@ -4,10 +4,13 @@ import { useNavigate, Link } from "react-router-dom";
 import { MetaMaskStorage } from "../../Storages/MetaMaskStorage";
 import { UIStorage } from "../../Storages/UIStorage";
 import { UserDataStorage } from "../../Storages/UserDataStorage";
+import { isTabletOrMobileBrowser } from "../../Utils/BrowserUtil";
 import { getLocalOptions, saveLocalOptions } from "../../Utils/LocalStorageManager/LocalStorageManager";
 
 export default function UIOption() {
     let navigate = useNavigate();
+
+    const [isMobile, setIsMobile] = useState(isTabletOrMobileBrowser());
 
     const userData = useStoreState(UserDataStorage);
     // const metamask = useStoreState(MetaMaskStorage);
@@ -72,12 +75,12 @@ export default function UIOption() {
     return showProfile ? (
         <div className="w-full flex flex-col text-white gap-4">
             <div className="w-full flex justify-center p-4">
-                <span className="text-4xl font-semibold">{userData.getLocalUserData()?.username}'s Interface settings</span>
+                <span className="text-4xl font-semibold text-center">{userData.getLocalUserData()?.username}'s Interface settings</span>
             </div>
             <div className="w-full flex justify-center p-2 gap-4 text-xl">
-                <Link to="/profile/deposit">
+                {!isMobile ? <Link to="/profile/deposit">
                     <button className="p-4 h-full bg-zinc-600 bg-opacity-30 rounded-md hover:bg-opacity-80 animated-100">Deposit</button>
-                </Link>
+                </Link>:<></>}
                 <Link to="/profile/uisettings">
                     <button className="p-4 h-full bg-zinc-700 bg-opacity-70 rounded-md">Interface settings</button>
                 </Link>
