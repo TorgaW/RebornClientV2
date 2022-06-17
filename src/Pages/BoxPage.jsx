@@ -64,9 +64,8 @@ export default function BoxPage() {
 
     async function openBox() {
         if (isOwner) {
-            if(userBalance.userBalance < boxInfo.priceToOpen)
-            {
-                ui.showError('Not enough balance!');
+            if (userBalance.userBalance < boxInfo.priceToOpen) {
+                ui.showError("Not enough balance!");
                 return;
             }
             ui.showContentLoading();
@@ -74,7 +73,7 @@ export default function BoxPage() {
             tempLink.setLinkFor(link, 600);
             await sleepFor(500);
             // console.log('/box/'+((boxInfo.boxId+12) * 77)+'/open/'+link);
-            navigate('/box/'+((boxInfo.boxId+12) * 77)+'/'+((ownerHero.index+12) * 77)+'/open/'+link);
+            navigate("/box/" + (boxInfo.boxId + 12) * 77 + "/" + (ownerHero.index + 12) * 77 + "/open/" + link);
         } else ui.showError("You are not the owner.");
     }
 
@@ -93,13 +92,12 @@ export default function BoxPage() {
                 );
 
                 let data = getDataFromResponse(response);
-                if(response?.data?.message === 'burned'){
-                    ui.showSuccess('You have successfully burned this box!');
+                if (response?.data?.message === "burned") {
+                    ui.showSuccess("You have successfully burned this box!");
                     getBoxInfo();
-                }
-                else {
+                } else {
                     ui.hideContentLoading();
-                    ui.showError('Failed to burn this box.');
+                    ui.showError("Failed to burn this box.");
                     console.log(data);
                 }
             } catch (error) {
@@ -127,47 +125,32 @@ export default function BoxPage() {
                         <span className={"text-2xl font-semibold opacity-80 " + (boxInfo?.type === "LUCKY" ? "text-yellow-500" : "text-teal-400")}>
                             {boxInfo?.serial}-{boxInfo?.number}
                         </span>
-                        {boxInfo?.type === "LUCKY" ? (
-                            <span className="italic text-yellow-400 opacity-90">Bright yellow box with shining edges! You are so lucky!</span>
-                        ) : (
-                            <span className="italic text-teal-400 opacity-90">So much power in this box! Who knows what it holds...</span>
-                        )}
+                        {boxInfo?.type === "LUCKY" ? <span className="italic text-yellow-400 opacity-90">Bright yellow box with shining edges! You are so lucky!</span> : <span className="italic text-teal-400 opacity-90">So much power in this box! Who knows what it holds...</span>}
                         {userData.isLoggedIn ? (
                             isOwner ? (
                                 boxInfo?.status === "Owned" ? (
                                     <div className="w-full flex flex-col items-center">
                                         <span className="font-semibold text-purple-400 mt-10">Try to open it for {boxInfo?.priceToOpen}G</span>
                                         <button
-                                        onClick={()=>{
-                                            openBox();
-                                        }}
-                                            className={
-                                                "text-black text-xl font-semibold w-full p-2 rounded-md bg-opacity-80 mt-1 animated-100 hover:bg-opacity-100 " +
-                                                (boxInfo?.type === "LUCKY" ? "bg-yellow-400" : "bg-teal-400")
-                                            }
+                                            onClick={() => {
+                                                openBox();
+                                            }}
+                                            className={"text-black text-xl font-semibold w-full p-2 rounded-md bg-opacity-80 mt-2 animated-100 hover:bg-opacity-100 " + (boxInfo?.type === "LUCKY" ? "bg-yellow-400" : "bg-teal-400")}
                                         >
                                             Open
                                         </button>
-                                        <span className="text-sm mt-3 opacity-80">or burn for free</span>
+                                        <span className="text-sm mt-5 opacity-80">or burn for free</span>
                                         <button
                                             onClick={() => {
                                                 burnBox();
                                             }}
-                                            className={
-                                                "text-white bg-slate-700 font-semibold w-full p-1 rounded-md bg-opacity-50 mt-1 animated-100 hover:bg-opacity-70 "
-                                            }
+                                            className={"text-white bg-slate-700 font-semibold w-full p-1 rounded-md bg-opacity-50 mt-2 animated-100 hover:bg-opacity-70 "}
                                         >
                                             Burn
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="w-full text-center">
-                                        {boxInfo?.status === "Burned" ? (
-                                            <span className="italic text-red-400">This box has been already burned.</span>
-                                        ) : (
-                                            <span className="italic text-red-400">This box has been already opened.</span>
-                                        )}
-                                    </div>
+                                    <div className="w-full text-center">{boxInfo?.status === "Burned" ? <span className="italic text-red-400">This box has been already burned.</span> : <span className="italic text-red-400">This box has been already opened.</span>}</div>
                                 )
                             ) : (
                                 <div className="w-full text-center">
@@ -247,19 +230,10 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
     // console.log(skills);
 
     return (
-        <div
-            className={
-                "flex flex-col items-center gap-4 p-2 border-y-[1px] border-opacity-50 animated-200 " + (tribePalette["border"][tribe] ?? "border-white")
-            }
-        >
+        <div className={"flex flex-col items-center gap-4 p-2 border-y-[1px] border-opacity-50 animated-200 " + (tribePalette["border"][tribe] ?? "border-white")}>
             <div className="w-full flex flex-col items-center gap-2 mt-2">
                 <div className="flex flex-col items-center">
-                    <div
-                        className={
-                            "w-[200px] h-[200px] relative flex flex-shrink-0 rounded-lg border-[6px] border-opacity-50 animated-200 overflow-x-hidden overflow-y-hidden " +
-                            (tribePalette["border"][tribe] ?? "border-white")
-                        }
-                    >
+                    <div className={"w-[200px] h-[200px] relative flex flex-shrink-0 rounded-lg border-[6px] border-opacity-50 animated-200 overflow-x-hidden overflow-y-hidden " + (tribePalette["border"][tribe] ?? "border-white")}>
                         <img
                             onLoad={() => {
                                 setImgLoaded(true);
@@ -290,21 +264,38 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
                 </div>
                 <div className="md:w-[500px] w-full flex justify-center flex-shrink-0 mb-2">
                     <div className="w-full flex flex-col gap-4 px-2">
-                        <div className={skillsPalette["sexy"] + " w-full p-2 rounded-md text-center font-semibold bg-opacity-20"}>Sexy: {skills?.sexy}</div>
-                        <div className={skillsPalette["lucky"] + " w-full p-2 rounded-md text-center font-semibold bg-opacity-20"}>Lucky: {skills?.lucky}</div>
-                        <div className={skillsPalette["brave"] + " w-full p-2 rounded-md text-center font-semibold bg-opacity-20"}>Brave: {skills?.brave}</div>
+                        <SkillTile skillVal={skills?.sexy} skillTitle={"Sexy"} />
+                        <SkillTile skillVal={skills?.lucky} skillTitle={"Lucky"} />
+                        <SkillTile skillVal={skills?.brave} skillTitle={"Brave"} />
                     </div>
                     <div className="w-full flex flex-col gap-4 px-2">
-                        <div className={skillsPalette["healthy"] + " w-full p-2 rounded-md text-center font-semibold bg-opacity-20"}>
-                            Healthy: {skills?.healthy}
-                        </div>
-                        <div className={skillsPalette["smart"] + " w-full p-2 rounded-md text-center font-semibold bg-opacity-20"}>Smart: {skills?.smart}</div>
-                        <div className={skillsPalette["skilled"] + " w-full p-2 rounded-md text-center font-semibold bg-opacity-20"}>
-                            Skilled: {skills?.skilled}
-                        </div>
+                        <SkillTile skillVal={skills?.healthy} skillTitle={"Healthy"} />
+                        <SkillTile skillVal={skills?.smart} skillTitle={"Smart"} />
+                        <SkillTile skillVal={skills?.skilled} skillTitle={"Skilled"} />
                     </div>
                 </div>
             </div>
+        </div>
+    );
+}
+
+function SkillTile({ skillVal, skillTitle }) {
+    const skillsPalette = {
+        sexy: "bg-pink-400",
+        lucky: "bg-yellow-300",
+        brave: "bg-slate-200",
+        healthy: "bg-red-500",
+        smart: "bg-blue-500",
+        skilled: "bg-green-500",
+    };
+
+    return (
+        <div className={"group relative w-full p-2 rounded-md text-center font-semibold bg-opacity-20 " + skillsPalette[skillTitle.toLowerCase()]}>
+            <div className="relative z-10 flex justify-between">
+                <span>{skillTitle}</span>
+                <span>{skillVal}</span>
+            </div>
+            <div className={"absolute inset-0 h-full rounded-md bg-opacity-30 group-hover:bg-opacity-60 animated-100 " + skillsPalette[skillTitle.toLowerCase()]} style={{ width: skillVal + "%" }}></div>
         </div>
     );
 }
@@ -345,12 +336,7 @@ function ItemTile({ name, comment, features, imgLink, rarity }) {
     return (
         <div className={"w-full flex flex-col items-center p-4 gap-4 text-white border-y-[1px] " + rarityPalette.border[rarity?.toLowerCase()]}>
             <div className="flex flex-col items-center gap-2">
-                <div
-                    className={
-                        "w-[200px] h-[200px] relative flex flex-shrink-0 rounded-lg border-[6px] border-opacity-50 animated-200 overflow-x-hidden overflow-y-hidden " +
-                        (rarityPalette.border[rarity?.toLowerCase()] ?? "border-white")
-                    }
-                >
+                <div className={"w-[200px] h-[200px] relative flex flex-shrink-0 rounded-lg border-[6px] border-opacity-50 animated-200 overflow-x-hidden overflow-y-hidden " + (rarityPalette.border[rarity?.toLowerCase()] ?? "border-white")}>
                     <img
                         onLoad={() => {
                             setImgLoaded(true);

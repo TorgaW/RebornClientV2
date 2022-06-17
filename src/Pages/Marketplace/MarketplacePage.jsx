@@ -83,16 +83,12 @@ export default function MarketplacePage() {
         <div className="w-full flex items-center flex-col relative text-white px-2">
             <div className="w-full flex justify-center items-center gap-4 text-xl my-6">
                 <Link to={"/marketplace"}>
-                    <button className="w-[100px] h-10 border-b-[1px] animated-100 hover:text-teal-400 hover:border-teal-400">
-                        Buy
-                    </button>
+                    <button className="w-[100px] h-10 border-b-[1px] animated-100 text-teal-400 border-teal-400">Buy</button>
                 </Link>
                 <Link to={"/marketplace/sell"}>
-                    <button className="w-[100px] h-10 border-b-[1px] animated-100 hover:text-teal-400 hover:border-teal-400">
-                        Sell
-                    </button>
+                    <button className="w-[100px] h-10 border-b-[1px] animated-100">Sell</button>
                 </Link>
-                <button className="w-[100px] h-10 border-b-[1px] animated-100 hover:text-teal-400 hover:border-teal-400">My lots</button>
+                <button className="w-[100px] h-10 border-b-[1px] animated-100">My lots</button>
             </div>
             <div className="shadow-lg bg-opacity-10 bg-dark-purple-100 rounded-xl pb-4">
                 <div className="w-full lg:w-[1000px] flex items-center flex-wrap md:gap-0 gap-4 justify-center md:justify-between p-4 px-8 pb-2">
