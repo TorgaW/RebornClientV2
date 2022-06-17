@@ -11,11 +11,13 @@ import InputDefault from "../../Components/UI/StyledComponents/InputDefault";
 import { MetaMaskStorage } from "../../Storages/MetaMaskStorage";
 import { UIStorage } from "../../Storages/UIStorage";
 import { UserDataStorage } from "../../Storages/UserDataStorage";
-import { changePassword_EP, getQr_EP, safeAuthorize_header } from "../../Utils/EndpointsUtil";
-import { deleteUserDataFromStorage, getLocalOptions, saveLocalOptions } from "../../Utils/LocalStorageManager/LocalStorageManager";
+import { changePassword_EP, getQr_EP, safeAuthorize_header, set2FA_EP } from "../../Utils/EndpointsUtil";
+import { deleteUserDataFromStorage, getLocalOptions, saveLocalOptions, saveUserDataToStorage } from "../../Utils/LocalStorageManager/LocalStorageManager";
 import { getDataFromResponse, logout, makePost } from "../../Utils/NetworkUtil";
-import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
+import { isStringEmptyOrSpaces, strToBase } from "../../Utils/StringUtil";
 import { isTabletOrMobileBrowser } from "../../Utils/BrowserUtil";
+import { TempLinkStorage } from "../../Storages/Stuff/TempLinkStorage";
+import { getRandomString } from "../../Utils/RandomUtil";
 
 export default function AccountOption() {
     let navigate = useNavigate();
@@ -25,6 +27,7 @@ export default function AccountOption() {
     const userData = useStoreState(UserDataStorage);
     // const metamask = useStoreState(MetaMaskStorage);
     const ui = useStoreState(UIStorage);
+    const tempLink = useStoreState(TempLinkStorage);
 
     const [showProfile, setShowProfile] = useState(false);
     const [userSettings, setUserSettings] = useState(getLocalOptions());
@@ -33,6 +36,8 @@ export default function AccountOption() {
     const [showQR, setShowQR] = useState(false);
     const [QRCode, setQRCode] = useState("");
     const [QRCodeLoaded, setQRCodeLoaded] = useState(false);
+
+    const [new2FAData, setNew2FAData] = useState({ qr: null, privateKey: null });
 
     const { executeRecaptcha } = useGoogleReCaptcha();
     async function handleReCaptchaVerify() {
@@ -49,6 +54,10 @@ export default function AccountOption() {
         else setShowProfile(true);
 
         setSafeUserData(userData.getLocalUserData());
+
+        return ()=>{
+            ui.hideContentLoading();
+        }
     }, []);
 
     async function getQR() {
@@ -97,15 +106,39 @@ export default function AccountOption() {
         console.log(d);
     }
 
+    async function enable2FA() {
+        ui.showContentLoading();
+        let [d, s, e] = await makePost(set2FA_EP(), {}, true);
+        if (d) {
+            saveUserDataToStorage({ ...userData.getLocalUserData(), twoFA: true });
+            UserDataStorage.update((s) => {
+                s.userData = { ...s.userData, twoFA: true };
+            });
+            let link = getRandomString(32);
+            tempLink.setLinkFor(link, 600);
+            let base64QR = strToBase(d.qrLink);
+            let base64Private = strToBase(d.secretKey);
+            navigate('/qr/'+base64QR+'/'+base64Private+'/'+link);
+        } else {
+            ui.showError(e);
+            console.log(e);
+            ui.hideContentLoading();
+        }
+    }
+
     return showProfile ? (
         <div className="w-full flex flex-col text-white gap-4">
             <div className="w-full flex justify-center p-4 text-center">
                 <span className="text-4xl font-semibold">{userData.getLocalUserData()?.username}'s Account settings</span>
             </div>
             <div className="w-full flex justify-center p-2 gap-4 text-xl">
-                {!isMobile ? <Link to="/profile/deposit">
-                    <button className="p-4 h-full bg-zinc-600 bg-opacity-30 rounded-md hover:bg-opacity-80 animated-100">Deposit</button>
-                </Link>:<></>}
+                {!isMobile ? (
+                    <Link to="/profile/deposit">
+                        <button className="p-4 h-full bg-zinc-600 bg-opacity-30 rounded-md hover:bg-opacity-80 animated-100">Deposit</button>
+                    </Link>
+                ) : (
+                    <></>
+                )}
                 <Link to="/profile/uisettings">
                     <button className="p-4 h-full bg-zinc-600 bg-opacity-30 rounded-md hover:bg-opacity-80 animated-100">Interface settings</button>
                 </Link>
@@ -118,13 +151,13 @@ export default function AccountOption() {
                     <div className="w-full flex justify-center text-center">
                         <span className="text-2xl font-semibold">Account information</span>
                     </div>
-                    <div className="w-full flex items-center gap-2 text-xl">
+                    <div className="w-full flex flex-col md:flex-row items-center gap-1 md:gap-2 text-xl">
                         <span className="font-semibold">Username:</span>
-                        <span className="text-teal-100 text-2xl font-bold">{safeUserData.username}</span>
+                        <span className="text-teal-100 text-xl md:text-2xl font-bold">{safeUserData.username}</span>
                     </div>
-                    <div className="w-full flex items-center gap-2 text-xl">
+                    <div className="w-full flex flex-col md:flex-row items-center gap-1 md:gap-2 text-xl">
                         <span className="font-semibold">Email:</span>
-                        <span className="text-teal-100 text-2xl font-bold">{safeUserData.email}</span>
+                        <span className="text-teal-100 text-xl md:text-2xl font-bold">{safeUserData.email}</span>
                     </div>
                     <div className="w-full h-[1px] bg-white"></div>
                     <div className="w-full flex justify-center text-center">
@@ -164,8 +197,12 @@ export default function AccountOption() {
                     ) : (
                         <div className="w-full flex flex-col gap-2 text-center">
                             <span className="text-red-300">Two-factor authentication is disabled!</span>
-                            <ButtonGreen text={"Enable Two-factor Authentication"} />
-                            <ButtonDefault text="Enable 2FA" />
+                            <ButtonGreen
+                                click={() => {
+                                    enable2FA();
+                                }}
+                                text={"Enable Two-factor Authentication"}
+                            />
                         </div>
                     )}
                     <div className="w-full h-[1px] bg-white"></div>
@@ -185,7 +222,12 @@ export default function AccountOption() {
                         <InputDefault type="text" id={"change-pass-code"} additionalStyle={"font-bold tracking-wider"} />
                     </div>
                     {/* <button className="p-2 w-48 bg-purple-800 bg-opacity-50 rounded-lg hover:bg-opacity-90 animated-100">Change password</button> */}
-                    <ButtonDefault text={"Change password"} click={()=>{changePassword()}} />
+                    <ButtonDefault
+                        text={"Change password"}
+                        click={() => {
+                            changePassword();
+                        }}
+                    />
                     <div className="w-full h-[1px] bg-white"></div>
                     {/* <button onClick={()=>{signOut(); navigate('/');}} className="p-2 w-48 bg-red-900 bg-opacity-70 rounded-lg hover:bg-opacity-100 self-end animated-100">Sign out</button> */}
                     <ButtonRed

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { MetaMaskStorage } from "../Storages/MetaMaskStorage";
 import { UIStorage } from "../Storages/UIStorage";
 import { ERC721Abi, NFTAddress } from "../Utils/BlockchainUtils";
-import { getBoxesByHeroId_EP, getHeroById_EP, getInventory_EP, safeAuthorize_header } from "../Utils/EndpointsUtil";
+import { getBoxesByHeroId_EP, getHeroById_EP, getInventory_EP, getTransferDetails_EP, safeAuthorize_header } from "../Utils/EndpointsUtil";
 import { getAxiosError, getDataFromResponse, makePost } from "../Utils/NetworkUtil";
 import luckyBoxImage from "../Images/Boxes/luckyBox.png";
 import mysteryBoxImage from "../Images/Boxes/mysteryBox.png";
@@ -320,8 +320,14 @@ function InventoryTab() {
         }
     }
 
+    async function getUserTransfers() {
+        let [d,s,e] = await makePost(getTransferDetails_EP(),{},true);
+        console.log(d);
+    }
+
     useEffect(() => {
         getUserInventory();
+        getUserTransfers();
     }, []);
 
     useEffect(() => {
@@ -446,7 +452,7 @@ function ItemTile({ comment, features, imgLink, name, rarity }) {
             </div>
             <span className={"mt-4 no-flick flex-shrink-0 font-bold " + RARITY_PALETTE.text[rarity?.toLowerCase()]}>{rarity?.toUpperCase()}</span>
             <div className="w-full h-full flex items-center justify-center text-center overflow-y-hidden overflow-x-hidden">
-                <span className="text-gray-300 text-sm">{compactString(comment, 150)}</span>
+                <span className="text-gray-300 text-sm">{compactString(comment, 120)}</span>
             </div>
         </div>
     );

@@ -41,6 +41,10 @@ export function verify2FA_EP(){
     return serverAddress + "/api/userActions/verifyCode";
 }
 
+export function set2FA_EP(){
+    return serverAddress + "/api/userActions/set2FA";
+}
+
 export function getQr_EP(){
     return serverAddress + "/api/userActions/getCode";
 }
@@ -67,6 +71,14 @@ export function getTokenExpiresTime_EP() {
 
 export function getInventory_EP() {
     return serverAddress + "/api/userActions/getInventory";
+}
+
+export function getTransferDetails_EP(){
+    return serverAddress + "/api/userActions/getTransferDetails";
+}
+
+export function setTransferDetails_EP(){
+    return serverAddress + "/api/userActions/setTransferDetails";
 }
 
 export function getNewsQuantity_EP(){

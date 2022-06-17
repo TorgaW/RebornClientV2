@@ -41,7 +41,8 @@ export function getLocalOptions() {
 
 export function saveUserDataToStorage(data, token) {
     localStorage.setItem(webName + userDataPostfix, JSON.stringify(data));
-    localStorage.setItem(tokenName, token);
+    if(token)
+        localStorage.setItem(tokenName, token);
 }
 
 export function deleteUserDataFromStorage() {

@@ -36,6 +36,7 @@ import OpenBoxPage from "./Pages/OpenBoxPage";
 import MarketplacePage from "./Pages/Marketplace/MarketplacePage";
 import ViewHeroPage from "./Pages/ViewHeroPage";
 import MarketplaceSellPage from "./Pages/Marketplace/MarketplaceSellPage";
+import TwoFAEnabledPage from "./Pages/Authorization/TwoFAEnabledPage";
 
 function App() {
     const [showLoading, setShowLoading] = useState(false);
@@ -82,6 +83,7 @@ function App() {
                     <Route path="/signin" element={<SignInPage />} />
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/forgotpass" element={<ForgotPasswordPage />} />
+                    <Route path="/qr/:qr/:private/:hash" element={<TwoFAEnabledPage />} />
                     <Route path="/auth/:username/:authHash" element={<ProofAuthWithCodePage />} />
                     <Route path="/profile/accountsettings" element={<AccountOption />} />
                     {/* <Route path="/profile/privacysettings" element={<UserProfilePage />}/> */}
