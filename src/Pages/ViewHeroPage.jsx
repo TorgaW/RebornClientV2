@@ -154,7 +154,7 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
                     <span className={"text-3xl font-bold text-opacity-70 " + tribePalette["text"][tribe]}>{tribe}</span>
                 </div>
             </div>
-            <ButtonGreen additionalStyle={"md:w-[350px] w-full"} text={"View on Marketplace"} />
+            <ButtonGreen additionalStyle={"md:w-[350px] w-full text-xl"} text={"View on Marketplace"} />
         </div>
     );
 }
