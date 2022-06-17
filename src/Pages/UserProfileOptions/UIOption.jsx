@@ -89,7 +89,7 @@ export default function UIOption() {
                 </Link>
             </div>
             <div className="w-full flex justify-center p-4">
-                <div className="w-full max-w-[800px] flex flex-col gap-6 p-8 bg-dark-purple-300 rounded-lg">
+                <div className="w-full max-w-[800px] flex flex-col gap-6 p-8 bg-dark-purple-400 rounded-lg">
                     {/* <span className="text-xl font-semibold">
                         Connected wallet:{" "}
                         <span className="p-2 bg-zinc-600 bg-opacity-40 rounded-md">{metamask.isConnected ? metamask.wallet : "No wallets connected"}</span>

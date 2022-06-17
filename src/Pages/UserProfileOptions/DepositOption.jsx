@@ -113,15 +113,15 @@ export default function DepositOption() {
                 </Link>
             </div>
             <div className="w-full flex justify-center p-4">
-                <div className="w-full max-w-[800px] flex flex-col gap-6 p-8 bg-dark-purple-300 rounded-lg">
+                <div className="w-full max-w-[800px] flex flex-col gap-6 p-8 bg-dark-purple-400 rounded-lg">
                     <span className="text-xl font-semibold">
                         Connected wallet: <span className="p-2 bg-zinc-600 bg-opacity-40 rounded-md">{metamask.isConnected ? metamask.wallet : "No wallets connected"}</span>
                     </span>
                     <span className="text-xl font-semibold">
-                        Your balance: <span className="p-2 bg-zinc-600 bg-opacity-40 rounded-md">{balance.userBalance}</span>
+                        Your balance: <span className="p-2 bg-zinc-600 bg-opacity-40 rounded-md">{balance.userBalance} <span className="text-purple-500">GAME</span></span>
                     </span>
                     <div className="flex flex-col gap-8 w-full items-center">
-                        <div className="group animated-100 border-2 border-dark-purple-200 border-opacity-90 bg-dark-purple-100 bg-opacity-90 p-4 rounded-lg flex flex-col gap-3 items-center max-w-[650px] w-full">
+                        <div className="group animated-100 border-2 border-dark-purple-200 border-opacity-90 bg-dark-purple-200 bg-opacity-90 p-4 rounded-lg flex flex-col gap-3 items-center max-w-[650px] w-full">
                             <span className="text-xl font-semibold">
                                 Deposit <span className="text-purple-500">GAME</span> tokens:
                             </span>
@@ -146,7 +146,7 @@ export default function DepositOption() {
                                 </button>
                             </div>
                         </div>
-                        <div className="group animated-100 border-2 border-dark-purple-200 border-opacity-90 bg-dark-purple-100 bg-opacity-90 rounded-lg p-4 flex flex-col gap-3 items-center max-w-[650px] w-full">
+                        <div className="group animated-100 border-2 border-dark-purple-200 border-opacity-90 bg-dark-purple-200 bg-opacity-90 rounded-lg p-4 flex flex-col gap-3 items-center max-w-[650px] w-full">
                             <span className="text-xl font-semibold">
                                 Withdraw <span className="text-purple-500">GAME</span> tokens:
                             </span>
@@ -163,7 +163,7 @@ export default function DepositOption() {
                                 />
                                 <button
                                     onClick={() => {
-                                        deposit();
+                                        
                                     }}
                                     className="w-full p-4 text-xl font-semibold bg-purple-900 bg-opacity-50 rounded-md hover:bg-opacity-80 animated-100"
                                 >
