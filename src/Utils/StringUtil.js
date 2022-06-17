@@ -1,3 +1,5 @@
+import { Buffer } from "buffer";
+
 export function isStringEmptyOrSpaces(str) {
     if (typeof str === "string") return str == null || str?.trim() === "";
     else if (typeof str === "object") {
@@ -52,3 +54,11 @@ export function compactString(str, length) {
     }
     return '';
 }
+
+export function strToBase(str) {
+    return Buffer.from(str).toString('base64');
+};
+
+export function baseToStr(str) {
+    return Buffer.from(str, 'base64').toString('utf-8');
+};
