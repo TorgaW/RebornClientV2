@@ -11,11 +11,12 @@ import luckyBoxImage from "../Images/Boxes/luckyBox.png";
 import mysteryBoxImage from "../Images/Boxes/mysteryBox.png";
 import { getRandomInt, getRandomString } from "../Utils/RandomUtil";
 import { formatDistanceToNowStrict } from "date-fns";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserDataStorage } from "../Storages/UserDataStorage";
 import { RARITY_PALETTE } from "../Utils/ColorPaletteUtils";
 import { rarityToNumber } from "../Utils/ItemsUtil";
-import { compactString } from "../Utils/StringUtil";
+import { compactString, strToBase } from "../Utils/StringUtil";
+import { TempLinkStorage } from "../Storages/Stuff/TempLinkStorage";
 
 export default function InventoryPage() {
     const ui = useStoreState(UIStorage);
@@ -309,14 +310,17 @@ function InventoryTab() {
     }
 
     async function getUserInventory() {
+        ui.showContentLoading();
         try {
             let r = await axios.get(getInventory_EP(), safeAuthorize_header());
             let data = getDataFromResponse(r);
             setRawItems(data);
             console.log(data);
+            ui.hideContentLoading();
         } catch (error) {
             ui.showError(getAxiosError(error));
             console.log(error.message);
+            ui.hideContentLoading();
         }
     }
 
@@ -328,6 +332,10 @@ function InventoryTab() {
     useEffect(() => {
         getUserInventory();
         getUserTransfers();
+
+        return ()=>{
+            ui.hideContentLoading();
+        }
     }, []);
 
     useEffect(() => {
@@ -443,9 +451,19 @@ function InventoryTab() {
     );
 }
 
-function ItemTile({ comment, features, imgLink, name, rarity }) {
+function ItemTile({ comment, features, imgLink, name, rarity, boxId }) {
+
+    const navigate = useNavigate();
+
+    function itemClick() {
+        if(typeof boxId === 'number') {
+            let p = strToBase(boxId.toString());
+            navigate('/inventory/item/'+p);
+        }
+    }
+
     return (
-        <div className={"w-[250px] h-[440px] cursor-pointer p-2 py-4 group flex flex-col text-center items-center relative border-2 rounded-md border-opacity-70 hover:border-opacity-100 bg-dark-purple-100 bg-opacity-0 hover:bg-opacity-50 animated-200 " + RARITY_PALETTE.border[rarity?.toLowerCase()]}>
+        <div onClick={()=>{itemClick()}} className={"w-[250px] h-[440px] cursor-pointer p-2 py-4 group flex flex-col text-center items-center relative border-2 rounded-md border-opacity-70 hover:border-opacity-100 bg-dark-purple-100 bg-opacity-0 hover:bg-opacity-50 animated-200 " + RARITY_PALETTE.border[rarity?.toLowerCase()]}>
             <span className="font-semibold text-lg h-[100px] no-flick flex-shrink-0">{name}</span>
             <div className="w-[150px] h-[150px] mt-4 flex flex-shrink-0">
                 <img src={imgLink} alt="item" className={"w-full h-full object-fill rounded-md animated-200 " + (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")} />

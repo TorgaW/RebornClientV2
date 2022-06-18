@@ -37,6 +37,7 @@ import MarketplacePage from "./Pages/Marketplace/MarketplacePage";
 import ViewHeroPage from "./Pages/ViewHeroPage";
 import MarketplaceSellPage from "./Pages/Marketplace/MarketplaceSellPage";
 import TwoFAEnabledPage from "./Pages/Authorization/TwoFAEnabledPage";
+import ItemPhysicalViewPage from "./Pages/ItemPhysicalViewPage";
 
 function App() {
     const [showLoading, setShowLoading] = useState(false);
@@ -98,6 +99,7 @@ function App() {
                     <Route path="/box/:boxIndex" element={<BoxPage />} />
                     <Route path="/heroes" element={<HeroesPage />} />
                     <Route path="/inventory" element={<InventoryPage />} />
+                    <Route path="/inventory/item/:boxId" element={<ItemPhysicalViewPage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/metamask" element={<MetaMaskPage />} />
                     <Route path="/" element={<HomePage />}></Route>
