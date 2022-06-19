@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useStoreState } from "pullstate";
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import AdaptiveLoadingComponent from "../../Components/UI/AdaptiveLoadingComponent";
 import ButtonDefault from "../../Components/UI/StyledComponents/ButtonDefault";
@@ -21,6 +21,8 @@ import { getRandomString } from "../../Utils/RandomUtil";
 
 export default function AccountOption() {
     let navigate = useNavigate();
+
+    const location = useLocation();
 
     const [isMobile, setIsMobile] = useState(isTabletOrMobileBrowser());
 
@@ -54,10 +56,12 @@ export default function AccountOption() {
         else setShowProfile(true);
 
         setSafeUserData(userData.getLocalUserData());
-
-        return ()=>{
+        setTimeout(() => {
             ui.hideContentLoading();
-        }
+        }, 100);
+        return () => {
+            ui.hideContentLoading();
+        };
     }, []);
 
     async function getQR() {
@@ -102,8 +106,10 @@ export default function AccountOption() {
             code,
             captchaToken: captcha,
         });
+        if(!d) {
+            ui.showError(e);
+        }
         ui.hideContentLoading();
-        console.log(d);
     }
 
     async function enable2FA() {
@@ -118,7 +124,7 @@ export default function AccountOption() {
             tempLink.setLinkFor(link, 600);
             let base64QR = strToBase(d.qrLink);
             let base64Private = strToBase(d.secretKey);
-            navigate('/qr/'+base64QR+'/'+base64Private+'/'+link);
+            navigate("/qr/" + base64QR + "/" + base64Private + "/" + link);
         } else {
             ui.showError(e);
             console.log(e);
@@ -134,16 +140,37 @@ export default function AccountOption() {
             <div className="w-full flex justify-center p-2 gap-4 text-xl">
                 {!isMobile ? (
                     <Link to="/profile/deposit">
-                        <button className="p-4 h-full bg-zinc-600 bg-opacity-30 rounded-md hover:bg-opacity-80 animated-100">Deposit</button>
+                        <button
+                            onClick={() => {
+                                if (location.pathname !== "/profile/deposit") ui.showContentLoading();
+                            }}
+                            className="p-4 h-full bg-zinc-600 bg-opacity-30 rounded-md hover:bg-opacity-80 animated-100"
+                        >
+                            Wallet
+                        </button>
                     </Link>
                 ) : (
                     <></>
                 )}
                 <Link to="/profile/uisettings">
-                    <button className="p-4 h-full bg-zinc-600 bg-opacity-30 rounded-md hover:bg-opacity-80 animated-100">Interface settings</button>
+                    <button
+                        onClick={() => {
+                            if (location.pathname !== "/profile/uisettings") ui.showContentLoading();
+                        }}
+                        className="p-4 h-full bg-zinc-600 bg-opacity-30 rounded-md hover:bg-opacity-80 animated-100"
+                    >
+                        Interface settings
+                    </button>
                 </Link>
                 <Link to="/profile/accountsettings">
-                    <button className="p-4 h-full bg-zinc-700 bg-opacity-70 rounded-md">Account settings</button>
+                    <button
+                        onClick={() => {
+                            if (location.pathname !== "/profile/accountsettings") ui.showContentLoading();
+                        }}
+                        className="p-4 h-full bg-zinc-700 bg-opacity-70 rounded-md"
+                    >
+                        Account settings
+                    </button>
                 </Link>
             </div>
             <div className="w-full flex justify-center p-4">
@@ -167,7 +194,7 @@ export default function AccountOption() {
                         <div className="w-full flex flex-col gap-2 text-center">
                             <span className="text-green-300">You have already connected two-factor authentication!</span>
                             <ButtonDefault
-                                text={"Show my QR-code"}
+                                text={!showQR ? "Show my QR-code":"Hide my QR-code"}
                                 click={() => {
                                     getQR();
                                 }}

@@ -17,23 +17,33 @@ import { RARITY_PALETTE } from "../Utils/ColorPaletteUtils";
 import { rarityToNumber } from "../Utils/ItemsUtil";
 import { compactString, strToBase } from "../Utils/StringUtil";
 import { TempLinkStorage } from "../Storages/Stuff/TempLinkStorage";
+import { isTabletOrMobileBrowser, scrollToTop } from "../Utils/BrowserUtil";
 
 export default function InventoryPage() {
     const ui = useStoreState(UIStorage);
 
-    const [selectedOption, setSelectedOption] = useState("boxes");
+    const [selectedOption, setSelectedOption] = useState(isTabletOrMobileBrowser() ? "items" : "boxes");
+    const [isMobile, setIsMobile] = useState(isTabletOrMobileBrowser());
+
+    useEffect(() => {
+        scrollToTop();
+    }, []);
 
     return (
         <div className="w-full flex flex-col items-center px-2 gap-4 text-white">
             <div className="w-full flex justify-center text-xl gap-4 mt-8">
-                <button
-                    onClick={() => {
-                        setSelectedOption("boxes");
-                    }}
-                    className={"w-32 h-10 border-b-[1px] animated-100 " + (selectedOption === "boxes" ? "text-teal-400 border-teal-400" : "")}
-                >
-                    Boxes
-                </button>
+                {!isMobile ? (
+                    <button
+                        onClick={() => {
+                            setSelectedOption("boxes");
+                        }}
+                        className={"w-32 h-10 border-b-[1px] animated-100 " + (selectedOption === "boxes" ? "text-teal-400 border-teal-400" : "")}
+                    >
+                        Boxes
+                    </button>
+                ) : (
+                    <></>
+                )}
                 <button
                     onClick={() => {
                         setSelectedOption("items");
@@ -53,7 +63,7 @@ function BoxTab() {
     const ui = useStoreState(UIStorage);
     const metamask = useStoreState(MetaMaskStorage);
     const userData = useStoreState(UserDataStorage);
-    const [filter, setFilter] = useState({ unopened: true, burned: true, opened: true });
+    const [filter, setFilter] = useState({ unopened: true, burned: false, opened: false });
     const [rawBoxes, setRawBoxes] = useState([]);
     const [boxesComponents, setBoxesComponents] = useState([]);
 
@@ -224,7 +234,12 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId 
     };
     return (
         <Link to={"/box/" + (boxId * 71 + 41)}>
-            <div className={"relative group w-[230px] h-[390px] p-4 flex flex-col flex-shrink-0 rounded-md bg-dark-purple-100 bg-opacity-10 hover:bg-opacity-50 animated-200 border-[2px] border-opacity-70 hover:border-opacity-100 " + (type === "LUCKY" ? "border-yellow-500" : "border-teal-400")}>
+            <div
+                className={
+                    "relative group w-[230px] h-[390px] p-4 flex flex-col flex-shrink-0 rounded-md bg-dark-purple-100 bg-opacity-10 hover:bg-opacity-50 animated-200 border-[2px] border-opacity-70 hover:border-opacity-100 " +
+                    (type === "LUCKY" ? "border-yellow-500" : "border-teal-400")
+                }
+            >
                 {/* <div className="absolute inset-0 flex opacity-70 group-hover:opacity-100 animated-100">
                     <img src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage} alt="lucky box" className={"w-full h-full object-contain animated-100 " + (getRandomInt(0,1) ? 'group-hover:rotate-6':'group-hover:-rotate-6')} />
                 </div>
@@ -244,14 +259,25 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId 
                     </div>
                 </div> */}
                 <div className="w-full flex flex-col items-start gap-1 text-left">
-                    <span className={"p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md no-flick " + statusPalette[status]}>{status === "Owned" ? formatDistanceToNowStrict(new Date(eAt)) + " left" : status}</span>
+                    <span className={"p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md no-flick " + statusPalette[status]}>
+                        {status === "Owned" ? formatDistanceToNowStrict(new Date(eAt)) + " left" : status}
+                    </span>
                     <span className="text-green-300 p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md">{owner}</span>
                 </div>
                 <div className="w-full flex opacity-70 group-hover:opacity-100 animated-100">
-                    <img src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage} alt="lucky box" className={"w-full h-full object-contain animated-200 " + (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")} />
+                    <img
+                        src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage}
+                        alt="lucky box"
+                        className={
+                            "w-full h-full object-contain animated-200 " +
+                            (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")
+                        }
+                    />
                 </div>
                 <div className="w-full mt-auto flex flex-col items-center p-1 bg-dark-purple-100 rounded-md bg-opacity-80">
-                    <span className={"no-flick font-semibold text-sm " + (type === "LUCKY" ? "text-yellow-500" : "text-teal-400")}>{type.toUpperCase()} BOX</span>
+                    <span className={"no-flick font-semibold text-sm " + (type === "LUCKY" ? "text-yellow-500" : "text-teal-400")}>
+                        {type.toUpperCase()} BOX
+                    </span>
                     <span className="no-flick text-sm">
                         {serial}-{number}
                     </span>
@@ -267,7 +293,7 @@ function InventoryTab() {
     const metamask = useStoreState(MetaMaskStorage);
     const userData = useStoreState(UserDataStorage);
 
-    const [rawItems, setRawItems] = useState([]);
+    const [rawItems, setRawItems] = useState({ items: undefined, transfers: undefined });
     const [itemsView, setItemsView] = useState([]);
     const [itemsFilter, setItemsFilter] = useState("heroic,legendary,mythical,epic,rare,common,guarantee");
 
@@ -299,13 +325,24 @@ function InventoryTab() {
         let t = [];
         let filter = itemsFilter.split(",");
         if (filter[0] === "") filter = [];
-        let rawCopy = Array.from(rawItems);
+        let rawCopy = Array.from(rawItems.items ?? []);
         rawCopy.sort((a, b) => {
             return rarityToNumber(b.rarity) - rarityToNumber(a.rarity);
         });
+        console.log(rawItems);
+        for (const i of rawCopy) {
+            for (const j of rawItems.transfers ?? []) {
+                if (i.boxId === j.boxID) {
+                    i.orderStatus = j.status;
+                    i.orderID = j.id;
+                    break;
+                }
+            }
+        }
         for (const i of rawCopy) {
             if (filter.includes(i?.rarity?.toLowerCase())) t.push(<ItemTile {...i} key={getRandomString(32)} />);
         }
+        // console.log(t);
         setItemsView(t);
     }
 
@@ -313,9 +350,13 @@ function InventoryTab() {
         ui.showContentLoading();
         try {
             let r = await axios.get(getInventory_EP(), safeAuthorize_header());
-            let data = getDataFromResponse(r);
-            setRawItems(data);
-            console.log(data);
+            let [transfers, s, e] = await makePost(getTransferDetails_EP(), {}, true);
+            let items = getDataFromResponse(r);
+            if (!transfers) {
+                ui.showError(e);
+                return;
+            }
+            setRawItems({ items, transfers });
             ui.hideContentLoading();
         } catch (error) {
             ui.showError(getAxiosError(error));
@@ -324,18 +365,12 @@ function InventoryTab() {
         }
     }
 
-    async function getUserTransfers() {
-        let [d,s,e] = await makePost(getTransferDetails_EP(),{},true);
-        console.log(d);
-    }
-
     useEffect(() => {
         getUserInventory();
-        getUserTransfers();
 
-        return ()=>{
+        return () => {
             ui.hideContentLoading();
-        }
+        };
     }, []);
 
     useEffect(() => {
@@ -451,26 +486,48 @@ function InventoryTab() {
     );
 }
 
-function ItemTile({ comment, features, imgLink, name, rarity, boxId }) {
-
+function ItemTile({ comment, features, imgLink, name, rarity, boxId, orderStatus, orderID }) {
     const navigate = useNavigate();
 
     function itemClick() {
-        if(typeof boxId === 'number') {
+        if (typeof boxId === "number") {
             let p = strToBase(boxId.toString());
-            navigate('/inventory/item/'+p);
+            navigate("/inventory/item/" + p);
         }
     }
 
     return (
-        <div onClick={()=>{itemClick()}} className={"w-[250px] h-[440px] cursor-pointer p-2 py-4 group flex flex-col text-center items-center relative border-2 rounded-md border-opacity-70 hover:border-opacity-100 bg-dark-purple-100 bg-opacity-0 hover:bg-opacity-50 animated-200 " + RARITY_PALETTE.border[rarity?.toLowerCase()]}>
+        <div
+            onClick={() => {
+                itemClick();
+            }}
+            className={
+                "w-[250px] h-[460px] cursor-pointer p-2 py-4 group flex flex-col text-center items-center relative border-2 rounded-md border-opacity-70 hover:border-opacity-100 bg-dark-purple-100 bg-opacity-0 hover:bg-opacity-50 animated-200 " +
+                RARITY_PALETTE.border[rarity?.toLowerCase()]
+            }
+        >
             <span className="font-semibold text-lg h-[100px] no-flick flex-shrink-0">{name}</span>
             <div className="w-[150px] h-[150px] mt-4 flex flex-shrink-0">
-                <img src={imgLink} alt="item" className={"w-full h-full object-fill rounded-md animated-200 " + (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")} />
+                <img
+                    src={imgLink}
+                    alt="item"
+                    className={
+                        "w-full h-full object-fill rounded-md animated-200 " +
+                        (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")
+                    }
+                />
             </div>
             <span className={"mt-4 no-flick flex-shrink-0 font-bold " + RARITY_PALETTE.text[rarity?.toLowerCase()]}>{rarity?.toUpperCase()}</span>
             <div className="w-full h-full flex items-center justify-center text-center overflow-y-hidden overflow-x-hidden">
-                <span className="text-gray-300 text-sm">{compactString(comment, 120)}</span>
+                <span className="text-gray-300 text-sm">{compactString(comment, 80)}</span>
+            </div>
+            <div className="w-full min-h-[20px] flex items-center justify-center text-center overflow-y-hidden overflow-x-hidden">
+                <span className="text-gray-300 text-sm no-flick">
+                    Order status:{" "}
+                    <span className={'no-flick '+(orderStatus === "Not send" ? "text-red-500" : orderStatus === "Shipped" ? "text-green-500" : "text-yellow-500")}>
+                        {orderStatus}
+                    </span>
+                </span>
             </div>
         </div>
     );

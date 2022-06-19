@@ -13,6 +13,7 @@ import { getDataFromResponse, makePost } from "../Utils/NetworkUtil";
 
 import party from "party-js";
 import { sleepFor } from "../Utils/CodeUtils";
+import { scrollToTop } from "../Utils/BrowserUtil";
 
 export default function OpenBoxPage() {
     const params = useParams();
@@ -131,6 +132,7 @@ export default function OpenBoxPage() {
 
     useEffect(() => {
         startup();
+        scrollToTop();
         return () => {
             ui.hideContentLoading();
         };

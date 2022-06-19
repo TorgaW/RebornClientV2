@@ -61,6 +61,14 @@ export function getBalance_EP() {
     return serverAddress + "/api/userActions/getBalance";
 }
 
+export function confirmWithdraw2FA_EP(){
+    return serverAddress + "/api/userActions/verifyRefund";
+}
+
+export function withdraw_EP(){
+    return serverAddress + "/api/userActions/refundTokens";
+}
+
 export function signedMessageMetaMask_EP(){
     return serverAddress + '/api/userActions/connectMetamask';
 }

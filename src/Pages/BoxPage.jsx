@@ -16,6 +16,7 @@ import { getRandomString } from "../Utils/RandomUtil";
 import { TempLinkStorage } from "../Storages/Stuff/TempLinkStorage";
 import { sleepFor } from "../Utils/CodeUtils";
 import { UserBalanceStorage } from "../Storages/UserBalanceStorage";
+import { isTabletOrMobileBrowser } from "../Utils/BrowserUtil";
 
 export default function BoxPage() {
     const params = useParams();
@@ -26,6 +27,8 @@ export default function BoxPage() {
     const userBalance = useStoreState(UserBalanceStorage);
     const metamask = useStoreState(MetaMaskStorage);
     const tempLink = useStoreState(TempLinkStorage);
+
+    const [isMobile, setIsMobile] = useState(isTabletOrMobileBrowser());
 
     const [boxInfo, setBoxInfo] = useState({});
     const [isOwner, setIsOwner] = useState(false);
@@ -44,14 +47,16 @@ export default function BoxPage() {
                 response = await axios.post(getHeroById_EP(), { index: data.heroId });
                 data = getDataFromResponse(response);
                 setOwnerHero(data);
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                const signer = provider.getSigner();
-                const contract = new ethers.Contract(NFTAddress(), ERC721Abi(), signer);
-                const address = await signer.getAddress();
-                let bigNumberHeroes = await contract.getUsersTokens(address);
-                let normalHeroes = [];
-                for (const i of bigNumberHeroes) normalHeroes.push(i.toNumber());
-                if (normalHeroes.includes(data.index)) setIsOwner(true);
+                if (!isMobile) {
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    const signer = provider.getSigner();
+                    const contract = new ethers.Contract(NFTAddress(), ERC721Abi(), signer);
+                    const address = await signer.getAddress();
+                    let bigNumberHeroes = await contract.getUsersTokens(address);
+                    let normalHeroes = [];
+                    for (const i of bigNumberHeroes) normalHeroes.push(i.toNumber());
+                    if (normalHeroes.includes(data.index)) setIsOwner(true);
+                }
                 setTimeout(() => {
                     ui.hideContentLoading();
                 }, 200);
@@ -110,6 +115,7 @@ export default function BoxPage() {
 
     useEffect(() => {
         if (metamask.isConnected) getBoxInfo();
+        if (isMobile) getBoxInfo();
         document.getElementById("content-wrapper").scrollTop = 0;
     }, [metamask]);
 
@@ -125,7 +131,11 @@ export default function BoxPage() {
                         <span className={"text-2xl font-semibold opacity-80 " + (boxInfo?.type === "LUCKY" ? "text-yellow-500" : "text-teal-400")}>
                             {boxInfo?.serial}-{boxInfo?.number}
                         </span>
-                        {boxInfo?.type === "LUCKY" ? <span className="italic text-yellow-400 opacity-90">Bright yellow box with shining edges! You are so lucky!</span> : <span className="italic text-teal-400 opacity-90">So much power in this box! Who knows what it holds...</span>}
+                        {boxInfo?.type === "LUCKY" ? (
+                            <span className="italic text-yellow-400 opacity-90">Bright yellow box with shining edges! You are so lucky!</span>
+                        ) : (
+                            <span className="italic text-teal-400 opacity-90">So much power in this box! Who knows what it holds...</span>
+                        )}
                         {userData.isLoggedIn ? (
                             isOwner ? (
                                 boxInfo?.status === "Owned" ? (
@@ -135,7 +145,10 @@ export default function BoxPage() {
                                             onClick={() => {
                                                 openBox();
                                             }}
-                                            className={"text-black text-xl font-semibold w-full p-2 rounded-md bg-opacity-80 mt-2 animated-100 hover:bg-opacity-100 " + (boxInfo?.type === "LUCKY" ? "bg-yellow-400" : "bg-teal-400")}
+                                            className={
+                                                "text-black text-xl font-semibold w-full p-2 rounded-md bg-opacity-80 mt-2 animated-100 hover:bg-opacity-100 " +
+                                                (boxInfo?.type === "LUCKY" ? "bg-yellow-400" : "bg-teal-400")
+                                            }
                                         >
                                             Open
                                         </button>
@@ -144,13 +157,21 @@ export default function BoxPage() {
                                             onClick={() => {
                                                 burnBox();
                                             }}
-                                            className={"text-white bg-slate-700 font-semibold w-full p-1 rounded-md bg-opacity-50 mt-2 animated-100 hover:bg-opacity-70 "}
+                                            className={
+                                                "text-white bg-slate-700 font-semibold w-full p-1 rounded-md bg-opacity-50 mt-2 animated-100 hover:bg-opacity-70 "
+                                            }
                                         >
                                             Burn
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="w-full text-center">{boxInfo?.status === "Burned" ? <span className="italic text-red-400">This box has been already burned.</span> : <span className="italic text-red-400">This box has been already opened.</span>}</div>
+                                    <div className="w-full text-center">
+                                        {boxInfo?.status === "Burned" ? (
+                                            <span className="italic text-red-400">This box has been already burned.</span>
+                                        ) : (
+                                            <span className="italic text-red-400">This box has been already opened.</span>
+                                        )}
+                                    </div>
                                 )
                             ) : (
                                 <div className="w-full text-center">
@@ -230,10 +251,19 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
     // console.log(skills);
 
     return (
-        <div className={"flex flex-col items-center gap-4 p-2 border-y-[1px] border-opacity-50 animated-200 " + (tribePalette["border"][tribe] ?? "border-white")}>
+        <div
+            className={
+                "flex flex-col items-center gap-4 p-2 border-y-[1px] border-opacity-50 animated-200 " + (tribePalette["border"][tribe] ?? "border-white")
+            }
+        >
             <div className="w-full flex flex-col items-center gap-2 mt-2">
                 <div className="flex flex-col items-center">
-                    <div className={"w-[200px] h-[200px] relative flex flex-shrink-0 rounded-lg border-[6px] border-opacity-50 animated-200 overflow-x-hidden overflow-y-hidden " + (tribePalette["border"][tribe] ?? "border-white")}>
+                    <div
+                        className={
+                            "w-[200px] h-[200px] relative flex flex-shrink-0 rounded-lg border-[6px] border-opacity-50 animated-200 overflow-x-hidden overflow-y-hidden " +
+                            (tribePalette["border"][tribe] ?? "border-white")
+                        }
+                    >
                         <img
                             onLoad={() => {
                                 setImgLoaded(true);
@@ -262,13 +292,16 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
                         <span className={" font-semibold " + (originPalette["text"][origin] ?? "text-white")}>Origin: {origin}</span>
                     </div>
                 </div>
+                <div className="bg-gray-800 bg-opacity-50 md:w-[500px] w-full text-center p-1 rounded-lg">
+                    <span className={"text-3xl font-bold text-opacity-70 " + tribePalette["text"][tribe]}>{tribe}</span>
+                </div>
                 <div className="md:w-[500px] w-full flex justify-center flex-shrink-0 mb-2">
-                    <div className="w-full flex flex-col gap-4 px-2">
+                    <div className="w-full flex flex-col gap-4 px-2 pl-0">
                         <SkillTile skillVal={skills?.sexy} skillTitle={"Sexy"} />
                         <SkillTile skillVal={skills?.lucky} skillTitle={"Lucky"} />
                         <SkillTile skillVal={skills?.brave} skillTitle={"Brave"} />
                     </div>
-                    <div className="w-full flex flex-col gap-4 px-2">
+                    <div className="w-full flex flex-col gap-4 px-2 pr-0">
                         <SkillTile skillVal={skills?.healthy} skillTitle={"Healthy"} />
                         <SkillTile skillVal={skills?.smart} skillTitle={"Smart"} />
                         <SkillTile skillVal={skills?.skilled} skillTitle={"Skilled"} />
@@ -292,10 +325,13 @@ function SkillTile({ skillVal, skillTitle }) {
     return (
         <div className={"group relative w-full p-2 rounded-md text-center font-semibold bg-opacity-20 " + skillsPalette[skillTitle.toLowerCase()]}>
             <div className="relative z-10 flex justify-between">
-                <span>{skillTitle}</span>
-                <span>{skillVal}</span>
+                <span className="font-semibold">{skillTitle}</span>
+                <span className="font-semibold">{skillVal}</span>
             </div>
-            <div className={"absolute inset-0 h-full rounded-md bg-opacity-30 group-hover:bg-opacity-60 animated-100 " + skillsPalette[skillTitle.toLowerCase()]} style={{ width: skillVal + "%" }}></div>
+            <div
+                className={"absolute inset-0 h-full rounded-md bg-opacity-30 group-hover:bg-opacity-60 animated-100 " + skillsPalette[skillTitle.toLowerCase()]}
+                style={{ width: skillVal + "%" }}
+            ></div>
         </div>
     );
 }
@@ -336,7 +372,12 @@ function ItemTile({ name, comment, features, imgLink, rarity }) {
     return (
         <div className={"w-full flex flex-col items-center p-4 gap-4 text-white border-y-[1px] " + rarityPalette.border[rarity?.toLowerCase()]}>
             <div className="flex flex-col items-center gap-2">
-                <div className={"w-[200px] h-[200px] relative flex flex-shrink-0 rounded-lg border-[6px] border-opacity-50 animated-200 overflow-x-hidden overflow-y-hidden " + (rarityPalette.border[rarity?.toLowerCase()] ?? "border-white")}>
+                <div
+                    className={
+                        "w-[200px] h-[200px] relative flex flex-shrink-0 rounded-lg border-[6px] border-opacity-50 animated-200 overflow-x-hidden overflow-y-hidden " +
+                        (rarityPalette.border[rarity?.toLowerCase()] ?? "border-white")
+                    }
+                >
                     <img
                         onLoad={() => {
                             setImgLoaded(true);

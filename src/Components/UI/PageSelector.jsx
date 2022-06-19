@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { scrollToTop } from "../../Utils/BrowserUtil";
 import { clampNumber } from "../../Utils/MathUtils";
 import { getRandomString } from "../../Utils/RandomUtil";
 
-export default function PageSelector({ maxPages, callback }) {
+export default function PageSelector({ maxPages, callback, scroll }) {
     const [selectedPage, setSelectedPage] = useState(1);
 
     const [pagesView, setPagesView] = useState([]);
@@ -12,6 +13,7 @@ export default function PageSelector({ maxPages, callback }) {
         if (r === selectedPage) return;
         if (typeof callback === "function") callback(r);
         setSelectedPage(r);
+        if(typeof scroll === 'number') scrollToTop(scroll);
     }
 
     useEffect(() => {

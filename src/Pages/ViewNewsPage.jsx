@@ -3,6 +3,7 @@ import { useStoreState } from "pullstate";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UIStorage } from "../Storages/UIStorage";
+import { scrollToTop } from "../Utils/BrowserUtil";
 import { getSpecificNews_EP } from "../Utils/EndpointsUtil";
 import { getDataFromResponse } from "../Utils/NetworkUtil";
 
@@ -34,6 +35,7 @@ export default function ViewNewsPage() {
         }
         ui.showContentLoading();
         s();
+        scrollToTop();
         return () => {
             ui.hideContentLoading();
         };

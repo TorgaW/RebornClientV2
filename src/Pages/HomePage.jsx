@@ -19,6 +19,7 @@ import { clampNumber } from "../Utils/MathUtils";
 import AdaptiveLoadingComponent from "../Components/UI/AdaptiveLoadingComponent";
 import PageSelector from "../Components/UI/PageSelector";
 import { insertInString } from "../Utils/StringUtil";
+import { scrollToTop } from "../Utils/BrowserUtil";
 
 export default function HomePage() {
     const [selectedOption, setSelectedOption] = useState("news");
@@ -29,6 +30,8 @@ export default function HomePage() {
         setInWait(true);
         setTimeout(()=>{setInWait(false)},150);
     },[selectedOption]);
+
+    useEffect(()=>{scrollToTop()},[]);
 
     return (
         <div className="w-full flex flex-col items-center px-2 gap-4">
@@ -127,12 +130,13 @@ function NewsSelector() {
                         callback={(a) => {
                             setSelectedPage(a);
                         }}
+                        scroll={500}
                     />
                 </div>
             </div>
             {showLoading ? (
                 <div className="absolute inset-0 w-full h-full">
-                    <AdaptiveLoadingComponent />
+                    <AdaptiveLoadingComponent top={true} />
                 </div>
             ) : (
                 <></>
@@ -200,12 +204,13 @@ function ComicsSelector() {
                         callback={(a) => {
                             setSelectedPage(a);
                         }}
+                        scroll={500}
                     />
                 </div>
             </div>
             {showLoading ? (
                 <div className="absolute inset-0 w-full h-full z-50">
-                    <AdaptiveLoadingComponent />
+                    <AdaptiveLoadingComponent top={true} />
                 </div>
             ) : (
                 <></>

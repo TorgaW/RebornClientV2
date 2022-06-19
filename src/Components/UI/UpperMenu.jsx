@@ -45,9 +45,9 @@ export default function UpperMenu() {
                         <Link to="/inventory">
                             <div className="flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-800 animated-100">Inventory</div>
                         </Link>
-                        <Link to="/marketplace">
+                        {/* <Link to="/marketplace">
                             <div className="flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-800 animated-100">Marketplace</div>
-                        </Link>
+                        </Link> */}
                         {/* <Link to="/about">
                             <div className="text-lg text-gray-300 flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-900 animated-100">
                                 About project
@@ -165,7 +165,7 @@ export default function UpperMenu() {
                                 </button>
                             </div>
                         </Link>
-                        <Link to="/marketplace">
+                        {/* <Link to="/marketplace">
                             <div className="w-full flex justify-center items-center">
                                 <button
                                     onClick={() => {
@@ -176,7 +176,7 @@ export default function UpperMenu() {
                                     Marketplace
                                 </button>
                             </div>
-                        </Link>
+                        </Link> */}
                         <div className="mt-auto">
                             <Link to="/about">
                                 <div className="w-full flex justify-center items-center">
@@ -247,16 +247,24 @@ export default function UpperMenu() {
                     </div>
                     <div className="flex flex-col w-full h-full gap-2">
                         {userData.isLoggedIn ? (
-                            <Link to="profile/accountsettings">
-                                <div onClick={()=>{toggleMobileMenu()}} className="h-16 flex justify-center items-center">
-                                    <div className="w-full p-1 border-[1px] rounded-md flex justify-center items-center gap-2">
-                                        <div className="h-14 w-14 flex justify-center items-center">
-                                            <ProfileIcon />
+                            <>
+                                <Link to="profile/accountsettings">
+                                    <div
+                                        onClick={() => {
+                                            toggleMobileMenu();
+                                        }}
+                                        className="h-16 flex justify-center items-center"
+                                    >
+                                        <div className="w-full p-1 border-[1px] rounded-md flex justify-center items-center gap-2">
+                                            <div className="h-14 w-14 flex justify-center items-center">
+                                                <ProfileIcon />
+                                            </div>
+                                            <span className="text-xl">{userData.userData.username}</span>
                                         </div>
-                                        <span className="text-xl">{userData.userData.username}</span>
                                     </div>
-                                </div>
-                            </Link>
+                                </Link>
+                                <span className="self-center text-teal-400">Your deposit: {balance.userBalance}G</span>
+                            </>
                         ) : (
                             <div className="w-full h-12 flex gap-4">
                                 <Link to="/signin" className="w-full h-full">
@@ -317,7 +325,7 @@ export default function UpperMenu() {
                                 </button>
                             </div>
                         </Link>
-                        <Link to="/marketplace">
+                        {/* <Link to="/marketplace">
                             <div className="w-full flex justify-center items-center">
                                 <button
                                     onClick={() => {
@@ -328,7 +336,7 @@ export default function UpperMenu() {
                                     Marketplace
                                 </button>
                             </div>
-                        </Link>
+                        </Link> */}
                         <div className="mt-auto">
                             <Link to="/about">
                                 <div className="w-full flex justify-center items-center">

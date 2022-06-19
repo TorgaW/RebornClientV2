@@ -8,6 +8,7 @@ import { getDataFromResponse } from "../Utils/NetworkUtil";
 import { getRandomString } from "../Utils/RandomUtil";
 import AdaptiveLoadingComponent from "../Components/UI/AdaptiveLoadingComponent";
 import ButtonGreen from "../Components/UI/StyledComponents/ButtonGreen";
+import { scrollToTop } from "../Utils/BrowserUtil";
 
 export default function HeroView() {
     const params = useParams();
@@ -38,7 +39,7 @@ export default function HeroView() {
         }
         ui.showContentLoading();
         h();
-        document.getElementById("content-wrapper").scrollTop = 0;
+        scrollToTop();
         return () => {
             ui.hideContentLoading();
         };
@@ -53,8 +54,7 @@ export default function HeroView() {
     );
 }
 
-function SkillTile({skillVal, skillTitle}) {
-    
+function SkillTile({ skillVal, skillTitle }) {
     const skillsPalette = {
         sexy: "bg-pink-400",
         lucky: "bg-yellow-300",
@@ -65,13 +65,19 @@ function SkillTile({skillVal, skillTitle}) {
     };
 
     return (
-    <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette[skillTitle.toLowerCase()]}>
-        <div className="relative z-10 flex justify-between">
-            <span>{skillTitle}</span>
-            <span>{skillVal}</span>
+        <div className={"group relative w-full mt-4 py-1 px-2 rounded-md bg-opacity-20 " + skillsPalette[skillTitle.toLowerCase()]}>
+            <div className="relative z-10 flex justify-between">
+                <span className="font-semibold">{skillTitle}</span>
+                <span className="font-semibold">{skillVal}</span>
+            </div>
+            <div
+                className={
+                    "absolute inset-0 h-full rounded-md bg-opacity-30 font-semibold group-hover:bg-opacity-60 animated-100 " +
+                    skillsPalette[skillTitle.toLowerCase()]
+                }
+                style={{ width: skillVal + "%" }}
+            ></div>
         </div>
-        <div className={"absolute inset-0 h-full rounded-md bg-opacity-30 font-semibold group-hover:bg-opacity-60 animated-100 " + skillsPalette[skillTitle.toLowerCase()]} style={{ width: skillVal + "%" }}></div>
-    </div>
     );
 }
 
@@ -114,8 +120,12 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
 
     return (
         <div className="w-full mt-6 flex flex-col justify-center items-center gap-6 text-white px-4">
-            <div className={"w-full flex flex-col justify-center items-center gap-6 px-6 py-6 border-t-2 border-b-2 border-opacity-80 " + tribePalette["border"][tribe]}>
-                <div className="w-full flex px-4 flex-col justify-center items-center gap-6">
+            <div
+                className={
+                    "w-full flex flex-col justify-center items-center gap-6 px-6 py-6 border-t-2 border-b-2 border-opacity-80 " + tribePalette["border"][tribe]
+                }
+            >
+                <div className="w-full flex px-4 flex-col justify-center items-center gap-3">
                     <div className="flex flex-col gap-2 justify-center items-center">
                         <div className={"h-[300px] w-[300px] border-[6px] border-opacity-50 rounded-lg relative " + tribePalette["border"][tribe]}>
                             <img
@@ -140,21 +150,21 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
                             </div>
                         </div>
                     </div>
+                    <div className="bg-gray-800 bg-opacity-50 w-full max-w-[350px] text-center p-1 rounded-lg">
+                        <span className={"text-3xl font-bold text-opacity-70 " + tribePalette["text"][tribe]}>{tribe}</span>
+                    </div>
                     <div className="flex flex-col w-full max-w-[350px] justify-center bg-gray-800 rounded-xl px-4 py-4 bg-opacity-80">
                         <span className="text-2xl font-semibold">Skills</span>
-                        <SkillTile skillVal={skills?.sexy} skillTitle={"Sexy"}/>
-                        <SkillTile skillVal={skills?.lucky} skillTitle={"Lucky"}/>
-                        <SkillTile skillVal={skills?.brave} skillTitle={"Brave"}/>
-                        <SkillTile skillVal={skills?.healthy} skillTitle={"Healthy"}/>
-                        <SkillTile skillVal={skills?.smart} skillTitle={"Smart"}/>
-                        <SkillTile skillVal={skills?.skilled} skillTitle={"Skilled"}/>
+                        <SkillTile skillVal={skills?.sexy} skillTitle={"Sexy"} />
+                        <SkillTile skillVal={skills?.lucky} skillTitle={"Lucky"} />
+                        <SkillTile skillVal={skills?.brave} skillTitle={"Brave"} />
+                        <SkillTile skillVal={skills?.healthy} skillTitle={"Healthy"} />
+                        <SkillTile skillVal={skills?.smart} skillTitle={"Smart"} />
+                        <SkillTile skillVal={skills?.skilled} skillTitle={"Skilled"} />
                     </div>
                 </div>
-                <div className="bg-gray-800 bg-opacity-50 w-full text-center p-1 rounded-lg">
-                    <span className={"text-3xl font-bold text-opacity-70 " + tribePalette["text"][tribe]}>{tribe}</span>
-                </div>
             </div>
-            <ButtonGreen additionalStyle={"md:w-[350px] w-full"} text={"View on Marketplace"} />
+            {/* <ButtonGreen additionalStyle={"md:w-[350px] w-full"} text={"View on Marketplace"} /> */}
         </div>
     );
 }
