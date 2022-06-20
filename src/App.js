@@ -91,7 +91,7 @@ function App() {
                     <Route path="/profile/uisettings" element={<UIOption />} />
                     <Route path="/profile/deposit" element={<DepositOption />} />
                     {/* <Route path="/marketplace" element={<MarketplacePage />} /> */}
-                    {/* <Route path="/marketplace/sell" element={<MarketplaceSellPage />} /> */}
+                    <Route path="/marketplace/sell" element={<MarketplaceSellPage />} />
                     <Route path="/news/:newsIndex" element={<ViewNewsPage />} />
                     <Route path="/comics/:comicsIndex" element={<ViewComicsPage />} />
                     <Route path="/hero/:heroIndex" element={<ViewHeroPage />} />
