@@ -8,6 +8,7 @@ import noti_sound_neutral from "../../Audio/notification_sound1.mp3";
 import noti_sound_success from "../../Audio/notification_sound2.mp3";
 import noti_sound_error from "../../Audio/notification_sound3.mp3";
 import { getLocalOptions } from "../../Utils/LocalStorageManager/LocalStorageManager";
+import { isTabletOrMobileBrowser } from "../../Utils/BrowserUtil";
 // import { isInArray } from "../Utils/ArrayUtil";
 
 export default function MessagesProvider() {
@@ -115,6 +116,8 @@ export default function MessagesProvider() {
 function Message({ type, text, mKey, closeMessage }) {
     const [fadeOut, setFadeOut] = useState(false);
 
+    const [isMobile, setIsMobile] = useState(isTabletOrMobileBrowser());
+
     useEffect(() => {
         let t1 = setTimeout(() => {
             setFadeOut(true);
@@ -135,7 +138,7 @@ function Message({ type, text, mKey, closeMessage }) {
             <div
                 className={
                     "p-4 border-2 border-slate-300 flex-shrink-0 flex items-center gap-6 bg-black rounded-lg relative pointer-events-auto transition-all " +
-                    (fadeOut ? "opacity-0" : "opacity-80 hover:opacity-100")
+                    (fadeOut ? "opacity-0" : (isMobile ? 'opacity-100':"opacity-80 hover:opacity-100"))
                 }
                 style={fadeOut ? { transitionDuration: "1700ms" } : {}}
             >
@@ -157,7 +160,7 @@ function Message({ type, text, mKey, closeMessage }) {
             <div
                 className={
                     "p-4 border-2 border-green-500 flex-shrink-0 flex items-center gap-6 bg-black rounded-lg relative pointer-events-auto transition-all " +
-                    (fadeOut ? "opacity-0" : "opacity-80 hover:opacity-100")
+                    (fadeOut ? "opacity-0" : (isMobile ? 'opacity-100':"opacity-80 hover:opacity-100"))
                 }
                 style={fadeOut ? { transitionDuration: "1700ms" } : {}}
             >
@@ -179,7 +182,7 @@ function Message({ type, text, mKey, closeMessage }) {
             <div
                 className={
                     "p-4 border-2 border-red-500 flex-shrink-0 flex items-center gap-6 bg-black rounded-lg relative pointer-events-auto transition-all " +
-                    (fadeOut ? "opacity-0" : "opacity-80 hover:opacity-100")
+                    (fadeOut ? "opacity-0" : (isMobile ? 'opacity-100':"opacity-80 hover:opacity-100"))
                 }
                 style={fadeOut ? { transitionDuration: "1700ms" } : {}}
             >
