@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import HomePage from "./Pages/HomePage";
 import UpperMenu from "./Components/UI/UpperMenu";
@@ -33,6 +33,11 @@ import BoxPage from "./Pages/BoxPage";
 import { getRandomString } from "./Utils/RandomUtil";
 import TemporaryLinkComponent from "./Components/TemporaryLinks/TemporaryLinkComponent";
 import OpenBoxPage from "./Pages/OpenBoxPage";
+import MarketplacePage from "./Pages/Marketplace/MarketplacePage";
+import ViewHeroPage from "./Pages/ViewHeroPage";
+import MarketplaceSellPage from "./Pages/Marketplace/MarketplaceSellPage";
+import TwoFAEnabledPage from "./Pages/Authorization/TwoFAEnabledPage";
+import ItemPhysicalViewPage from "./Pages/ItemPhysicalViewPage";
 
 function App() {
     const [showLoading, setShowLoading] = useState(false);
@@ -71,7 +76,7 @@ function App() {
             <CurrenciesUpdateComponent />
             <UserBalanceComponent />
             <TemporaryLinkComponent />
-            <div id="content-wrapper" className={"absolute inset-0 flex flex-col justify-between bg-dark-purple-500 overflow-y-auto " + (isTabletOrMobileBrowser() ? 'top-[80px]':'top-[120px]')}>
+            <div id="content-wrapper" className="absolute inset-0 top-[120px] flex flex-col justify-between bg-dark-purple-500 overflow-y-auto">
                 {/* loading component */}
                 {showLoading ? <AbsoluteLoadingComponent /> : <></>}
 
@@ -79,23 +84,28 @@ function App() {
                     <Route path="/signin" element={<SignInPage />} />
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/forgotpass" element={<ForgotPasswordPage />} />
+                    <Route path="/qr/:qr/:private/:hash" element={<TwoFAEnabledPage />} />
                     <Route path="/auth/:username/:authHash" element={<ProofAuthWithCodePage />} />
                     <Route path="/profile/accountsettings" element={<AccountOption />} />
                     {/* <Route path="/profile/privacysettings" element={<UserProfilePage />}/> */}
                     <Route path="/profile/uisettings" element={<UIOption />} />
                     <Route path="/profile/deposit" element={<DepositOption />} />
+                    {/* <Route path="/marketplace" element={<MarketplacePage />} /> */}
+                    {/* <Route path="/marketplace/sell" element={<MarketplaceSellPage />} /> */}
                     <Route path="/news/:newsIndex" element={<ViewNewsPage />} />
                     <Route path="/comics/:comicsIndex" element={<ViewComicsPage />} />
-                    <Route exact path="/box/:boxIndex/:heroIndex/:boxType/open/:hash" element={<OpenBoxPage />} />
+                    <Route path="/hero/:heroIndex" element={<ViewHeroPage />} />
+                    <Route path="/box/:boxIndex/:heroIndex/open/:hash" element={<OpenBoxPage />} />
                     <Route path="/box/:boxIndex" element={<BoxPage />} />
                     <Route path="/heroes" element={<HeroesPage />} />
                     <Route path="/inventory" element={<InventoryPage />} />
+                    <Route path="/inventory/item/:boxId" element={<ItemPhysicalViewPage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/metamask" element={<MetaMaskPage />} />
                     <Route path="/" element={<HomePage />}></Route>
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
-                <footer className="w-full h-[200px] pt-8 flex flex-col justify-center items-center bg-black flex-shrink-0 mt-20">
+                <footer className="w-full h-[220px] pt-4 py-4 flex flex-col justify-center items-center bg-black flex-shrink-0 mt-20">
                     <span className="text-teal-800 text-xl font-bold">Reborn.cash</span>
                     <span className="text-teal-800 font-semibold text-center">An experimental, open-ended, NFT-based metaverse.</span>
                     <span className="text-purple-900 font-semibold">Based on $GAME token.</span>
@@ -125,7 +135,10 @@ function App() {
                             <DiscordIcon color={"#1a918a"} />
                         </div>
                     </div>
-                    <span className="text-teal-800 mt-auto">Reborn web-client version: 2022.02</span>
+                    <Link to={"/about"} className='mt-2'>
+                        <span className="text-teal-400 opacity-50 font-semibold animated-200 cursor-pointer hover:opacity-100">About project</span>
+                    </Link>
+                    <span className="text-teal-800 mt-auto">Reborn web-client version: 2022, v0.2</span>
                 </footer>
             </div>
             <MessagesProvider />

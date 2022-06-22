@@ -1,6 +1,10 @@
-import React from 'react'
+import { useStoreState } from 'pullstate'
+import React, { useEffect } from 'react'
+import { UIStorage } from '../../Storages/UIStorage';
 
 export default function NotFoundPage() {
+  const ui = useStoreState(UIStorage);
+  useEffect(()=>{ui.hideContentLoading()},[]);
   return (
     <div className='w-full h-full flex justify-center'>
         <div className='h-1/2 w-full flex flex-col items-center py-20 gap-4'>

@@ -27,7 +27,7 @@ export default function UpperMenu() {
     }
 
     function toggleMobileMenu() {
-        document.getElementById("menu-mobile").classList.toggle("translate-x-full");
+        document.getElementById("small-menu-mobile").classList.toggle("-translate-x-full");
     }
 
     return !isOnMobile ? (
@@ -45,11 +45,14 @@ export default function UpperMenu() {
                         <Link to="/inventory">
                             <div className="flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-800 animated-100">Inventory</div>
                         </Link>
-                        <Link to="/about">
+                        {/* <Link to="/marketplace">
+                            <div className="flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-800 animated-100">Marketplace</div>
+                        </Link> */}
+                        {/* <Link to="/about">
                             <div className="text-lg text-gray-300 flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-900 animated-100">
                                 About project
                             </div>
-                        </Link>
+                        </Link> */}
                     </div>
 
                     {/* small size window */}
@@ -113,7 +116,7 @@ export default function UpperMenu() {
             {/* small size desktop menu */}
             <div
                 id="small-menu-desktop"
-                className="fixed md:hidden w-full h-full flex p-5 bg-black z-30 animated-500 overflow-x-hidden text-white transform -translate-x-full"
+                className="fixed md:hidden w-full h-full flex p-5 bg-black z-[51] animated-500 overflow-x-hidden text-white transform -translate-x-full"
             >
                 <div className="w-full h-full flex flex-col gap-4 relative">
                     <div className="w-full p-2 flex justify-center items-center">
@@ -162,6 +165,18 @@ export default function UpperMenu() {
                                 </button>
                             </div>
                         </Link>
+                        {/* <Link to="/marketplace">
+                            <div className="w-full flex justify-center items-center">
+                                <button
+                                    onClick={() => {
+                                        toggleSmallSizeMenuDesktop();
+                                    }}
+                                    className="w-full text-3xl p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                >
+                                    Marketplace
+                                </button>
+                            </div>
+                        </Link> */}
                         <div className="mt-auto">
                             <Link to="/about">
                                 <div className="w-full flex justify-center items-center">
@@ -198,21 +213,27 @@ export default function UpperMenu() {
     ) : (
         // mobile devices menu
         <>
-            <div className="fixed w-full left-0 top-0 h-20 flex bg-black overflow-x-auto overflow-y-hidden text-white z-20">
-                <div className="w-full h-full flex flex-row-reverse items-center justify-between px-2 pl-4">
-                    <div onClick={()=>{toggleMobileMenu()}} className="h-16 w-16 flex justify-center items-center hover:bg-zinc-800 rounded-md">
-                        <div className="w-12 h-12 flex justify-center items-center">
-                            <MenuIcon />
-                        </div>
-                    </div>
-                    <div className="h-full flex justify-center items-center">
-                        <span className="text-teal-300 text-3xl font-bold">BCH Reborn</span>
+            <div className="fixed w-full left-0 top-0 h-[120px] flex flex-col bg-black overflow-x-auto text-white z-20">
+                <div className="w-full h-full flex justify-center items-center relative">
+                    <span className="text-3xl font-bold text-teal-400">BCH Reborn</span>
+                    <div
+                        onClick={() => {
+                            toggleMobileMenu();
+                        }}
+                        className="absolute p-1 rounded-md right-4 top-1/2 h-12 w-12 -translate-y-1/2 flex justify-center items-center animated-100 hover:bg-zinc-800"
+                    >
+                        <MenuIcon />
                     </div>
                 </div>
+                <div className="w-full h-10 flex justify-center items-center gap-8 flex-shrink-0 text-teal-400">
+                    <span>GAME: {currencies.GAMEPrice}$</span>
+                    <span>BCH: {currencies.BCHPrice}$</span>
+                </div>
             </div>
+
             <div
-                id="menu-mobile"
-                className="fixed md:hidden w-full h-full flex p-5 bg-black z-30 animated-500 overflow-x-hidden text-white transform translate-x-full"
+                id="small-menu-mobile"
+                className="fixed md:hidden w-full h-full flex p-5 bg-black z-[51] animated-500 overflow-x-hidden text-white transform -translate-x-full"
             >
                 <div className="w-full h-full flex flex-col gap-4 relative">
                     <div className="w-full p-2 flex justify-center items-center">
@@ -225,13 +246,56 @@ export default function UpperMenu() {
                         </div>
                     </div>
                     <div className="flex flex-col w-full h-full gap-2">
-                        <Link to="/">
+                        {userData.isLoggedIn ? (
+                            <>
+                                <Link to="profile/accountsettings">
+                                    <div
+                                        onClick={() => {
+                                            toggleMobileMenu();
+                                        }}
+                                        className="h-16 flex justify-center items-center"
+                                    >
+                                        <div className="w-full p-1 border-[1px] rounded-md flex justify-center items-center gap-2">
+                                            <div className="h-14 w-14 flex justify-center items-center">
+                                                <ProfileIcon />
+                                            </div>
+                                            <span className="text-xl">{userData.userData.username}</span>
+                                        </div>
+                                    </div>
+                                </Link>
+                                <span className="self-center text-teal-400">Your deposit: {balance.userBalance}G</span>
+                            </>
+                        ) : (
+                            <div className="w-full h-12 flex gap-4">
+                                <Link to="/signin" className="w-full h-full">
+                                    <button
+                                        onClick={() => {
+                                            toggleMobileMenu();
+                                        }}
+                                        className="w-full text-xl border-[1px] p-2 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                    >
+                                        Sign in
+                                    </button>
+                                </Link>
+                                <Link to="/signup" className="w-full h-full">
+                                    <button
+                                        onClick={() => {
+                                            toggleMobileMenu();
+                                        }}
+                                        className="w-full text-xl border-[1px] p-2 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                    >
+                                        Sign up
+                                    </button>
+                                </Link>
+                            </div>
+                        )}
+                        <Link to="/" className="mt-8">
                             <div className="w-full flex justify-center items-center">
                                 <button
                                     onClick={() => {
                                         toggleMobileMenu();
                                     }}
-                                    className="w-full text-3xl p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                    className="w-full text-3xl border-[1px] border-teal-400 p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
                                 >
                                     Home
                                 </button>
@@ -243,7 +307,7 @@ export default function UpperMenu() {
                                     onClick={() => {
                                         toggleMobileMenu();
                                     }}
-                                    className="w-full text-3xl p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                    className="w-full text-3xl border-[1px] border-teal-400 p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
                                 >
                                     Heroes
                                 </button>
@@ -255,12 +319,24 @@ export default function UpperMenu() {
                                     onClick={() => {
                                         toggleMobileMenu();
                                     }}
-                                    className="w-full text-3xl p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                    className="w-full text-3xl border-[1px] border-teal-400 p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
                                 >
                                     Inventory
                                 </button>
                             </div>
                         </Link>
+                        {/* <Link to="/marketplace">
+                            <div className="w-full flex justify-center items-center">
+                                <button
+                                    onClick={() => {
+                                        toggleMobileMenu();
+                                    }}
+                                    className="w-full text-3xl border-[1px] border-teal-400 p-4 rounded-md hover:bg-zinc-800 font-semibold animated-100"
+                                >
+                                    Marketplace
+                                </button>
+                            </div>
+                        </Link> */}
                         <div className="mt-auto">
                             <Link to="/about">
                                 <div className="w-full flex justify-center items-center">
@@ -279,12 +355,12 @@ export default function UpperMenu() {
                             <span>BCH Reborn 2022, v0.2</span>
                         </div>
                     </div>
-                    <div className="absolute w-12 h-12 right-0 top-1 flex">
+                    <div className="absolute w-12 h-12 right-0 top-0 flex">
                         <div
                             onClick={() => {
                                 toggleMobileMenu();
                             }}
-                            className="w-full h-full flex p-3 rounded-md hover:bg-zinc-800 animated-100 cursor-pointer select-none"
+                            className="w-full h-full flex p-2 rounded-md hover:bg-zinc-800 animated-100 cursor-pointer select-none"
                         >
                             <div className="w-full h-full flex justify-center items-center">
                                 <CancelIWhite />

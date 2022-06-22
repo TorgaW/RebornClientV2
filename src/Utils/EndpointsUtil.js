@@ -33,8 +33,24 @@ export function signIn_EP() {
     return serverAddress + "/api/auth/signin";
 }
 
+export function signUp_EP() {
+    return serverAddress + "/api/auth/signup";
+}
+
 export function verify2FA_EP(){
     return serverAddress + "/api/userActions/verifyCode";
+}
+
+export function set2FA_EP(){
+    return serverAddress + "/api/userActions/set2FA";
+}
+
+export function getQr_EP(){
+    return serverAddress + "/api/userActions/getCode";
+}
+
+export function changePassword_EP(){
+    return serverAddress + "/api/auth/resetPassword";
 }
 
 export function addBalance_EP() {
@@ -45,12 +61,32 @@ export function getBalance_EP() {
     return serverAddress + "/api/userActions/getBalance";
 }
 
+export function confirmWithdraw2FA_EP(){
+    return serverAddress + "/api/userActions/verifyRefund";
+}
+
+export function withdraw_EP(){
+    return serverAddress + "/api/userActions/refundTokens";
+}
+
 export function signedMessageMetaMask_EP(){
     return serverAddress + '/api/userActions/connectMetamask';
 }
 
 export function getTokenExpiresTime_EP() {
     return serverAddress + "/api/userActions/getExpiresAt";
+}
+
+export function getInventory_EP() {
+    return serverAddress + "/api/userActions/getInventory";
+}
+
+export function getTransferDetails_EP(){
+    return serverAddress + "/api/userActions/getTransferDetails";
+}
+
+export function setTransferDetails_EP(){
+    return serverAddress + "/api/userActions/setTransferDetails";
 }
 
 export function getNewsQuantity_EP(){
@@ -103,4 +139,10 @@ export function openBox_EP() {
 
 export function burnBox_EP() {
     return serverAddress + "/api/userActions/burnBox";
+}
+
+// Marketplace
+
+export function marketplace_Load() {
+    return serverAddress + "/api/marketplace/loadLots";
 }

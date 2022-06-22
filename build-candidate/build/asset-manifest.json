@@ -1,0 +1,39 @@
+{
+  "files": {
+    "main.css": "/static/css/main.2506a32d.css",
+    "main.js": "/static/js/main.a627c8d8.js",
+    "static/media/11.jpg": "/static/media/11.d5cbee50c7337d977797.jpg",
+    "static/media/mysteryBox.png": "/static/media/mysteryBox.054c8410001672fa9a05.png",
+    "static/media/luckyBox.png": "/static/media/luckyBox.af8d1b87bd0d75adfbe4.png",
+    "static/media/3.jpg": "/static/media/3.23daf073c9294cfc8005.jpg",
+    "static/media/13.jpg": "/static/media/13.85d4dbc5201000e3b249.jpg",
+    "static/media/2.jpg": "/static/media/2.fd7ac1d506a20516e238.jpg",
+    "static/media/notification_sound2.mp3": "/static/media/notification_sound2.0169218b497659bfd275.mp3",
+    "static/media/notification_sound3.mp3": "/static/media/notification_sound3.9751c321e5354ebad641.mp3",
+    "static/media/16.jpg": "/static/media/16.836a07ecea2b2823ebd2.jpg",
+    "static/media/5.jpg": "/static/media/5.6c3529b68eb35912e252.jpg",
+    "static/media/17.jpg": "/static/media/17.3668b1d1d6b8cc28a749.jpg",
+    "static/media/20.jpg": "/static/media/20.12b8fd6b46d88a41f71b.jpg",
+    "static/media/14.jpg": "/static/media/14.d2000ec6693d9207df1f.jpg",
+    "static/media/18.jpg": "/static/media/18.4f8db7c4e9bbf0080f63.jpg",
+    "static/media/12.jpg": "/static/media/12.3fc88448ba2039f3cb85.jpg",
+    "static/media/19.jpg": "/static/media/19.4185d33d4f41093f5633.jpg",
+    "static/media/10.jpg": "/static/media/10.6dc3adddc064a0ca9c4e.jpg",
+    "static/media/9.jpg": "/static/media/9.38dd771eae43a6da92db.jpg",
+    "static/media/7.jpg": "/static/media/7.fafb24144e030c45c653.jpg",
+    "static/media/21.jpg": "/static/media/21.c18157f656205747e92e.jpg",
+    "static/media/15.jpg": "/static/media/15.99970766e24918b62b56.jpg",
+    "static/media/4.jpg": "/static/media/4.dc394c94e6e07fe2722a.jpg",
+    "static/media/6.jpg": "/static/media/6.c553e4df9e4021d7dcce.jpg",
+    "static/media/8.jpg": "/static/media/8.e4972a70ba3ffde5f4d0.jpg",
+    "static/media/1.jpg": "/static/media/1.d030d0d17ea0d3c95483.jpg",
+    "static/media/notification_sound1.mp3": "/static/media/notification_sound1.47ba671778e23090dc38.mp3",
+    "index.html": "/index.html",
+    "main.2506a32d.css.map": "/static/css/main.2506a32d.css.map",
+    "main.a627c8d8.js.map": "/static/js/main.a627c8d8.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2506a32d.css",
+    "static/js/main.a627c8d8.js"
+  ]
+}

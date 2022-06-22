@@ -2,13 +2,10 @@ import React, { useEffect } from 'react'
 import DiscordIcon from '../Icons/Discord';
 import TelegramIcon from '../Icons/Telegram';
 import TwitterIcon from '../Icons/Twitter';
+import { scrollToTop } from '../Utils/BrowserUtil';
 
 export default function AboutPage() {
-
-    useEffect(()=>{
-        document.getElementById("content-wrapper").scrollTop = 0;
-    },[])
-
+    useEffect(()=>{scrollToTop()},[])
   return (
     <div className="w-full flex relative">
             <div className="w-full h-full overflow-y-auto flex flex-col items-center px-4 lg:px-10">

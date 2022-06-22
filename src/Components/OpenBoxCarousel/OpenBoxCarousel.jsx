@@ -1,183 +1,185 @@
-import React, { useEffect, useRef } from "react";
-import luckyBoxImage from "../../Images/Boxes/luckyBox.png";
-import mysteryBoxImage from "../../Images/Boxes/mysteryBox.png";
+import React, { useEffect, useRef, useState } from "react";
+import img1 from "../../Images/1.jpg";
+import img2 from "../../Images/2.jpg";
+import img3 from "../../Images/3.jpg";
+import img4 from "../../Images/4.jpg";
+import img5 from "../../Images/5.jpg";
+import img6 from "../../Images/6.jpg";
+import img7 from "../../Images/7.jpg";
+import img8 from "../../Images/8.jpg";
+import img9 from "../../Images/9.jpg";
+import img10 from "../../Images/10.jpg";
+import img11 from "../../Images/11.jpg";
+import img12 from "../../Images/12.jpg";
+import img13 from "../../Images/13.jpg";
+import img14 from "../../Images/14.jpg";
+import img15 from "../../Images/15.jpg";
+import img16 from "../../Images/16.jpg";
+import img17 from "../../Images/17.jpg";
+import img18 from "../../Images/18.jpg";
+import img19 from "../../Images/19.jpg";
+import img20 from "../../Images/20.jpg";
+import img21 from "../../Images/21.jpg";
+import luckyBoxImg from "../../Images/Boxes/luckyBox.png";
+import mysteryBoxImg from "../../Images/Boxes/mysteryBox.png";
 
 import party from "party-js";
 import anime from "animejs";
+import { RARITY_PALETTE } from "../../Utils/ColorPaletteUtils";
 import { useStoreState } from "pullstate";
 import { UIStorage } from "../../Storages/UIStorage";
+import ButtonDefault from "../UI/StyledComponents/ButtonDefault";
 import { useNavigate } from "react-router-dom";
+import BigCross from "../../Icons/BigCross";
+import { UserBalanceStorage } from "../../Storages/UserBalanceStorage";
 
-const tempItem = {
-    comment: "Nazko wears this backpack every day to travel to his job & home.",
-    features: {},
-    imgLink: "https://axiebch.com/wp-content/uploads/2022/04/reborn_box_serial_001.png",
-    name: "Original Xiaomi Mi Backpack",
-    rarity: "Guarantee",
-};
-
-const rarityColors = {
-    guarantee: "text-gray-400",
-    common: "text-blue-100",
-    rare: "text-green-300",
-    epic: "text-blue-400",
-    mythical: "text-purple-400",
-    legendary: "text-yellow-300",
-    heroic: "text-red-500",
-};
-
-export default function OpenBoxCarousel({ item, boxType, winner, startPlaying }) {
+export default function OpenBoxCarousel({ boxData, win, itemData }) {
+    const animation = useRef(null);
     const ui = useStoreState(UIStorage);
     const navigate = useNavigate();
 
-    const animation = useRef(null);
+    const [animationFinished, setAnimationFinished] = useState(false);
+
+    // const tempItem = {
+    //     comment: "Nazko wears this backpack every day to travel to his job & home.",
+    //     features: {},
+    //     imgLink: "https://axiebch.com/wp-content/uploads/2022/04/reborn_box_serial_001.png",
+    //     name: "Original Xiaomi Mi Backpack",
+    //     rarity: "Guarantee",
+    // };
 
     useEffect(() => {
-        if (startPlaying && animation.current) play();
-    }, [startPlaying]);
-
-    function play() {
-        animation.current.restart();
-    }
-
-    function onWinnerAnimationFinished() {
-        // console.log("stop!!");
-        party.confetti(document.getElementById("target-item"));
-        ui.showSuccess("Congratulations!");
-    }
-
-    function onLoseAnimationFinished() {
-        console.log("stop lose!!");
-    }
-
-    function onActivateButton() {
-        document.getElementById("view-inv").classList.remove("pointer-events-none");
-    }
-
-    function setWinnerAnimation() {
+        animation.current = null;
         animation.current = anime.timeline({
-            duration: 1000,
             loop: false,
             autoplay: false,
-            easing: "easeInOutElastic(1, .96)",
+            easing: "easeInOutElastic(1, .6)",
         });
 
-        animation.current
-            .add({
-                targets: ".target-box",
-                translateX: [700, "50%"],
-            })
-            .add({
-                targets: ".target-box",
-                rotate: "+=2turn",
-                scale: 1.5,
-            })
-            .add({
-                targets: ".target-box",
-                translateY: [0, 1200],
-            })
-            .add({
-                targets: ".target-item",
-                translateY: [1200, 0],
-                translateX: [0, "50%"],
-                rotate: "+=2turn",
-                scale: [1, 0.8],
-            })
-            .add({
-                duration: 800,
-                targets: ".target-item",
-                scale: [0.8, 1],
-                complete: onWinnerAnimationFinished,
-            })
-            .add({
-                targets: ".target-text",
-                opacity: [0, 1],
-            })
-            .add({
-                targets: ".target-button",
-                opacity: [0, 1],
-                complete: onActivateButton,
-            });
-    }
-
-    function setLoseAnimation() {
-        animation.current = anime.timeline({
-            duration: 1000,
-            loop: false,
-            autoplay: false,
-            easing: "easeInOutElastic(1, .96)",
+        animation.current.add({
+            targets: [".target-item", ".target-cross"],
+            opacity: 0,
+            duration: 1,
         });
 
-        animation.current
-            .add({
-                targets: ".target-box",
-                translateX: [700, "50%"],
-            })
-            .add({
-                targets: ".target-box",
-                rotate: "+=2turn",
-                scale: 1.5,
-            })
-            .add({
-                targets: ".target-box",
-                translateY: [0, 1200],
-                complete: onLoseAnimationFinished,
-            })
-            .add({
+        if (win) {
+            animation.current.add({
                 targets: ".target-item",
-                translateY: [1200, 1201],
-            })
-            .add({
-                targets: ".target-text",
-                opacity: [0, 0],
-            })
-            .add({
-                targets: ".target-button",
-                opacity: [0, 0],
+                opacity: [0, 1],
+                duration: 1,
+                delay: 300,
             });
-    }
+            animation.current
+                .add({
+                    targets: ".target-box",
+                    translateX: [1000, 0],
+                    duration: 1500,
+                })
+                .add({
+                    targets: ".target-box",
+                    translateY: [0, -100, 1000],
+                    rotate: "+=8turn",
+                    duration: 2000,
+                })
+                .add({
+                    targets: ".target-item",
+                    translateY: [1000, 0],
+                    scale: [0.5, 0.7],
+                    duration: 1500,
+                    delay: 500,
+                    complete: () => {
+                        ui.showSuccess("Congratulations! You have won an item!");
+                        party.confetti(document.getElementById("target-item"));
+                        setAnimationFinished(true);
+                    },
+                })
+                .add({
+                    targets: ".target-text",
+                    opacity: [0, 1],
+                });
+            animation.current.play();
+        } else {
+            animation.current.add({
+                targets: ".target-cross",
+                opacity: [0, 1],
+                duration: 1,
+                delay: 300,
+            });
+            animation.current
+                .add({
+                    targets: ".target-box",
+                    translateX: [1000, 0],
+                    duration: 1500,
+                })
+                .add({
+                    targets: ".target-box",
+                    translateY: [0, -100, 1000],
+                    rotate: "+=8turn",
+                    duration: 2000,
+                })
+                .add({
+                    targets: ".target-cross",
+                    translateY: [1000, 0],
+                    scale: [0.5, 1, 5],
+                    duration: 2000,
+                    delay: 1000,
+                    complete: () => {
+                        ui.showNotification("Unfortunately, this box was empty.");
+                        setAnimationFinished(true);
+                    },
+                });
 
-    useEffect(() => {
-        if(winner) setWinnerAnimation();
-        else setLoseAnimation();
-
-        // console.log("change animation");
-
-        return ()=>{
-            // console.log('destroyed');
-            animation.current.pause();
-            animation.current = null;
+            animation.current.play();
         }
+    }, [win]);
+
+    useEffect(() => {
+        return () => {
+            try {
+                animation.current.pause();
+            } catch (error) {}
+            animation.current = null;
+        };
     }, []);
 
     return (
-        <>
-            <div className="w-full h-full flex items-center justify-center overflow-x-hidden overflow-y-hidden">
-                <div className="w-full h-1/2 relative">
-                    <div className="target-box absolute h-full flex justify-center items-center">
-                        <img src={boxType === "LUCKY" ? luckyBoxImage : mysteryBoxImage} alt="" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="target-item absolute h-full w-1/2 flex justify-center items-center">
-                        <div id="target-item" className="w-full h-full relative">
-                            <div className="target-text absolute z-10 w-full h-full flex flex-col items-center justify-center gap-4 text-center bg-opacity-70 bg-black rounded-lg">
-                                <span className="text-3xl font-semibold">{item["name"]}</span>
-                                <span className={"text-xl font-semibold " + rarityColors[item["rarity"]?.toLowerCase()]}>{item["rarity"]} item</span>
-                                <span className="text-xl">{item["comment"]}</span>
-                            </div>
-                            <img src={item["imgLink"]} alt="" className="absolute w-full h-full object-cover rounded-lg" />
+        <div className="w-full h-full flex items-center">
+            <div className="w-full h-2/3 flex relative justify-center">
+                <div className="flex h-full target-box">
+                    <img src={boxData?.type?.name === "TYPE_LUCKY" ? luckyBoxImg : mysteryBoxImg} alt="box" className="h-full w-full object-contain" />
+                </div>
+                <div id="target-item" className="absolute flex h-full target-item">
+                    <div className="w-full h-full flex relative">
+                        <img
+                            src={itemData?.imgLink}
+                            alt="box"
+                            className={"h-full w-full object-contain border-8 rounded-md" + RARITY_PALETTE.border[itemData?.rarity?.toLowerCase()]}
+                        />
+                        <div className="absolute inset-0 w-full h-full flex items-center justify-center text-center bg-black bg-opacity-80 target-text px-4">
+                            <span className={"font-semibold text-sm md:text-xl lg:text-2xl" + RARITY_PALETTE.text[itemData?.rarity?.toLowerCase()]}>
+                                {itemData?.name}
+                            </span>
                         </div>
                     </div>
                 </div>
-                <button
-                    onClick={() => {
-                        navigate("/inventory");
-                    }}
-                    id="view-inv"
-                    className="target-button opacity-0 pointer-events-none absolute bottom-0 p-4 text-teal-400 border-2 border-teal-600 bg-dark-purple-100 bg-opacity-30 animated-100 hover:bg-opacity-60 rounded-lg"
-                >
-                    View my inventory
-                </button>
+                <div className="absolute flex h-full target-cross">
+                    <div className="w-full h-full flex justify-center items-center relative">
+                        <BigCross className={"h-full w-full"} />
+                    </div>
+                </div>
+                {animationFinished ? (
+                    <div className="absolute left-0 right-0 bottom-0 w-full h-12 flex justify-center">
+                        <ButtonDefault
+                            text={"Go to inventory"}
+                            click={() => {
+                                navigate("/inventory");
+                            }}
+                        />
+                    </div>
+                ) : (
+                    <></>
+                )}
             </div>
-        </>
+        </div>
     );
 }

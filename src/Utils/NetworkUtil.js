@@ -1,5 +1,7 @@
 import { deleteUserAuthToken, deleteUserDataFromStorage, deleteUserNonce } from "./LocalStorageManager/LocalStorageManager";
 import { UserDataStorage } from "../Storages/UserDataStorage";
+import axios from "axios";
+import { safeAuthorize_header } from "./EndpointsUtil";
 
 export function getDataFromResponse(response) {
     return response?.data?.data;
@@ -11,6 +13,10 @@ export function getMessageFromResponse(response) {
 
 export function getStatusFromResponse(response) {
     return response?.data?.status;
+}
+
+export function getAxiosError(error) {
+    return error?.response?.data?.message ?? error.message;
 }
 
 export function catch401(error) {
@@ -25,4 +31,23 @@ export function logout() {
         s.isLoggedIn = false;
         s.userData = null;
     });
+}
+
+export async function makePost(address, body, auth){
+    let data;
+    let error;
+    let status;
+    try {
+        let t;
+        if(auth)
+            t = await axios.post(address, body, safeAuthorize_header());
+        else
+            t = await axios.post(address, body);
+        data = getDataFromResponse(t);
+        status = getStatusFromResponse(t);
+        return [data, status, error];
+    } catch (er) {
+        if (er.response) return [data, status, getAxiosError(er)];
+        return [data, status, er.message];
+    }
 }

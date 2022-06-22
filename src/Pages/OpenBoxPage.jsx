@@ -8,11 +8,12 @@ import { TempLinkStorage } from "../Storages/Stuff/TempLinkStorage";
 import { UIStorage } from "../Storages/UIStorage";
 import { UserBalanceStorage } from "../Storages/UserBalanceStorage";
 import { UserDataStorage } from "../Storages/UserDataStorage";
-import { openBox_EP, safeAuthorize_header } from "../Utils/EndpointsUtil";
-import { getDataFromResponse } from "../Utils/NetworkUtil";
+import { getBoxById_EP, openBox_EP, safeAuthorize_header } from "../Utils/EndpointsUtil";
+import { getDataFromResponse, makePost } from "../Utils/NetworkUtil";
 
 import party from "party-js";
 import { sleepFor } from "../Utils/CodeUtils";
+import { scrollToTop } from "../Utils/BrowserUtil";
 
 export default function OpenBoxPage() {
     const params = useParams();
@@ -24,9 +25,9 @@ export default function OpenBoxPage() {
     const userBalance = useStoreState(UserBalanceStorage);
     const tempLink = useStoreState(TempLinkStorage);
 
-    const [isWinner, setIsWinner] = useState(false);
-    const [itemData, setItemData] = useState({});
-    const [playing, setPlaying] = useState(false);
+    const [activate, setActivate] = useState(false);
+    const [itemData, setItemData] = useState({ win: false, data: undefined });
+    const [boxData, setBoxData] = useState({});
 
     const tempItem = {
         comment: "Nazko wears this backpack every day to travel to his job & home.",
@@ -37,63 +38,121 @@ export default function OpenBoxPage() {
     };
 
     async function startup() {
-        console.log(params);
-        if (params && params.boxIndex && params.hash && params.heroIndex && userData.isLoggedIn && params.boxType) {
+        if (params && params.boxIndex && params.hash && params.heroIndex && userData.isLoggedIn) {
             if (!metamask.isConnected) {
-                ui.showError("Please, connect metamask and try again!");
                 tempLink.removeLink();
-                navigate("/notfound");
+                ui.showError("Please, connect metamask and try again!");
+                // navigate("/notfound");
             } else {
                 if (params.hash === tempLink.link && tempLink.eAt >= new Date()) {
-                    tempLink.removeLink();
+                    tempLink.removeLink(); //uncomment in release
                     let realBoxIndex = params.boxIndex / 77 - 12;
                     let realHeroIndex = params.heroIndex / 77 - 12;
-                    try {
-                        let response = await axios.post(
-                            openBox_EP(),
-                            {
-                                userAddress: metamask.wallet,
-                                heroId: realHeroIndex,
-                                boxId: realBoxIndex,
-                            },
-                            safeAuthorize_header()
-                        );
-                        let data = getDataFromResponse(response);
-                        // let data = tempItem;
-                        setItemData(data);
-                        setIsWinner(true);
-                        await sleepFor(500);
-                        ui.hideContentLoading();
-                        setPlaying(true);
-                        userBalance.updateUserBalance();
-                        console.log("you win: ", data, "from box", params.boxType);
-                    } catch (error) {
-                        console.log(error);
-                        ui.showError(error.message);
+                    let [d, s, e] = await makePost(getBoxById_EP(), { index: realBoxIndex }, true);
+                    if (d) {
+                        setBoxData(d);
+                        console.log("got a box");
+                        return;
+                    } else {
+                        ui.showError(e);
+                        console.log(e);
+                        // navigate('/notfound');
                     }
-                    // console.log(realBoxIndex, realHeroIndex);
                 } else {
-                    // console.log(params.hash, tempLink.link, tempLink.eAt, (new Date()).getTime());
+                    ui.showError("Internal client error! Please, try again.");
                     tempLink.removeLink();
-                    navigate("/notfound");
+                    // navigate("/notfound");
                 }
             }
         } else {
             tempLink.removeLink();
-            navigate("/notfound");
+            // navigate('/notfound');
         }
+
+        // if (params && params.boxIndex && params.hash && params.heroIndex && userData.isLoggedIn) {
+        //     if (!metamask.isConnected) {
+        //         ui.showError("Please, connect metamask and try again!");
+        //         tempLink.removeLink();
+        //         navigate("/notfound");
+        //     } else {
+        //         if (params.hash === tempLink.link && tempLink.eAt >= new Date()) {
+        //             tempLink.removeLink();
+        //             let realBoxIndex = params.boxIndex / 77 - 12;
+        //             let realHeroIndex = params.heroIndex / 77 - 12;
+        //             try {
+        //                 // let response = await axios.post(
+        //                 //     openBox_EP(),
+        //                 //     {
+        //                 //         userAddress: metamask.wallet,
+        //                 //         heroId: realHeroIndex,
+        //                 //         boxId: realBoxIndex,
+        //                 //     },
+        //                 //     safeAuthorize_header()
+        //                 // );
+        //                 // let data = getDataFromResponse(response);
+        //                 setItemData(tempItem);
+        //                 setIsWinner(true);
+        //                 setActivate(true);
+        //                 ui.hideContentLoading();
+        //                 userBalance.updateUserBalance();
+        //                 // console.log("you win: ", JSON.stringify(tempItem));
+        //             } catch (error) {
+        //                 console.log(error);
+        //                 ui.showError(error.message);
+        //             }
+        //             // console.log(realBoxIndex, realHeroIndex);
+        //         } else {
+        //             // console.log(params.hash, tempLink.link, tempLink.eAt, (new Date()).getTime());
+        //             tempLink.removeLink();
+        //             navigate("/notfound");
+        //         }
+        //     }
+        // } else {
+        //     tempLink.removeLink();
+        //     navigate("/notfound");
+        // }
+    }
+
+    async function rollBox() {
+        let realHeroIndex = params.heroIndex / 77 - 12;
+        let realBoxIndex = params.boxIndex / 77 - 12;
+        let [d, s, e] = await makePost(openBox_EP(), {
+            userAddress: metamask.wallet,
+            heroId: realHeroIndex,
+            boxId: realBoxIndex,
+        },true);
+        if(d.Item)
+            setItemData({ win: true, data: d.Item });
+        else
+            setItemData({ win: false, data: null });
+        userBalance.updateUserBalance();
+        setActivate(true);
+        setTimeout(()=>{ui.hideContentLoading()},250);
     }
 
     useEffect(() => {
         startup();
-        // setActivate(true)
+        scrollToTop();
+        return () => {
+            ui.hideContentLoading();
+        };
     }, []);
 
-    return (
+    useEffect(() => {
+        if (boxData.type) rollBox();
+    }, [boxData]);
+
+    useEffect(() => {
+        if (itemData.data) setActivate(true);
+    }, [itemData]);
+
+    return activate ? (
         <div className="w-full h-full p-4 flex justify-center items-center text-white">
             <div className="w-[70vw] h-[70vw] md:w-[600px] md:h-[600px] flex relative overflow-x-hidden overflow-y-hidden">
-                <OpenBoxCarousel boxType={params.boxType} item={itemData} winner={isWinner} startPlaying={playing} />
+                <OpenBoxCarousel boxData={boxData} win={itemData?.win} itemData={itemData?.data} />
             </div>
         </div>
+    ) : (
+        <></>
     );
 }

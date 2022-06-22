@@ -11,10 +11,12 @@ import AdaptiveLoadingComponent from "../Components/UI/AdaptiveLoadingComponent"
 import { UserDataStorage } from "../Storages/UserDataStorage";
 import { MetaMaskStorage } from "../Storages/MetaMaskStorage";
 import { ethers } from "ethers";
-import { ERC721Abi, getUserHeroesID, NFTAddress } from "../Utils/BlockchainUtils";
+import { ERC721Abi, NFTAddress } from "../Utils/BlockchainUtils";
 import { getRandomString } from "../Utils/RandomUtil";
 import { TempLinkStorage } from "../Storages/Stuff/TempLinkStorage";
 import { sleepFor } from "../Utils/CodeUtils";
+import { UserBalanceStorage } from "../Storages/UserBalanceStorage";
+import { isTabletOrMobileBrowser } from "../Utils/BrowserUtil";
 
 export default function BoxPage() {
     const params = useParams();
@@ -22,8 +24,11 @@ export default function BoxPage() {
 
     const ui = useStoreState(UIStorage);
     const userData = useStoreState(UserDataStorage);
+    const userBalance = useStoreState(UserBalanceStorage);
     const metamask = useStoreState(MetaMaskStorage);
     const tempLink = useStoreState(TempLinkStorage);
+
+    const [isMobile, setIsMobile] = useState(isTabletOrMobileBrowser());
 
     const [boxInfo, setBoxInfo] = useState({});
     const [isOwner, setIsOwner] = useState(false);
@@ -42,8 +47,16 @@ export default function BoxPage() {
                 response = await axios.post(getHeroById_EP(), { index: data.heroId });
                 data = getDataFromResponse(response);
                 setOwnerHero(data);
-                let userHeroes = await getUserHeroesID();
-                if (userHeroes.includes(data.index)) setIsOwner(true);
+                if (!isMobile) {
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    const signer = provider.getSigner();
+                    const contract = new ethers.Contract(NFTAddress(), ERC721Abi(), signer);
+                    const address = await signer.getAddress();
+                    let bigNumberHeroes = await contract.getUsersTokens(address);
+                    let normalHeroes = [];
+                    for (const i of bigNumberHeroes) normalHeroes.push(i.toNumber());
+                    if (normalHeroes.includes(data.index)) setIsOwner(true);
+                }
                 setTimeout(() => {
                     ui.hideContentLoading();
                 }, 200);
@@ -56,12 +69,16 @@ export default function BoxPage() {
 
     async function openBox() {
         if (isOwner) {
+            if (userBalance.userBalance < boxInfo.priceToOpen) {
+                ui.showError("Not enough balance!");
+                return;
+            }
             ui.showContentLoading();
             let link = getRandomString(64);
             tempLink.setLinkFor(link, 600);
             await sleepFor(500);
             // console.log('/box/'+((boxInfo.boxId+12) * 77)+'/open/'+link);
-            navigate('/box/'+((boxInfo.boxId+12) * 77)+'/'+((ownerHero.index+12) * 77)+'/' + boxInfo.type + '/open/'+link);
+            navigate("/box/" + (boxInfo.boxId + 12) * 77 + "/" + (ownerHero.index + 12) * 77 + "/open/" + link);
         } else ui.showError("You are not the owner.");
     }
 
@@ -80,13 +97,12 @@ export default function BoxPage() {
                 );
 
                 let data = getDataFromResponse(response);
-                if(response?.data?.message === 'burned'){
-                    ui.showSuccess('You have successfully burned this box!');
+                if (response?.data?.message === "burned") {
+                    ui.showSuccess("You have successfully burned this box!");
                     getBoxInfo();
-                }
-                else {
+                } else {
                     ui.hideContentLoading();
-                    ui.showError('Failed to burn this box.');
+                    ui.showError("Failed to burn this box.");
                     console.log(data);
                 }
             } catch (error) {
@@ -99,6 +115,7 @@ export default function BoxPage() {
 
     useEffect(() => {
         if (metamask.isConnected) getBoxInfo();
+        if (isMobile) getBoxInfo();
         document.getElementById("content-wrapper").scrollTop = 0;
     }, [metamask]);
 
@@ -125,23 +142,23 @@ export default function BoxPage() {
                                     <div className="w-full flex flex-col items-center">
                                         <span className="font-semibold text-purple-400 mt-10">Try to open it for {boxInfo?.priceToOpen}G</span>
                                         <button
-                                        onClick={()=>{
-                                            openBox();
-                                        }}
+                                            onClick={() => {
+                                                openBox();
+                                            }}
                                             className={
-                                                "text-black text-xl font-semibold w-full p-2 rounded-md bg-opacity-80 animated-100 hover:bg-opacity-100 " +
+                                                "text-black text-xl font-semibold w-full p-2 rounded-md bg-opacity-80 mt-2 animated-100 hover:bg-opacity-100 " +
                                                 (boxInfo?.type === "LUCKY" ? "bg-yellow-400" : "bg-teal-400")
                                             }
                                         >
                                             Open
                                         </button>
-                                        <span className="text-sm mt-3 opacity-80">or burn for free</span>
+                                        <span className="text-sm mt-5 opacity-80">or burn for free</span>
                                         <button
                                             onClick={() => {
                                                 burnBox();
                                             }}
                                             className={
-                                                "text-white bg-slate-700 font-semibold w-full p-1 rounded-md bg-opacity-50 animated-100 hover:bg-opacity-70 "
+                                                "text-white bg-slate-700 font-semibold w-full p-1 rounded-md bg-opacity-50 mt-2 animated-100 hover:bg-opacity-70 "
                                             }
                                         >
                                             Burn
@@ -275,23 +292,46 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
                         <span className={" font-semibold " + (originPalette["text"][origin] ?? "text-white")}>Origin: {origin}</span>
                     </div>
                 </div>
+                <div className="bg-gray-800 bg-opacity-50 md:w-[500px] w-full text-center p-1 rounded-lg">
+                    <span className={"text-3xl font-bold text-opacity-70 " + tribePalette["text"][tribe]}>{tribe}</span>
+                </div>
                 <div className="md:w-[500px] w-full flex justify-center flex-shrink-0 mb-2">
-                    <div className="w-full flex flex-col gap-4 px-2">
-                        <div className={skillsPalette["sexy"] + " w-full p-2 rounded-md text-center font-semibold bg-opacity-20"}>Sexy: {skills?.sexy}</div>
-                        <div className={skillsPalette["lucky"] + " w-full p-2 rounded-md text-center font-semibold bg-opacity-20"}>Lucky: {skills?.lucky}</div>
-                        <div className={skillsPalette["brave"] + " w-full p-2 rounded-md text-center font-semibold bg-opacity-20"}>Brave: {skills?.brave}</div>
+                    <div className="w-full flex flex-col gap-4 px-2 pl-0">
+                        <SkillTile skillVal={skills?.sexy} skillTitle={"Sexy"} />
+                        <SkillTile skillVal={skills?.lucky} skillTitle={"Lucky"} />
+                        <SkillTile skillVal={skills?.brave} skillTitle={"Brave"} />
                     </div>
-                    <div className="w-full flex flex-col gap-4 px-2">
-                        <div className={skillsPalette["healthy"] + " w-full p-2 rounded-md text-center font-semibold bg-opacity-20"}>
-                            Healthy: {skills?.healthy}
-                        </div>
-                        <div className={skillsPalette["smart"] + " w-full p-2 rounded-md text-center font-semibold bg-opacity-20"}>Smart: {skills?.smart}</div>
-                        <div className={skillsPalette["skilled"] + " w-full p-2 rounded-md text-center font-semibold bg-opacity-20"}>
-                            Skilled: {skills?.skilled}
-                        </div>
+                    <div className="w-full flex flex-col gap-4 px-2 pr-0">
+                        <SkillTile skillVal={skills?.healthy} skillTitle={"Healthy"} />
+                        <SkillTile skillVal={skills?.smart} skillTitle={"Smart"} />
+                        <SkillTile skillVal={skills?.skilled} skillTitle={"Skilled"} />
                     </div>
                 </div>
             </div>
+        </div>
+    );
+}
+
+function SkillTile({ skillVal, skillTitle }) {
+    const skillsPalette = {
+        sexy: "bg-pink-400",
+        lucky: "bg-yellow-300",
+        brave: "bg-slate-200",
+        healthy: "bg-red-500",
+        smart: "bg-blue-500",
+        skilled: "bg-green-500",
+    };
+
+    return (
+        <div className={"group relative w-full p-2 rounded-md text-center font-semibold bg-opacity-20 " + skillsPalette[skillTitle.toLowerCase()]}>
+            <div className="relative z-10 flex justify-between">
+                <span className="font-semibold">{skillTitle}</span>
+                <span className="font-semibold">{skillVal}</span>
+            </div>
+            <div
+                className={"absolute inset-0 h-full rounded-md bg-opacity-30 group-hover:bg-opacity-60 animated-100 " + skillsPalette[skillTitle.toLowerCase()]}
+                style={{ width: skillVal + "%" }}
+            ></div>
         </div>
     );
 }

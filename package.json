@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "-": "^0.0.1",
-    "@binance/connector": "^1.7.0",
     "@tailwindcss/forms": "^0.4.0",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
