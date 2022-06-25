@@ -2,6 +2,7 @@ import { useStoreState } from "pullstate";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TempLinkStorage } from "../../Storages/Stuff/TempLinkStorage";
+import { scrollToTop } from "../../Utils/BrowserUtil";
 import { baseToStr } from "../../Utils/StringUtil";
 
 export default function TwoFAEnabledPage() {
@@ -27,6 +28,10 @@ export default function TwoFAEnabledPage() {
             tempLink.removeLink();
             navigate("/notfound");
         }
+    }, []);
+
+    useEffect(() => {
+        scrollToTop();
     }, []);
 
     return (

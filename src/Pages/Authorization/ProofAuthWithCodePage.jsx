@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthHashStorage } from "../../Storages/Stuff/AuthHashStorage";
 import { UIStorage } from "../../Storages/UIStorage";
 import { UserDataStorage } from "../../Storages/UserDataStorage";
+import { scrollToTop } from "../../Utils/BrowserUtil";
 import { createAuthorizeHeader, saveAuthorizeToken, verify2FA_EP } from "../../Utils/EndpointsUtil";
 import { saveUserDataToStorage, saveUserNonce } from "../../Utils/LocalStorageManager/LocalStorageManager";
 import { getDataFromResponse } from "../../Utils/NetworkUtil";
@@ -53,6 +54,10 @@ export default function ProofAuthWithCodePage() {
             console.log(error?.response?.data?.message);
         }
     }
+
+    useEffect(() => {
+        scrollToTop();
+    }, []);
 
     return validUser ? (
         <div className="w-full h-full flex justify-center px-2 py-10">

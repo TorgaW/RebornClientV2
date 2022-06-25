@@ -1,9 +1,10 @@
 import { useStoreState } from "pullstate";
-import React from "react";
+import React, { useEffect } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { Link, useNavigate } from "react-router-dom";
 import ButtonDefault from "../../Components/UI/StyledComponents/ButtonDefault";
 import { UIStorage } from "../../Storages/UIStorage";
+import { scrollToTop } from "../../Utils/BrowserUtil";
 import { getElementById } from "../../Utils/CodeUtils";
 import { changePassword_EP } from "../../Utils/EndpointsUtil";
 import { makePost } from "../../Utils/NetworkUtil";
@@ -62,6 +63,10 @@ export default function ForgotPasswordPage() {
             ui.showError(e);
         }
     }
+
+    useEffect(() => {
+        scrollToTop();
+    }, []);
 
     return (
         <div className="w-full h-full flex justify-center px-2 py-10">

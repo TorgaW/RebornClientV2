@@ -368,15 +368,17 @@ function InventoryTab() {
     useEffect(() => {
         if(userData.isLoggedIn)
             getUserInventory();
-
-        return () => {
-            ui.hideContentLoading();
-        };
-    }, []);
+    }, [userData]);
 
     useEffect(() => {
         refillInventory();
     }, [rawItems, itemsFilter]);
+
+    useEffect(()=>{
+        return () => {
+            ui.hideContentLoading();
+        };
+    },[]);
 
     return userData.isLoggedIn ? (
         <div className="w-full lg:w-[1000px] px-4 flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
@@ -517,7 +519,7 @@ function ItemTile({ comment, features, imgLink, name, rarity, boxId, orderStatus
                     src={imgLink}
                     alt="item"
                     className={
-                        "w-full h-full object-fill rounded-md animated-200 " +
+                        "w-full h-full object-cover rounded-md animated-200 " +
                         (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")
                     }
                 />

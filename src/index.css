@@ -6,6 +6,10 @@
     font-family: "Poppins", sans-serif;
 }
 
+.root {
+    position: relative;
+}
+
 .animated-100 {
     @apply transition-all duration-100;
 }
