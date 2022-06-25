@@ -72,7 +72,7 @@ export default function SignUpPage() {
     }, []);
 
     return (
-        <div className="w-full h-full flex justify-center px-2 py-10">
+        <div className="w-full h-full flex justify-center px-2 py-10 min-h-[500px]">
             <div className="w-full md:w-[750px] h-[450px] bg-dark-purple-100 bg-opacity-10 shadow-lg mt-10 rounded-xl flex flex-col p-4 text-white items-center justify-center gap-2">
                 <h3 className="text-2xl font-semibold">Create your new account</h3>
                 <div className="w-full flex flex-col gap-1">
