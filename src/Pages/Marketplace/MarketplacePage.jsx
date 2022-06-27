@@ -91,7 +91,7 @@ export default function MarketplacePage() {
                 <button className="w-[100px] h-10 border-b-[1px] animated-100">My lots</button>
             </div>
             <div className="shadow-lg bg-opacity-10 bg-dark-purple-100 rounded-xl pb-4">
-                <div className="w-full lg:w-[1000px] flex items-center flex-wrap md:gap-0 gap-4 justify-center md:justify-between p-4 px-8 pb-2">
+                <div className="w-full lg:w-[1000px] flex md:flex-row flex-col items-center flex-wrap md:gap-0 gap-4 justify-center md:justify-between p-4 px-8 pb-2">
                     <div className="flex justify-start items-center relative">
                         <div className="absolute left-1">
                             <SearchIcon />
@@ -101,7 +101,7 @@ export default function MarketplacePage() {
                     <div className="flex justify-center flex-wrap items-center gap-2">
                         <div className="flex justify-center items-center gap-2">
                             {filter.rarity ? (
-                                <div className="relative h-[42px] px-7 border-2 border-gray-800 rounded-md text-center flex items-center justify-center">
+                                <div className="relative h-[42px] md:text-base text-sm px-7 border-2 border-gray-800 rounded-md text-center flex items-center justify-center">
                                     <span className={filter.rarityColor}>{filter.rarity}</span>
                                     <button
                                         onClick={() => {
@@ -116,7 +116,7 @@ export default function MarketplacePage() {
                                 <></>
                             )}
                             {filter.price ? (
-                                <div className="relative h-[42px] px-7 border-2 border-gray-800 rounded-md text-center flex items-center justify-center">
+                                <div className="relative h-[42px] md:text-base text-sm px-7 border-2 border-gray-800 rounded-md text-center flex items-center justify-center">
                                     <span>{filter.price}</span>
                                     <button
                                         onClick={() => {
@@ -263,26 +263,28 @@ function SearchBar() {
 function ItemTile({ price, name, rarity, owner }) {
     // let rarityUpperCase = String(rarity).charAt(0).toUpperCase() + rarity.slice(1);
     return (
-        <div className={"w-[250px] h-[290px] px-4 py-2 items-center flex flex-col rounded-md group hover:bg-dark-purple-300 hover:border-opacity-100 animated-200 cursor-pointer border-2 justify-center " + rarityColor[rarity.toLowerCase()]}>
-            <div className="text-white w-full text-center font-bold text-2xl">
-                <span>{name}</span>
+        <div className={"w-full md:h-[130px] h-[100px] px-6 md:px-8 py-2 gap-3 md:gap-5 items-center flex rounded-md group hover:bg-dark-purple-300 hover:border-opacity-100 animated-200 cursor-pointer border-2 justify-center " + rarityColor[rarity.toLowerCase()]}>
+            <div className="flex items-center justify-between w-[150px] md:w-[250px]">
+                <div className="flex md:w-[100px] md:h-[100px] w-[80px] h-[80px]">
+                    <img className={"h-full w-full object-cover animated-200 group-hover:scale-[1.2]  " + (getRandomInt(0, 1) ? "group-hover:rotate-[-5deg]" : "group-hover:rotate-[5deg]")} src={box} alt="" />
+                </div>
+                <div className="w-[100px] px-2 md:w-[150px] text-white text-center md:font-bold font-semibold md:text-xl text-sm">
+                    <span>{name}</span>
+                </div>
             </div>
-            <div className="flex w-[150px] h-[150px]">
-                <img className={"h-full w-full object-cover animated-200 group-hover:scale-[1.2]  " + (getRandomInt(0, 1) ? "group-hover:rotate-[-5deg]" : "group-hover:rotate-[5deg]")} src={box} alt="" />
-            </div>
-            <div className="w-full justify-between flex py-2 border-t-2 border-b-2 border-gray-800 items-center">
-                <div className="">
+            <div className="max-w-[800px] md:gap-0 gap-4 w-full justify-between flex py-2 border-b-2 border-gray-800 items-center">
+                <div className="md:text-sm text-xs">
                     <span>{rarity}</span>
                 </div>
-                <div className="text-white text-xl">
+                <div className="text-white text-large md:text-xl">
                     <span>{price}$</span>
                 </div>
             </div>
-            <div className="w-full flex justify-center mt-2 gap-1 text-sm">
+            <div className="max-w-[200px] w-full md:flex hidden items-center justify-center mt-2 gap-1 text-xs md:text-sm">
                 <div className="text-gray-500">
                     <span>Owner:</span>
                 </div>
-                <div className="text-white italic font-light">
+                <div className="text-white italic md:text-small text-xs font-light">
                     <span>{owner}</span>
                 </div>
             </div>
