@@ -165,7 +165,7 @@ export default function UpperMenu() {
                                 </button>
                             </div>
                         </Link>
-                        {/* <Link to="/marketplace">
+                        <Link to="/marketplace">
                             <div className="w-full flex justify-center items-center">
                                 <button
                                     onClick={() => {
@@ -176,7 +176,7 @@ export default function UpperMenu() {
                                     Marketplace
                                 </button>
                             </div>
-                        </Link> */}
+                        </Link>
                         <div className="mt-auto">
                             <Link to="/about">
                                 <div className="w-full flex justify-center items-center">
