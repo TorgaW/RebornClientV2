@@ -27,7 +27,7 @@ const rarityColor = {
 };
 
 async function start() {
-    let response = await axios.post(marketplace_Load(), { amount: 1, type: 2, username: "FarHowl", tribe: "BCH Tribe" }, safeAuthorize_header());
+    let response = await axios.post(marketplaceLoadLots_EP(), { amount: 1, type: 2, username: "FarHowl", tribe: "BCH Tribe" }, safeAuthorize_header());
     let data = getDataFromResponse(response);
     console.log(data);
 }
