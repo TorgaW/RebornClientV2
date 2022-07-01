@@ -6,6 +6,14 @@
     font-family: "Poppins", sans-serif;
 }
 
+.merriweather {
+    font-family: 'Merriweather Sans', sans-serif;
+}
+
+.root {
+    position: relative;
+}
+
 .animated-100 {
     @apply transition-all duration-100;
 }

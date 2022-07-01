@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthHashStorage } from "../../Storages/Stuff/AuthHashStorage";
 import { UIStorage } from "../../Storages/UIStorage";
 import { UserDataStorage } from "../../Storages/UserDataStorage";
+import { scrollToTop } from "../../Utils/BrowserUtil";
 import { createAuthorizeHeader, saveAuthorizeToken, verify2FA_EP } from "../../Utils/EndpointsUtil";
 import { saveUserDataToStorage, saveUserNonce } from "../../Utils/LocalStorageManager/LocalStorageManager";
 import { getDataFromResponse } from "../../Utils/NetworkUtil";
@@ -54,8 +55,12 @@ export default function ProofAuthWithCodePage() {
         }
     }
 
+    useEffect(() => {
+        scrollToTop();
+    }, []);
+
     return validUser ? (
-        <div className="w-full h-full flex justify-center px-2 py-10">
+        <div className="w-full h-full flex justify-center px-2 py-10 min-h-[500px]">
             <div className="w-full md:w-[750px] h-[400px] bg-dark-purple-100 bg-opacity-10 shadow-lg mt-10 rounded-xl flex flex-col p-4 text-white items-center justify-center gap-5">
                 <h3 className="text-2xl font-semibold text-center">Enter code from authenticator</h3>
                 <div className="w-full flex flex-col gap-1">

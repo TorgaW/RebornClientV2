@@ -16,6 +16,7 @@ export function getStatusFromResponse(response) {
 }
 
 export function getAxiosError(error) {
+    console.log('axios error');
     return error?.response?.data?.message ?? error.message;
 }
 
@@ -48,6 +49,6 @@ export async function makePost(address, body, auth){
         return [data, status, error];
     } catch (er) {
         if (er.response) return [data, status, getAxiosError(er)];
-        return [data, status, er.message];
+        return [data, status, JSON.stringify(er)];
     }
 }

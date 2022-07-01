@@ -6,12 +6,13 @@ import ArrowIcon from "../../Icons/FilterArrow";
 import SearchIcon from "../../Icons/Search";
 import box from "../../Images/Boxes/luckyBox.png";
 import { UIStorage } from "../../Storages/UIStorage";
-import { marketplace_Load, safeAuthorize_header } from "../../Utils/EndpointsUtil";
-import { getDataFromResponse } from "../../Utils/NetworkUtil";
+import { marketplaceLoadLots_EP, marketplaceSellItem_EP, safeAuthorize_header } from "../../Utils/EndpointsUtil";
+import { getDataFromResponse, makePost } from "../../Utils/NetworkUtil";
 import { getRandomString } from "../../Utils/RandomUtil";
 import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
 import { Link } from "react-router-dom";
 import { getRandomInt } from "../../Utils/RandomUtil";
+import { MetaMaskStorage } from "../../Storages/MetaMaskStorage";
 import UseStateRef from "react-usestateref";
 import ButtonGreen from "../../Components/UI/StyledComponents/ButtonGreen";
 import ButtonRed from "../../Components/UI/StyledComponents/ButtonRed";
@@ -28,6 +29,7 @@ const rarityColor = {
 
 export default function MarketplacePage() {
     const ui = useStoreState(UIStorage);
+    const metamask = useStoreState(MetaMaskStorage);
 
     const [popUpData, setPopUpData] = useState({});
 
@@ -79,9 +81,23 @@ export default function MarketplacePage() {
     }, []);
 
     async function start() {
-        let response = await axios.post(marketplace_Load(), { amount: 1, type: 2, username: "FarHowl", tribe: "BCH Tribe" }, safeAuthorize_header());
-        let data = getDataFromResponse(response);
-        console.log(data);
+        let [d, s, e] = await makePost(marketplaceLoadLots_EP(), {}, true);
+        // let [d,s,e] = await makePost(marketplaceSellItem_EP(), { 
+        //     itemId: 7, 
+        //     price: 9999, 
+        //     type: 2, 
+        //     code: "422948" 
+        // }, true); 
+        // let [d,s,e] = await makePost("https://reborn.cash/api/marketplace/getItemBack", { 
+        //     itemName: "TEST ITEM", 
+        //     itemPrice: 9999, 
+        //     itemType: 2, 
+        //     code: "460917",
+        //     userAddress: metamask.wallet,
+        // }, true); 
+        
+        // console.log(d);
+        console.log(d);
     }
 
     return (

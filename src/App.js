@@ -68,7 +68,7 @@ function App() {
     }, []);
 
     return (
-        <div className="poppins">
+        <div className="merriweather">
             <AutoLoginComponent />
             <MetaMaskConnector />
             <UpperMenu />
@@ -135,7 +135,7 @@ function App() {
                             <DiscordIcon color={"#1a918a"} />
                         </div>
                     </div>
-                    <Link to={"/about"}>
+                    <Link to={"/about"} className='mt-2'>
                         <span className="text-teal-400 opacity-50 font-semibold animated-200 cursor-pointer hover:opacity-100">About project</span>
                     </Link>
                     <span className="text-teal-800 mt-auto">Reborn web-client version: 2022, v0.2</span>

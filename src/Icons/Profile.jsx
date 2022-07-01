@@ -2,7 +2,7 @@ import React from "react";
 
 function ProfileIcon() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172 172">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172 172" width={50} height={50}>
       <g
         fill="none"
         strokeMiterlimit="10"

@@ -366,16 +366,19 @@ function InventoryTab() {
     }
 
     useEffect(() => {
-        getUserInventory();
-
-        return () => {
-            ui.hideContentLoading();
-        };
-    }, []);
+        if(userData.isLoggedIn)
+            getUserInventory();
+    }, [userData]);
 
     useEffect(() => {
         refillInventory();
     }, [rawItems, itemsFilter]);
+
+    useEffect(()=>{
+        return () => {
+            ui.hideContentLoading();
+        };
+    },[]);
 
     return userData.isLoggedIn ? (
         <div className="w-full lg:w-[1000px] px-4 flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
@@ -482,7 +485,11 @@ function InventoryTab() {
             <div className="w-full flex flex-wrap justify-center gap-6 mt-4">{itemsView}</div>
         </div>
     ) : (
-        <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative"></div>
+        <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
+            <div className="w-full flex flex-wrap items-center justify-center gap-2 p-4">
+                <span>Please, sign in to see your inventory.</span>
+            </div>
+        </div>
     );
 }
 
@@ -512,7 +519,7 @@ function ItemTile({ comment, features, imgLink, name, rarity, boxId, orderStatus
                     src={imgLink}
                     alt="item"
                     className={
-                        "w-full h-full object-fill rounded-md animated-200 " +
+                        "w-full h-full object-cover rounded-md animated-200 " +
                         (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")
                     }
                 />

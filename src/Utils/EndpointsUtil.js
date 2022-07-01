@@ -143,6 +143,10 @@ export function burnBox_EP() {
 
 // Marketplace
 
-export function marketplace_Load() {
+export function marketplaceLoadLots_EP() {
     return serverAddress + "/api/marketplace/loadLots";
+}
+
+export function marketplaceSellItem_EP() {
+    return serverAddress + "/api/marketplace/sellObject";
 }
