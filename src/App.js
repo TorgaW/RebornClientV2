@@ -68,7 +68,7 @@ function App() {
     }, []);
 
     return (
-        <div className="poppins">
+        <div className="merriweather">
             <AutoLoginComponent />
             <MetaMaskConnector />
             <UpperMenu />
@@ -90,8 +90,8 @@ function App() {
                     {/* <Route path="/profile/privacysettings" element={<UserProfilePage />}/> */}
                     <Route path="/profile/uisettings" element={<UIOption />} />
                     <Route path="/profile/deposit" element={<DepositOption />} />
-                    {/* <Route path="/marketplace" element={<MarketplacePage />} /> */}
-                    {/* <Route path="/marketplace/sell" element={<MarketplaceSellPage />} /> */}
+                    <Route path="/marketplace" element={<MarketplacePage />} />
+                    <Route path="/marketplace/sell" element={<MarketplaceSellPage />} />
                     <Route path="/news/:newsIndex" element={<ViewNewsPage />} />
                     <Route path="/comics/:comicsIndex" element={<ViewComicsPage />} />
                     <Route path="/hero/:heroIndex" element={<ViewHeroPage />} />
