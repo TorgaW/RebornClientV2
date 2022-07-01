@@ -57,9 +57,6 @@
     }
 }
 
-.search-border {
-}
-
 .grecaptcha-badge {
     display: none;
 }
@@ -188,3 +185,41 @@
     -moz-backface-visibility: hidden;
     -ms-backface-visibility: hidden;
 }
+
+/* end of flickering fix */
+
+/* media quarries for 500 error */
+.span-1 {
+    font-size: xxx-large;
+    font-weight: 600;
+    color: white;
+}
+.span-2 {
+    font-size: xx-large;
+    font-weight: 500;
+    color: rgb(236, 79, 79);
+}
+.span-3 {
+    margin-top: 6px;
+    font-size: x-large;
+    color: rgb(45, 212, 191);
+    font-weight: 400;
+}
+.span-4 {
+    font-size: x-large;
+    color: rgb(45, 212, 191);
+    font-weight: 400;
+}
+
+@media only screen and (max-width: 500px) {
+    .span-2 {
+        font-size: x-large;
+    }
+    .span-3 {
+        font-size: large;
+    }
+    .span-4 {
+        font-size: large;
+    }
+}
+/* end of media quarries for 500 error */
