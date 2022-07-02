@@ -102,7 +102,7 @@ export default function ItemPhysicalViewPage() {
     return (
         <div className="w-full lg:w-[1000px] self-center px-4 flex flex-col text-white bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
             <div className="w-full flex flex-col items-center text-center gap-4">
-                <span className={"text-2xl font-semibold" + RARITY_PALETTE.text[rawData.item?.rarity?.toLowerCase()]}>{rawData.item?.name}</span>
+                <span className={"mt-2 text-2xl font-semibold" + RARITY_PALETTE.text[rawData.item?.rarity?.toLowerCase()]}>{rawData.item?.name}</span>
                 <div className="w-[200px] h-[200px] flex">
                     <img
                         src={rawData.item?.imgLink}
