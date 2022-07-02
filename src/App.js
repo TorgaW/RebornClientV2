@@ -38,6 +38,7 @@ import ViewHeroPage from "./Pages/ViewHeroPage";
 import MarketplaceSellPage from "./Pages/Marketplace/MarketplaceSellPage";
 import TwoFAEnabledPage from "./Pages/Authorization/TwoFAEnabledPage";
 import ItemPhysicalViewPage from "./Pages/ItemPhysicalViewPage";
+import TestHomePage from "./Pages/TestPages/TestHomePage";
 
 function App() {
     const [showLoading, setShowLoading] = useState(false);
@@ -102,6 +103,7 @@ function App() {
                     <Route path="/inventory/item/:boxId" element={<ItemPhysicalViewPage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/metamask" element={<MetaMaskPage />} />
+                    <Route exact path="/test/home" element={<TestHomePage />} />
                     <Route path="/" element={<HomePage />}></Route>
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
