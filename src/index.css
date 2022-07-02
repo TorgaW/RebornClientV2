@@ -192,6 +192,11 @@ img {
     -moz-backface-visibility: hidden;
     -ms-backface-visibility: hidden;
 }
+span {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -ms-backface-visibility: hidden;
+}
 
 /* end of flickering fix */
 
