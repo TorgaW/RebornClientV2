@@ -234,12 +234,7 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId 
     };
     return (
         <Link to={"/box/" + (boxId * 71 + 41)}>
-            <div
-                className={
-                    "relative group w-[230px] h-[390px] p-4 flex flex-col flex-shrink-0 rounded-md bg-dark-purple-100 bg-opacity-10 hover:bg-opacity-50 animated-200 border-[2px] border-opacity-70 hover:border-opacity-100 " +
-                    (type === "LUCKY" ? "border-yellow-500" : "border-teal-400")
-                }
-            >
+            <div className={"relative group w-[230px] h-[390px] p-4 flex flex-col flex-shrink-0 rounded-md bg-dark-purple-100 bg-opacity-10 hover:bg-opacity-50 animated-200 border-[2px] border-opacity-70 hover:border-opacity-100 " + (type === "LUCKY" ? "border-yellow-500" : "border-teal-400")}>
                 {/* <div className="absolute inset-0 flex opacity-70 group-hover:opacity-100 animated-100">
                     <img src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage} alt="lucky box" className={"w-full h-full object-contain animated-100 " + (getRandomInt(0,1) ? 'group-hover:rotate-6':'group-hover:-rotate-6')} />
                 </div>
@@ -259,25 +254,14 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId 
                     </div>
                 </div> */}
                 <div className="w-full flex flex-col items-start gap-1 text-left">
-                    <span className={"p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md no-flick " + statusPalette[status]}>
-                        {status === "Owned" ? formatDistanceToNowStrict(new Date(eAt)) + " left" : status}
-                    </span>
+                    <span className={"p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md no-flick " + statusPalette[status]}>{status === "Owned" ? formatDistanceToNowStrict(new Date(eAt)) + " left" : status}</span>
                     <span className="text-green-300 p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md">{owner}</span>
                 </div>
                 <div className="w-full flex opacity-70 group-hover:opacity-100 animated-100">
-                    <img
-                        src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage}
-                        alt="lucky box"
-                        className={
-                            "w-full h-full object-contain animated-200 " +
-                            (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")
-                        }
-                    />
+                    <img src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage} alt="lucky box" className={"w-full h-full object-contain animated-200 " + (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")} />
                 </div>
                 <div className="w-full mt-auto flex flex-col items-center p-1 bg-dark-purple-100 rounded-md bg-opacity-80">
-                    <span className={"no-flick font-semibold text-sm " + (type === "LUCKY" ? "text-yellow-500" : "text-teal-400")}>
-                        {type.toUpperCase()} BOX
-                    </span>
+                    <span className={"no-flick font-semibold text-sm " + (type === "LUCKY" ? "text-yellow-500" : "text-teal-400")}>{type.toUpperCase()} BOX</span>
                     <span className="no-flick text-sm">
                         {serial}-{number}
                     </span>
@@ -366,19 +350,18 @@ function InventoryTab() {
     }
 
     useEffect(() => {
-        if(userData.isLoggedIn)
-            getUserInventory();
+        if (userData.isLoggedIn) getUserInventory();
     }, [userData]);
 
     useEffect(() => {
         refillInventory();
     }, [rawItems, itemsFilter]);
 
-    useEffect(()=>{
+    useEffect(() => {
         return () => {
             ui.hideContentLoading();
         };
-    },[]);
+    }, []);
 
     return userData.isLoggedIn ? (
         <div className="w-full lg:w-[1000px] px-4 flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
@@ -482,7 +465,7 @@ function InventoryTab() {
                     />
                 </div>
             </div>
-            <div className="w-full flex flex-wrap justify-center gap-6 mt-4">{itemsView}</div>
+            <div className="w-full flex flex-col items-center gap-6 mt-4">{itemsView}</div>
         </div>
     ) : (
         <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
@@ -508,33 +491,22 @@ function ItemTile({ comment, features, imgLink, name, rarity, boxId, orderStatus
             onClick={() => {
                 itemClick();
             }}
-            className={
-                "w-[250px] h-[460px] cursor-pointer p-2 py-4 group flex flex-col text-center items-center relative border-2 rounded-md border-opacity-70 hover:border-opacity-100 bg-dark-purple-100 bg-opacity-0 hover:bg-opacity-50 animated-200 " +
-                RARITY_PALETTE.border[rarity?.toLowerCase()]
-            }
+            className={"w-full md:h-[130px] h-[170px] px-4 md:px-8 py-2 gap-4 md:gap-5 items-center flex md:flex-row flex-col rounded-md group border-opacity-50 hover:bg-dark-purple-300 hover:border-opacity-100 animated-200 cursor-pointer border-2 justify-center " + RARITY_PALETTE.border[rarity?.toLowerCase()]}
         >
-            <span className="font-semibold text-lg h-[100px] no-flick flex-shrink-0">{name}</span>
-            <div className="w-[150px] h-[150px] mt-4 flex flex-shrink-0">
-                <img
-                    src={imgLink}
-                    alt="item"
-                    className={
-                        "w-full h-full object-cover rounded-md animated-200 " +
-                        (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")
-                    }
-                />
+            <div className="flex md:gap-5 gap-3 md:max-w-[415px] max-w-[450px] w-full items-center md:justify-center justify-start">
+                <div className="flex md:w-[95px] md:h-[95px] w-[70px] h-[70px] flex-shrink-0">
+                    <img src={imgLink} alt="item" className={"w-full h-full object-cover rounded-md animated-200 " + (getRandomInt(0, 1) ? "group-hover:rotate-3 group-hover:scale-110" : "group-hover:-rotate-3 group-hover:scale-110")} />
+                </div>
+                <span className="font-semibold text-sm md:text-lg text-right md:text-center no-flick w-full md:max-w-[300px]">{name}</span>
             </div>
-            <span className={"mt-4 no-flick flex-shrink-0 font-bold " + RARITY_PALETTE.text[rarity?.toLowerCase()]}>{rarity?.toUpperCase()}</span>
-            <div className="w-full h-full flex items-center justify-center text-center overflow-y-hidden overflow-x-hidden">
-                <span className="text-gray-300 text-sm">{compactString(comment, 80)}</span>
-            </div>
-            <div className="w-full min-h-[20px] flex items-center justify-center text-center overflow-y-hidden overflow-x-hidden">
-                <span className="text-gray-300 text-sm no-flick">
-                    Order status:{" "}
-                    <span className={'no-flick '+(orderStatus === "Not send" ? "text-red-500" : orderStatus === "Shipped" ? "text-green-500" : "text-yellow-500")}>
-                        {orderStatus}
-                    </span>
-                </span>
+            <div className="flex justify-between max-w-[450px] w-full gap-2 py-2 border-b-2 border-gray-800">
+                <div className="flex justify-center items-center">
+                    <span className={"no-flick md:text-base text-sm font-semibold " + RARITY_PALETTE.text[rarity?.toLowerCase()]}>{rarity}</span>
+                </div>
+                <div className="text-gray-300 text-sm no-flick flex items-center flex-wrap gap-1 justify-center">
+                    <span>Order status:</span>
+                    <span className={"no-flick " + (orderStatus === "Not send" ? "text-red-500" : orderStatus === "Shipped" ? "text-green-500" : "text-yellow-500")}>{orderStatus}</span>
+                </div>
             </div>
         </div>
     );

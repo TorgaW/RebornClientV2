@@ -112,8 +112,8 @@ export default function MarketplacePage() {
                     </Link>
                     <button className="w-[100px] h-10 border-b-[1px] animated-100">My lots</button>
                 </div>
-                <div className="shadow-lg bg-opacity-10 bg-dark-purple-100 rounded-xl pb-4">
-                    <div className="w-full lg:w-[1000px] flex md:flex-row flex-col items-center flex-wrap md:gap-0 gap-4 justify-center md:justify-between p-4 px-8 pb-2">
+                <div className="pb-4">
+                    <div className="w-full lg:w-[1000px] flex md:flex-row flex-col items-center flex-wrap md:gap-0 gap-4 justify-center md:justify-between p-4 px-8 pb-6">
                         <div className="flex justify-start items-center relative">
                             <div className="absolute left-1">
                                 <SearchIcon />
@@ -297,15 +297,15 @@ function ItemTile({ price, name, rarity, owner, setData, describtion }) {
             className={"w-full md:h-[130px] h-[100px] px-4 md:px-8 py-2 gap-3 md:gap-5 items-center flex rounded-md group hover:bg-dark-purple-300 hover:border-opacity-100 animated-200 cursor-pointer border-2 justify-center " + rarityColor[rarity.toLowerCase()]}
         >
             <div className="flex items-center justify-between w-[150px] md:w-[250px]">
-                <div className="flex md:w-[100px] md:h-[100px] w-[80px] h-[80px]">
-                    <img className={"h-full w-full object-cover animated-200 group-hover:scale-[1.2]  " + (getRandomInt(0, 1) ? "group-hover:rotate-[-5deg]" : "group-hover:rotate-[5deg]")} src={box} alt="" />
+                <div className="flex md:w-[95px] md:h-[95px] w-[80px] h-[80px]">
+                    <img className={"h-full w-full object-cover animated-200 group-hover:scale-110  " + (getRandomInt(0, 1) ? "group-hover:-rotate-3" : "group-hover:rotate-3")} src={box} alt="" />
                 </div>
                 <div className="w-[100px] px-2 md:w-[150px] text-white text-center md:font-bold font-semibold md:text-xl text-sm">
                     <span>{name}</span>
                 </div>
             </div>
             <div className="max-w-[800px] md:gap-0 gap-4 w-full justify-between flex py-2 border-b-2 border-gray-800 items-center">
-                <div className="md:text-sm text-xs">
+                <div className="md:text-sm text-xs font-semibold">
                     <span>{rarity}</span>
                 </div>
                 <div className="text-white text-large md:text-xl">
@@ -348,7 +348,7 @@ function PopUpTile({ price, name, rarity, owner, describtion }) {
                     </div>
                     <div className="border-t-2 border-b-2 border-gray-800 w-full flex flex-col items-center gap-3 py-2">
                         <div className={rarityColor[rarity?.toLowerCase()]}>
-                            <span className="md:text-xl text-large">{rarity}</span>
+                            <span className="md:text-xl text-large font-semibold">{rarity}</span>
                         </div>
                         <div className="flex justify-center items-center gap-1">
                             <div className="text-gray-500 md:text-base text-sm">
