@@ -563,45 +563,47 @@ function SelectedItemBigScreen({ selectedItemView }) {
     const navigate = useNavigate();
     return (
         <>
-            <div
-                className={
-                    "w-full h-[450px] hidden md:flex flex-col items-center border-2 border-opacity-30 rounded-md md:sticky top-0 p-2" +
-                    RARITY_PALETTE.border[selectedItemView?.rarity?.toLowerCase()]
-                }
-            >
-                <div className="w-[200px] h-[200px] flex flex-shrink-0">
-                    <img
-                        src={selectedItemView?.imgLink}
-                        alt="item"
-                        className={"w-full h-full object-cover border-4 rounded-md" + RARITY_PALETTE.border[selectedItemView?.rarity?.toLowerCase()]}
-                    />
-                </div>
-                <span className={"text-2xl font-semibold text-center mt-2" + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>
-                    {selectedItemView?.name}
-                </span>
-                <div className="w-full h-full flex flex-col justify-center">
-                    <span className="opacity-80 text-center">{compactString(selectedItemView?.comment, 120)}</span>
-                </div>
-                <div className="flex flex-col items-center">
-                    <span className={selectedItemView?.orderStatus === "Shipped" ? "text-green-500" : "text-yellow-400"}>
-                        Order status: {selectedItemView?.orderStatus}
+            <div className="hidden md:flex flex-col w-full">
+                <div
+                    className={
+                        "w-full hidden md:flex gap-4 justify-center flex-col items-center border-2 border-opacity-30 rounded-md md:sticky top-0 px-3 pt-14 pb-6" +
+                        RARITY_PALETTE.border[selectedItemView?.rarity?.toLowerCase()]
+                    }
+                >
+                    <div className="w-[200px] h-[200px] flex flex-shrink-0">
+                        <img
+                            src={selectedItemView?.imgLink}
+                            alt="item"
+                            className={"w-full object-cover border-4 rounded-md" + RARITY_PALETTE.border[selectedItemView?.rarity?.toLowerCase()]}
+                        />
+                    </div>
+                    <span className={"text-2xl font-semibold text-center" + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>
+                        {selectedItemView?.name}
                     </span>
-                    <span>Order ID: {selectedItemView?.orderID}</span>
-                </div>
-                <div className="w-full flex justify-around px-2 mt-2">
-                    <ButtonDefault
-                        text={"View full information"}
-                        click={() => {
-                            if (typeof selectedItemView?.boxId === "number") {
-                                let p = strToBase(selectedItemView?.boxId.toString());
-                                navigate("/inventory/item/" + p);
-                            }
-                        }}
-                    />
-                    <ButtonGreen text={"Sell on marketplace"} />
-                </div>
-                <div className="absolute top-0 right-0 flex p-2">
-                    <span className={"font-semibold" + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>{selectedItemView?.rarity}</span>
+                    <div className="w-full flex flex-col justify-center">
+                        <span className="opacity-80 text-center">{compactString(selectedItemView?.comment, 120)}</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <span className={selectedItemView?.orderStatus === "Shipped" ? "text-green-500" : "text-yellow-400"}>
+                            Order status: {selectedItemView?.orderStatus}
+                        </span>
+                        <span>Order ID: {selectedItemView?.orderID}</span>
+                    </div>
+                    <div className="w-full flex justify-around px-2">
+                        <ButtonDefault
+                            text={"View information"}
+                            click={() => {
+                                if (typeof selectedItemView?.boxId === "number") {
+                                    let p = strToBase(selectedItemView?.boxId.toString());
+                                    navigate("/inventory/item/" + p);
+                                }
+                            }}
+                        />
+                        <ButtonGreen text={"Sell on market"} />
+                    </div>
+                    <div className="absolute top-0 justify-center border-b-2 border-gray-700 border-opacity-100 w-[80%] flex p-2">
+                        <span className={"font-semibold" + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>{selectedItemView?.rarity}</span>
+                    </div>
                 </div>
             </div>
         </>
@@ -612,10 +614,13 @@ function SelectedItemSmallScreen({ selectedItemView }) {
     const navigate = useNavigate();
     return (
         <>
-            <div id="small-screen-selected-item" className="fixed inset-0 top-[120px] flex items-center justify-center p-2 hidden md:hidden bg-black bg-opacity-90">
+            <div
+                id="small-screen-selected-item"
+                className="fixed inset-0 top-[120px] flex z-10 items-center justify-center p-2 hidden md:hidden bg-black bg-opacity-90"
+            >
                 <div
                     className={
-                        "w-full max-w-[500px] h-[400px] flex flex-col items-center border-2 border-opacity-30 rounded-md p-2 relative bg-dark-purple-500" +
+                        "w-full max-w-[500px] justify-center flex flex-col gap-5 items-center border-2 border-opacity-30 rounded-md px-2 pt-14 pb-5 relative bg-dark-purple-500" +
                         RARITY_PALETTE.border[selectedItemView?.rarity?.toLowerCase()]
                     }
                 >
@@ -623,14 +628,14 @@ function SelectedItemSmallScreen({ selectedItemView }) {
                         <img
                             src={selectedItemView?.imgLink}
                             alt="item"
-                            className={"w-full h-full object-cover border-4 rounded-md" + RARITY_PALETTE.border[selectedItemView?.rarity?.toLowerCase()]}
+                            className={"w-full object-cover border-4 rounded-md" + RARITY_PALETTE.border[selectedItemView?.rarity?.toLowerCase()]}
                         />
                     </div>
-                    <span className={"font-semibold text-center mt-2" + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>
+                    <span className={"font-semibold text-lg text-center" + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>
                         {selectedItemView?.name}
                     </span>
-                    <div className="w-full h-full flex flex-col justify-center">
-                        <span className="opacity-80 text-center">{compactString(selectedItemView?.comment, 120)}</span>
+                    <div className="w-full flex flex-col justify-center">
+                        <span className="opacity-80 text-sm text-center">{compactString(selectedItemView?.comment, 120)}</span>
                     </div>
                     <div className="flex flex-col items-center">
                         <span className={selectedItemView?.orderStatus === "Shipped" ? "text-green-500" : "text-yellow-400"}>
@@ -638,7 +643,7 @@ function SelectedItemSmallScreen({ selectedItemView }) {
                         </span>
                         <span>Order ID: {selectedItemView?.orderID}</span>
                     </div>
-                    <div className="w-full flex justify-around px-2 mt-2">
+                    <div className="w-full flex justify-around px-2">
                         <ButtonDefault
                             text={"Information"}
                             click={() => {
@@ -650,7 +655,7 @@ function SelectedItemSmallScreen({ selectedItemView }) {
                         />
                         <ButtonGreen text={"Sell on market"} />
                     </div>
-                    <div className="absolute top-0 left-0 flex p-2">
+                    <div className="absolute top-0 justify-center border-gray-700 w-[65%] flex p-2 border-b-2">
                         <span className={"font-semibold" + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>{selectedItemView?.rarity}</span>
                     </div>
                     <div
