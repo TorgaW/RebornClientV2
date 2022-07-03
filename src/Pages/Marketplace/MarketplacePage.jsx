@@ -376,7 +376,7 @@ function PopUpTile({ price, itemName, rarity, username, description, imgLink }) 
                             document.getElementById("orderConfirmation").classList.remove("opacity-0");
                             document.getElementById("orderConfirmation").classList.add("opacity-100");
                         }}
-                        additionalStyle="w-[300px] text-white"
+                        additionalStyle="w-[300px] text-white tracking-wider"
                         text={"Buy for " + price + "$"}
                     />
                 </div>
