@@ -5,7 +5,14 @@ import React, { useEffect, useState } from "react";
 import { MetaMaskStorage } from "../Storages/MetaMaskStorage";
 import { UIStorage } from "../Storages/UIStorage";
 import { ERC721Abi, NFTAddress } from "../Utils/BlockchainUtils";
-import { getBoxesByHeroId_EP, getHeroById_EP, getInventory_EP, getTransferDetails_EP, safeAuthorize_header } from "../Utils/EndpointsUtil";
+import {
+    getBoxesByHeroId_EP,
+    getHeroById_EP,
+    getInventory_EP,
+    getTransferDetails_EP,
+    marketplaceSellItem_EP,
+    safeAuthorize_header,
+} from "../Utils/EndpointsUtil";
 import { getAxiosError, getDataFromResponse, makePost } from "../Utils/NetworkUtil";
 import luckyBoxImage from "../Images/Boxes/luckyBox.png";
 import mysteryBoxImage from "../Images/Boxes/mysteryBox.png";
@@ -21,6 +28,8 @@ import { isTabletOrMobileBrowser, scrollToTop } from "../Utils/BrowserUtil";
 import ButtonGreen from "../Components/UI/StyledComponents/ButtonGreen";
 import ButtonDefault from "../Components/UI/StyledComponents/ButtonDefault";
 import CancelIWhite from "../Icons/CancelWhite";
+import CrossIcon from "../Icons/Cross";
+import InputDefault from "../Components/UI/StyledComponents/InputDefault";
 
 export default function InventoryPage() {
     const ui = useStoreState(UIStorage);
@@ -346,7 +355,7 @@ function InventoryTab() {
         for (const i of rawCopy) {
             if (filter.includes(i?.rarity?.toLowerCase())) t.push(<ItemTile {...i} callback={itemTileClickCallback} key={getRandomString(32)} />);
         }
-        if (!selectedItemView.imgLink) setSelectedItemView(rawCopy[0] ?? {});
+        setSelectedItemView(rawCopy[0] ?? {});
         console.log(rawCopy, "poop");
         // console.log(t);
         setItemsView(t);
@@ -382,6 +391,42 @@ function InventoryTab() {
                 setSelectedItemView(i);
                 break;
             }
+        }
+    }
+
+    function sellCallback() {
+        document.getElementById("sell-popup").classList.remove("hidden");
+        document.getElementById("small-screen-selected-item").classList.add("hidden");
+        document.getElementById("sell-popup").focus();
+    }
+
+    async function sellItem() {
+        if (selectedItemView && selectedItemView.name) {
+            let price = document.getElementById("item-sell-price").value;
+            let code = document.getElementById("item-sell-code").value;
+            if (price > 0) {
+                let [d, s, e] = await makePost(
+                    marketplaceSellItem_EP(),
+                    {
+                        itemId: selectedItemView.itemId,
+                        price,
+                        type: 2,
+                        code,
+                    },
+                    true
+                );
+                if (d) {
+                    ui.showSuccess("Your item is on marketplace now!");
+                    document.getElementById("sell-popup").classList.add("hidden");
+                    getUserInventory();
+                    document.getElementById("item-sell-price").value = NaN;
+                    document.getElementById("item-sell-code").value = "";
+                    scrollToTop();
+                } else {
+                    ui.showError(e);
+                    console.log(e);
+                }
+            } else ui.showError("Price must be than 0!");
         }
     }
 
@@ -503,8 +548,66 @@ function InventoryTab() {
             </div>
             <div className="w-full flex mt-4 gap-2">
                 <div className="w-full flex flex-col gap-2">{itemsView}</div>
-                <SelectedItemBigScreen selectedItemView={selectedItemView} />
-                <SelectedItemSmallScreen selectedItemView={selectedItemView} />
+                <SelectedItemBigScreen sellCallback={sellCallback} selectedItemView={selectedItemView} />
+                <SelectedItemSmallScreen sellCallback={sellCallback} selectedItemView={selectedItemView} />
+            </div>
+            <div id="sell-popup" className="animated-200 p-2 fixed inset-0 top-[120px] flex items-center justify-center bg-black bg-opacity-90 hidden">
+                <div
+                    className={
+                        "w-full max-w-[550px] flex p-4 rounded-md relative bg-dark-purple-500 border-2" +
+                        RARITY_PALETTE.border[selectedItemView?.rarity?.toLowerCase()]
+                    }
+                >
+                    <div className="max-h-[450px] overflow-y-auto md:max-h-[1000px] w-full flex flex-col items-center mt-6">
+                        <span className="font-semibold text-lg self-start ml-2">Item to sell</span>
+                        <div className="w-full border-b-2 border-white"></div>
+                        <div className="w-[150px] h-[150px] flex flex-shrink-0 mt-2">
+                            <img
+                                src={selectedItemView?.imgLink}
+                                alt="item"
+                                className={"w-full object-cover border-4 rounded-md" + RARITY_PALETTE.border[selectedItemView?.rarity?.toLowerCase()]}
+                            />
+                        </div>
+                        <div className="justify-center border-gray-700 w-[65%] flex p-2 border-b-2">
+                            <span className={"font-semibold" + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>{selectedItemView?.rarity}</span>
+                        </div>
+                        <span className={"mt-2 font-semibold text-lg text-center" + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>
+                            {selectedItemView?.name}
+                        </span>
+                        <div className="w-full flex flex-col justify-center">
+                            <span className="opacity-80 text-sm text-center">{compactString(selectedItemView?.comment, 120)}</span>
+                        </div>
+                        <span className="font-semibold text-lg mt-4 self-start ml-2">Sell price</span>
+                        <div className="w-full border-b-2 border-white"></div>
+                        <div className="w-full flex gap-2 justify-center items-center mt-2">
+                            <InputDefault id={"item-sell-price"} type={"number"} additionalStyle={"max-w-[100px] text-center text-lg font-semibold"} />
+                            <span className="text-purple-700 font-semibold text-lg">GAME</span>
+                        </div>
+                        <span className="font-semibold text-lg mt-4 self-start ml-2">Security</span>
+                        <div className="w-full border-b-2 border-white"></div>
+                        <div className="w-full flex flex-col gap-2 items-center mt-2">
+                            <span>Code from your authenticator</span>
+                            <InputDefault id={"item-sell-code"} type={"text"} additionalStyle={"text-center text-lg font-semibold"} />
+                        </div>
+                        <ButtonGreen
+                            click={() => {
+                                sellItem();
+                            }}
+                            text="Sell"
+                            additionalStyle={"w-full mt-4 text-lg"}
+                        />
+                    </div>
+                    <div className="absolute flex p-2 top-0 right-0">
+                        <div
+                            onClick={() => {
+                                document.getElementById("sell-popup").classList.toggle("hidden");
+                            }}
+                            className="w-6 h-6 flex justify-center items-center cursor-pointer"
+                        >
+                            <CrossIcon size={32} />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     ) : (
@@ -559,7 +662,7 @@ function ItemTile({ imgLink, name, rarity, _unique, callback }) {
     );
 }
 
-function SelectedItemBigScreen({ selectedItemView }) {
+function SelectedItemBigScreen({ selectedItemView, sellCallback }) {
     const navigate = useNavigate();
     return (
         <>
@@ -599,10 +702,17 @@ function SelectedItemBigScreen({ selectedItemView }) {
                                 }
                             }}
                         />
-                        <ButtonGreen text={"Sell on market"} />
+                        <ButtonGreen
+                            click={() => {
+                                if (typeof sellCallback === "function") sellCallback();
+                            }}
+                            text={"Sell on market"}
+                        />
                     </div>
                     <div className="absolute top-0 justify-center border-b-2 border-gray-700 border-opacity-100 w-[80%] flex p-2">
-                        <span className={"font-semibold text-xl " + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>{selectedItemView?.rarity}</span>
+                        <span className={"font-semibold text-xl " + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>
+                            {selectedItemView?.rarity}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -610,7 +720,7 @@ function SelectedItemBigScreen({ selectedItemView }) {
     );
 }
 
-function SelectedItemSmallScreen({ selectedItemView }) {
+function SelectedItemSmallScreen({ selectedItemView, sellCallback }) {
     const navigate = useNavigate();
     return (
         <>
@@ -653,7 +763,12 @@ function SelectedItemSmallScreen({ selectedItemView }) {
                                 }
                             }}
                         />
-                        <ButtonGreen text={"Sell on market"} />
+                        <ButtonGreen
+                            click={() => {
+                                if (typeof sellCallback === "function") sellCallback();
+                            }}
+                            text={"Sell on market"}
+                        />
                     </div>
                     <div className="absolute top-0 justify-center border-gray-700 w-[65%] flex p-2 border-b-2">
                         <span className={"font-semibold" + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>{selectedItemView?.rarity}</span>
@@ -665,7 +780,7 @@ function SelectedItemSmallScreen({ selectedItemView }) {
                         className="absolute top-0 right-0 flex p-2 cursor-pointer"
                     >
                         <div className="w-6 h-6 flex justify-center items-center">
-                            <CancelIWhite />
+                            <CrossIcon size={32} />
                         </div>
                     </div>
                 </div>
