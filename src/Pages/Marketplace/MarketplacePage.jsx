@@ -111,7 +111,7 @@ function MarketplaceBuyPage() {
                         </div>
                         <SearchBar />
                     </div>
-                    <div className="flex justify-center flex-wrap max-w-[210px] items-center gap-2">
+                    <div className="flex justify-center flex-wrap max-w-[220px] items-center gap-2">
                         <div className="flex justify-center items-center gap-2">
                             {filter.rarity ? (
                                 <div className="relative h-[42px] md:text-base text-sm px-7 border-2 border-gray-800 rounded-md text-center flex items-center justify-center">
