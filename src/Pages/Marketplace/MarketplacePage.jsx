@@ -348,7 +348,7 @@ function PopUpTile({ price, itemName, rarity, username, description, imgLink }) 
                     </button>
                 </div>
                 <div className="flex flex-col justify-center items-center h-full w-full gap-4 px-4">
-                    <div className="w-full px-10 text-center flex justify-center">
+                    <div className="w-full px-10 md:py-2 text-center flex justify-center">
                         <span className="md:text-3xl text-2xl font-bold text-white">{itemName}</span>
                     </div>
                     <div className={"md:w-[200px] md:h-[200px] w-[130px] h-[130px] border-4 rounded-md " + rarityColor[rarity?.toLowerCase()]}>
