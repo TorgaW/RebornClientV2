@@ -103,15 +103,15 @@ function MarketplaceBuyPage() {
 
     return (
         <>
-            <div className="pb-4">
-                <div className="w-full lg:w-[1000px] flex md:flex-row flex-col items-center flex-wrap md:gap-0 gap-4 justify-center md:justify-between p-4 px-8 pb-6">
+            <div className="pb-4 w-full flex flex-col items-center">
+                <div className="w-full lg:w-[1000px] flex md:flex-row flex-col items-center flex-wrap gap-4 justify-center md:justify-between p-4 px-8 pb-6">
                     <div className="flex justify-start items-center relative">
                         <div className="absolute left-1">
                             <SearchIcon />
                         </div>
                         <SearchBar />
                     </div>
-                    <div className="flex justify-center flex-wrap max-w-[220px] items-center gap-2">
+                    <div className="flex justify-center flex-wrap md:max-w-[500px] max-w-[220px] items-center gap-2">
                         <div className="flex justify-center items-center gap-2">
                             {filter.rarity ? (
                                 <div className="relative h-[42px] md:text-base text-sm px-7 border-2 border-gray-800 rounded-md text-center flex items-center justify-center">
