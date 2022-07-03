@@ -351,8 +351,8 @@ function PopUpTile({ price, itemName, rarity, username, description, imgLink }) 
                     <div className="w-full px-10 text-center flex justify-center">
                         <span className="md:text-3xl text-2xl font-bold text-white">{itemName}</span>
                     </div>
-                    <div className="md:w-[200px] md:h-[200px] w-[130px] h-[130px]">
-                        <img className="w-full h-full object-cover rounded-md" src={imgLink} alt="" />
+                    <div className={"md:w-[200px] md:h-[200px] w-[130px] h-[130px] border-4 rounded-md " + rarityColor[rarity?.toLowerCase()]}>
+                        <img className="w-full h-full object-cover" src={imgLink} alt="" />
                     </div>
                     <div className="border-t-2 border-b-2 border-gray-800 w-full flex flex-col items-center gap-3 py-2">
                         <div className={rarityColor[rarity?.toLowerCase()]}>

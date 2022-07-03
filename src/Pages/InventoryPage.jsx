@@ -602,7 +602,7 @@ function SelectedItemBigScreen({ selectedItemView }) {
                         <ButtonGreen text={"Sell on market"} />
                     </div>
                     <div className="absolute top-0 justify-center border-b-2 border-gray-700 border-opacity-100 w-[80%] flex p-2">
-                        <span className={"font-semibold" + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>{selectedItemView?.rarity}</span>
+                        <span className={"font-semibold text-xl " + RARITY_PALETTE.text[selectedItemView?.rarity?.toLowerCase()]}>{selectedItemView?.rarity}</span>
                     </div>
                 </div>
             </div>
