@@ -78,6 +78,7 @@ function BoxTab() {
     const [filter, setFilter] = useState({ unopened: true, burned: false, opened: false });
     const [rawBoxes, setRawBoxes] = useState([]);
     const [boxesComponents, setBoxesComponents] = useState([]);
+    const [selectedBox, setSelectedBox] = useState({});
 
     function changeFilter(newValue) {
         setFilter({ ...filter, ...newValue });
@@ -167,6 +168,10 @@ function BoxTab() {
         }
     }
 
+    function selectCallback(serial, number, type, boxId) {
+        
+    }
+
     useEffect(() => {
         if (userData.isLoggedIn) getHeroesIDs();
         // console.log('hi');
@@ -185,50 +190,67 @@ function BoxTab() {
     }, []);
 
     return userData.isLoggedIn ? (
-        <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
-            <div className="w-full flex flex-wrap items-center justify-center gap-4 p-4">
-                <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px]  border-teal-600 rounded-md">
-                    <span>Show unopened boxes</span>
-                    <input
-                        type="checkbox"
-                        onChange={() => {
-                            changeFilter({ unopened: document.getElementById("show-unopened").checked });
-                        }}
-                        name=""
-                        id="show-unopened"
-                        defaultChecked={filter.unopened}
-                        className="h-5 w-5 rounded-lg hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
-                    />
+        <>
+            <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
+                <div className="w-full flex flex-wrap items-center justify-center gap-4 p-4">
+                    <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px]  border-teal-600 rounded-md">
+                        <span>Show unopened boxes</span>
+                        <input
+                            type="checkbox"
+                            onChange={() => {
+                                changeFilter({ unopened: document.getElementById("show-unopened").checked });
+                            }}
+                            name=""
+                            id="show-unopened"
+                            defaultChecked={filter.unopened}
+                            className="h-5 w-5 rounded-lg hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
+                        />
+                    </div>
+                    <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px] border-teal-600 rounded-md">
+                        <span>Show burned boxes</span>
+                        <input
+                            type="checkbox"
+                            onChange={() => {
+                                changeFilter({ burned: document.getElementById("show-burned").checked });
+                            }}
+                            name=""
+                            id="show-burned"
+                            defaultChecked={filter.burned}
+                            className="h-5 w-5 rounded-lg hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
+                        />
+                    </div>
+                    <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px] border-teal-600 rounded-md">
+                        <span>Show opened boxes</span>
+                        <input
+                            type="checkbox"
+                            onChange={() => {
+                                changeFilter({ opened: document.getElementById("show-opened").checked });
+                            }}
+                            name=""
+                            id="show-opened"
+                            defaultChecked={filter.opened}
+                            className="h-5 w-5 rounded-lg hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
+                        />
+                    </div>
                 </div>
-                <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px] border-teal-600 rounded-md">
-                    <span>Show burned boxes</span>
-                    <input
-                        type="checkbox"
-                        onChange={() => {
-                            changeFilter({ burned: document.getElementById("show-burned").checked });
-                        }}
-                        name=""
-                        id="show-burned"
-                        defaultChecked={filter.burned}
-                        className="h-5 w-5 rounded-lg hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
-                    />
-                </div>
-                <div className="w-[230px] flex items-center justify-between gap-2 p-2 border-[1px] border-teal-600 rounded-md">
-                    <span>Show opened boxes</span>
-                    <input
-                        type="checkbox"
-                        onChange={() => {
-                            changeFilter({ opened: document.getElementById("show-opened").checked });
-                        }}
-                        name=""
-                        id="show-opened"
-                        defaultChecked={filter.opened}
-                        className="h-5 w-5 rounded-lg hover:outline-none hover:ring-2 hover:ring-purple-400 focus:ring-purple-600"
-                    />
+                <div className="flex flex-wrap justify-center gap-6 p-4">{boxesComponents}</div>
+                <div id="market-sell-box" className="fixed inset-0 top-[120px] p-2 flex justify-center items-center bg-black bg-opacity-90 z-10 hidden">
+                    <div
+                        className={
+                            "relative w-full max-w-[500px] max-h-[400px] overflow-y-auto p-2 bg-dark-purple-500 flex flex-col rounded-md border-2 " +
+                            (selectedBox?.type === "LUCKY" ? "border-yellow-500" : "border-teal-400")
+                        }
+                    >
+                        
+                        <div onClick={() => {document.getElementById('market-sell-box').classList.toggle('hidden')}} className="absolute top-0 right-0 flex p-2 cursor-pointer">
+                            <div className="w-6 h-6 flex justify-center items-center">
+                                <CrossIcon size={32} />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className="flex flex-wrap justify-center gap-6 p-4">{boxesComponents}</div>
-        </div>
+        </>
     ) : (
         <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
             <div className="w-full flex flex-wrap items-center justify-center gap-2 p-4">
@@ -238,65 +260,50 @@ function BoxTab() {
     );
 }
 
-function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId }) {
+function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId, selectCallback }) {
     const statusPalette = {
         Opened: "text-red-500",
         Burned: "text-amber-500",
         Owned: "text-green-300",
     };
     return (
-        <Link to={"/box/" + (boxId * 71 + 41)}>
-            <div
-                className={
-                    "relative group w-[230px] h-[390px] p-4 flex flex-col flex-shrink-0 rounded-md bg-dark-purple-100 bg-opacity-10 hover:bg-opacity-50 animated-200 border-[2px] border-opacity-70 hover:border-opacity-100 " +
-                    (type === "LUCKY" ? "border-yellow-500" : "border-teal-400")
-                }
-            >
-                {/* <div className="absolute inset-0 flex opacity-70 group-hover:opacity-100 animated-100">
-                    <img src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage} alt="lucky box" className={"w-full h-full object-contain animated-100 " + (getRandomInt(0,1) ? 'group-hover:rotate-6':'group-hover:-rotate-6')} />
-                </div>
-                <div className="w-full h-full flex flex-col p-2 z-10 pointer-events-none">
-                    <div className="w-full flex flex-col items-start justify-between gap-1">
-                        <span className={"text-sm p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md " + statusPalette[status]}>
+        <div
+            className={
+                "relative w-[230px] h-[420px] p-2 gap-2 flex flex-col flex-shrink-0 rounded-md bg-dark-purple-100 bg-opacity-10 animated-200 border-[2px] border-opacity-70 hover:border-opacity-100 " +
+                (type === "LUCKY" ? "border-yellow-500" : "border-teal-400")
+            }
+        >
+            <Link to={"/box/" + (boxId * 71 + 41)}>
+                <div className="w-full h-full flex flex-col group hover:bg-dark-purple-100 rounded-md animated-200">
+                    <div className="w-full flex flex-col items-start gap-1 text-left">
+                        <span className={"p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md no-flick " + statusPalette[status]}>
                             {status === "Owned" ? formatDistanceToNowStrict(new Date(eAt)) + " left" : status}
                         </span>
-                        <span className="text-green-300 text-sm p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md">{owner}</span>
+                        <span className="text-green-300 p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md">{owner}</span>
+                    </div>
+                    <div className="w-full flex opacity-70 group-hover:opacity-100 animated-100">
+                        <img
+                            src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage}
+                            alt="lucky box"
+                            className={
+                                "w-full h-full object-contain animated-200 " +
+                                (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")
+                            }
+                        />
                     </div>
                     <div className="w-full mt-auto flex flex-col items-center p-1 bg-dark-purple-100 rounded-md bg-opacity-80">
-                        <span className={"font-semibold text-sm " + (type === "LUCKY" ? "text-yellow-500":"text-teal-400")}>{type.toUpperCase()} BOX</span>
-                        <span className="text-sm">
+                        <span className={"no-flick font-semibold text-sm " + (type === "LUCKY" ? "text-yellow-500" : "text-teal-400")}>
+                            {type.toUpperCase()} BOX
+                        </span>
+                        <span className="no-flick text-sm">
                             {serial}-{number}
                         </span>
-                        <span className="font-semibold text-purple-300">{priceToOpen} G</span>
+                        <span className="no-flick font-semibold text-purple-300">{priceToOpen} G</span>
                     </div>
-                </div> */}
-                <div className="w-full flex flex-col items-start gap-1 text-left">
-                    <span className={"p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md no-flick " + statusPalette[status]}>
-                        {status === "Owned" ? formatDistanceToNowStrict(new Date(eAt)) + " left" : status}
-                    </span>
-                    <span className="text-green-300 p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md">{owner}</span>
                 </div>
-                <div className="w-full flex opacity-70 group-hover:opacity-100 animated-100">
-                    <img
-                        src={type === "LUCKY" ? luckyBoxImage : mysteryBoxImage}
-                        alt="lucky box"
-                        className={
-                            "w-full h-full object-contain animated-200 " +
-                            (getRandomInt(0, 1) ? "group-hover:rotate-6 group-hover:scale-110" : "group-hover:-rotate-6 group-hover:scale-110")
-                        }
-                    />
-                </div>
-                <div className="w-full mt-auto flex flex-col items-center p-1 bg-dark-purple-100 rounded-md bg-opacity-80">
-                    <span className={"no-flick font-semibold text-sm " + (type === "LUCKY" ? "text-yellow-500" : "text-teal-400")}>
-                        {type.toUpperCase()} BOX
-                    </span>
-                    <span className="no-flick text-sm">
-                        {serial}-{number}
-                    </span>
-                    <span className="no-flick font-semibold text-purple-300">{priceToOpen} G</span>
-                </div>
-            </div>
-        </Link>
+            </Link>
+            {status === "Owned" ? <ButtonGreen text={"Sell on market"} click={()=>{if(typeof selectCallback === 'function') selectCallback(serial, number, type, boxId);}} /> : <></>}
+        </div>
     );
 }
 
