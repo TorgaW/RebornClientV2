@@ -101,7 +101,7 @@ function BoxTab() {
             if (i.status === "Burned" && !filter.burned) continue;
             if (i.status === "Owned" && !filter.unopened) continue;
             // console.log(i.status);
-            t.push(<BoxTile key={getRandomString(12)} {...i} />);
+            t.push(<BoxTile key={getRandomString(12)} {...i} selectCallback={selectCallback} />);
         }
         setBoxesComponents(t);
     }
@@ -169,7 +169,9 @@ function BoxTab() {
     }
 
     function selectCallback(serial, number, type, boxId) {
-        
+        console.log({ serial, number, type, boxId });
+        setSelectedBox({ serial, number, type, boxId });
+        document.getElementById("market-sell-box").classList.toggle("hidden");
     }
 
     useEffect(() => {
@@ -241,8 +243,22 @@ function BoxTab() {
                             (selectedBox?.type === "LUCKY" ? "border-yellow-500" : "border-teal-400")
                         }
                     >
-                        
-                        <div onClick={() => {document.getElementById('market-sell-box').classList.toggle('hidden')}} className="absolute top-0 right-0 flex p-2 cursor-pointer">
+                        <div>
+                            
+                        </div>
+                        <div className="w-full flex justify-center">
+                            <img src={selectedBox?.type === "MYSTERY" ? mysteryBoxImage:luckyBoxImage} alt="box" className="w-[150px] h-[150px]" />
+                        </div>
+                        <div className="w-full flex flex-col items-center">
+                            <span className={(selectedBox?.type === 'MYSTERY' ? "text-teal-400":"text-yellow-500")+" font-bold"}>{selectedBox?.type} BOX</span>
+                            <span>{selectedBox?.serial}-{selectedBox?.number}</span>
+                        </div>
+                        <div
+                            onClick={() => {
+                                document.getElementById("market-sell-box").classList.toggle("hidden");
+                            }}
+                            className="absolute top-0 right-0 flex p-2 cursor-pointer"
+                        >
                             <div className="w-6 h-6 flex justify-center items-center">
                                 <CrossIcon size={32} />
                             </div>
@@ -302,7 +318,16 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId,
                     </div>
                 </div>
             </Link>
-            {status === "Owned" ? <ButtonGreen text={"Sell on market"} click={()=>{if(typeof selectCallback === 'function') selectCallback(serial, number, type, boxId);}} /> : <></>}
+            {status === "Owned" ? (
+                <ButtonGreen
+                    text={"Sell on market"}
+                    click={() => {
+                        if (typeof selectCallback === "function") selectCallback(serial, number, type, boxId);
+                    }}
+                />
+            ) : (
+                <></>
+            )}
         </div>
     );
 }
