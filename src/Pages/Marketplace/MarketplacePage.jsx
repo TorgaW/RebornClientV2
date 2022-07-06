@@ -6,7 +6,7 @@ import ArrowIcon from "../../Icons/FilterArrow";
 import SearchIcon from "../../Icons/Search";
 import box from "../../Images/Boxes/luckyBox.png";
 import { UIStorage } from "../../Storages/UIStorage";
-import { marketplaceLoadLots_EP, marketplaceSellItem_EP, safeAuthorize_header } from "../../Utils/EndpointsUtil";
+import { marketplaceLoadLots_EP, marketplaceSellItem_EP, safeAuthorize_header, marketplaceBuyItem_EP } from "../../Utils/EndpointsUtil";
 import { getDataFromResponse, makePost } from "../../Utils/NetworkUtil";
 import { getRandomString } from "../../Utils/RandomUtil";
 import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
@@ -14,9 +14,11 @@ import { getRandomInt } from "../../Utils/RandomUtil";
 import { MetaMaskStorage } from "../../Storages/MetaMaskStorage";
 import ButtonGreen from "../../Components/UI/StyledComponents/ButtonGreen";
 import ButtonRed from "../../Components/UI/StyledComponents/ButtonRed";
+import InputDefault from "../../Components/UI/StyledComponents/InputDefault";
 import InventoryPage from "../InventoryPage";
 import { compactString } from "../../Utils/StringUtil";
 import { isTabletOrMobileBrowser } from "../../Utils/BrowserUtil";
+import { UserDataStorage } from "../../Storages/UserDataStorage";
 
 const rarityColor = {
     guarantee: "text-gray-400 border-gray-400 border-opacity-50",
@@ -35,17 +37,32 @@ export default function MarketplacePage() {
         <div>
             <div className="w-full flex items-center flex-col relative text-white px-2">
                 <div className="w-full flex justify-center items-center gap-4 text-xl my-6">
-                    <button onClick={()=>{
-                        setMarketSelectedOption("buy");
-                    }} className={"w-[100px] h-10 border-b-[1px] animated-100 " + (marketSelectedOption === "buy" ? "text-teal-400 border-teal-400" : "")}>Buy</button>
-                    <button onClick={()=>{
-                        setMarketSelectedOption("sell");
-                    }} className={"w-[100px] h-10 border-b-[1px] animated-100 " + (marketSelectedOption === "sell" ? "text-teal-400 border-teal-400" : "")}>Sell</button>
-                    <button onClick={()=>{
-                        setMarketSelectedOption("userLots");
-                    }} className={"w-[100px] h-10 border-b-[1px] animated-100 " + (marketSelectedOption === "userLots" ? "text-teal-400 border-teal-400" : "")}>My lots</button>
+                    <button
+                        onClick={() => {
+                            setMarketSelectedOption("buy");
+                        }}
+                        className={"w-[100px] h-10 border-b-[1px] animated-100 " + (marketSelectedOption === "buy" ? "text-teal-400 border-teal-400" : "")}
+                    >
+                        Buy
+                    </button>
+                    <button
+                        onClick={() => {
+                            setMarketSelectedOption("sell");
+                        }}
+                        className={"w-[100px] h-10 border-b-[1px] animated-100 " + (marketSelectedOption === "sell" ? "text-teal-400 border-teal-400" : "")}
+                    >
+                        Sell
+                    </button>
+                    <button
+                        onClick={() => {
+                            setMarketSelectedOption("userLots");
+                        }}
+                        className={"w-[100px] h-10 border-b-[1px] animated-100 " + (marketSelectedOption === "userLots" ? "text-teal-400 border-teal-400" : "")}
+                    >
+                        My lots
+                    </button>
                 </div>
-                {marketSelectedOption === "buy" ? <MarketplaceBuyPage /> : (marketSelectedOption === "sell" ? <InventoryPage /> : <></>)}
+                {marketSelectedOption === "buy" ? <MarketplaceBuyPage /> : marketSelectedOption === "sell" ? <InventoryPage /> : <></>}
             </div>
         </div>
     );
@@ -62,10 +79,39 @@ function MarketplaceBuyPage() {
 
     const [lotsData, setLotsData] = useState([]);
 
+    const [selectedItem, setSelectedItem] = useState({});
+
     async function start() {
         let [d, s, e] = await makePost(marketplaceLoadLots_EP(), {}, true);
         setLotsData(d.items);
         console.log(d);
+    }
+
+    async function buyItem() {
+        if (selectedItem && selectedItem.itemId) {
+            let code = document.getElementById("item-buy-code").value;
+            let [d, s, e] = await makePost(
+                marketplaceBuyItem_EP(),
+                {
+                    itemType: 2,
+                    sellerName: selectedItem.username,
+                    price: selectedItem.price,
+                    itemId: selectedItem.itemId,
+                    code,
+                },
+                true
+            );
+
+            if (d) {
+                ui.showSuccess("Congratulations on your purchase!");
+                document.getElementById("popUpVision").classList.add("hidden");
+                document.getElementById("item-buy-code").value = "";
+            } else {
+                ui.showError(e);
+                console.log(e);
+                start();
+            }
+        }
     }
 
     useEffect(() => {
@@ -87,7 +133,16 @@ function MarketplaceBuyPage() {
             }
             let a = [];
             for (const i of t) {
-                a.push(<ItemTile key={getRandomString(12)} {...i} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} setData={setPopUpData} />);
+                a.push(
+                    <ItemTile
+                        key={getRandomString(12)}
+                        buyItem={buyItem}
+                        imgLink={i.boxItem.imgLink}
+                        description={i.boxItem.comment}
+                        setSelectedItem={setSelectedItem}
+                        setPopUpData={setPopUpData}
+                    />
+                );
             }
             setLotsView(a);
         }
@@ -274,7 +329,7 @@ function SearchBar() {
     );
 }
 
-function ItemTile({ price, itemName, rarity, username, setData, description, itemId, itemType, imgLink }) {
+function ItemTile({ itemData, setPopUpData, setSelectedItem }) {
     // let rarityUpperCase = String(rarity).charAt(0).toUpperCase() + rarity.slice(1);
     return (
         <div
@@ -282,11 +337,11 @@ function ItemTile({ price, itemName, rarity, username, setData, description, ite
                 document.getElementById("popUpVision").classList.remove("pointer-events-none");
                 document.getElementById("popUpVision").classList.remove("opacity-0");
                 document.getElementById("popUpVision").classList.add("opacity-100");
-                setData({ price, itemName, rarity, username, setData, description, imgLink });
+                setPopUpData({ itemData });
             }}
             className={
                 "w-full md:h-[130px] h-[100px] px-4 md:px-8 py-2 gap-1 md:gap-5 items-center flex rounded-md group hover:bg-dark-purple-300 hover:border-opacity-100 animated-200 cursor-pointer border-2 justify-center " +
-                rarityColor[rarity.toLowerCase()]
+                rarityColor[itemData?.rarity.toLowerCase()]
             }
         >
             <div className="flex gap-2 items-center justify-between w-[150px] md:w-[250px]">
@@ -296,20 +351,20 @@ function ItemTile({ price, itemName, rarity, username, setData, description, ite
                             "h-full w-full object-cover rounded-md animated-200 group-hover:scale-110  " +
                             (getRandomInt(0, 1) ? "group-hover:-rotate-3" : "group-hover:rotate-3")
                         }
-                        src={imgLink}
+                        src={itemData?.imgLink}
                         alt=""
                     />
                 </div>
                 <div className="w-[100px] px-2 md:w-[150px] text-white text-center md:font-bold font-semibold md:text-xl text-xs">
-                    <span>{compactString(itemName, 30)}</span>
+                    <span>{compactString(itemData?.itemName, 30)}</span>
                 </div>
             </div>
             <div className="max-w-[800px] md:gap-0 gap-4 w-full justify-between flex py-2 border-b-2 border-gray-800 items-center">
                 <div className="md:text-sm text-xs font-semibold">
-                    <span>{rarity}</span>
+                    <span>{itemData?.rarity}</span>
                 </div>
                 <div className="text-white text-large md:text-xl">
-                    <span>{price}$</span>
+                    <span>{itemData?.price}$</span>
                 </div>
             </div>
             <div className="max-w-[200px] w-full md:flex hidden items-center justify-center mt-2 gap-1 text-xs md:text-sm">
@@ -317,14 +372,16 @@ function ItemTile({ price, itemName, rarity, username, setData, description, ite
                     <span>Owner:</span>
                 </div>
                 <div className="text-white italic md:text-sm text-xs font-light">
-                    <span>{username}</span>
+                    <span>{itemData?.username}</span>
                 </div>
             </div>
         </div>
     );
 }
 
-function PopUpTile({ price, itemName, rarity, username, description, imgLink }) {
+function PopUpTile({ itemData, setSelectedItem, buyItem }) {
+    const userData = useStoreState(UserDataStorage);
+
     return (
         <div
             id="popUpVision"
@@ -332,8 +389,8 @@ function PopUpTile({ price, itemName, rarity, username, description, imgLink }) 
         >
             <div
                 className={
-                    "relative py-5 md:w-[500px] w-[430px] flex flex-col gap-4 items-center bg-dark-purple-400 border-2 md:mt-0 mt-[90px] rounded-xl shadow-lg mx-6 " +
-                    rarityColor[rarity?.toLowerCase()]
+                    "relative py-5 md:w-[500px] w-[430px] flex flex-col gap-4 items-center bg-dark-purple-400 border-2 md:mt-0 mt-[110px] rounded-xl shadow-lg mx-6 " +
+                    rarityColor[itemData?.rarity?.toLowerCase()]
                 }
             >
                 <div className="absolute w-full top-0 flex justify-end pt-2 pr-2">
@@ -349,47 +406,63 @@ function PopUpTile({ price, itemName, rarity, username, description, imgLink }) 
                 </div>
                 <div className="flex flex-col justify-center items-center h-full w-full gap-4 px-4">
                     <div className="w-full px-10 md:py-2 text-center flex justify-center">
-                        <span className="md:text-3xl text-2xl font-bold text-white">{itemName}</span>
+                        <span className="md:text-3xl text-2xl font-bold text-white">{itemData?.itemName}</span>
                     </div>
-                    <div className={"md:w-[200px] md:h-[200px] w-[130px] h-[130px] border-4 rounded-md " + rarityColor[rarity?.toLowerCase()]}>
-                        <img className="w-full h-full object-cover" src={imgLink} alt="" />
+                    <div className={"md:w-[200px] md:h-[200px] w-[130px] h-[130px] border-4 rounded-md " + rarityColor[itemData?.rarity?.toLowerCase()]}>
+                        <img className="w-full h-full object-cover" src={itemData?.imgLink} alt="" />
                     </div>
                     <div className="border-t-2 border-b-2 border-gray-800 w-full flex flex-col items-center gap-3 py-2">
-                        <div className={rarityColor[rarity?.toLowerCase()]}>
-                            <span className="md:text-xl text-large font-semibold">{rarity}</span>
+                        <div className={rarityColor[itemData?.rarity?.toLowerCase()]}>
+                            <span className="md:text-xl text-large font-semibold">{itemData?.rarity}</span>
                         </div>
                         <div className="flex justify-center items-center gap-1">
                             <div className="text-gray-500 md:text-base text-sm">
                                 <span>Owner:</span>
                             </div>
                             <div className="text-white italic md:text-sm text-xs font-light">
-                                <span>{username}</span>
+                                <span>{itemData?.username}</span>
                             </div>
                         </div>
                     </div>
                     <div className="text-center flex justify-center items-center py-2">
-                        <span className="text-white md:text-base text-sm">{isTabletOrMobileBrowser() ? compactString(description, 150) : description}</span>
+                        <span className="text-white md:text-base text-sm">
+                            {isTabletOrMobileBrowser() ? compactString(itemData?.description, 150) : itemData?.description}
+                        </span>
                     </div>
-                    <ButtonGreen
-                        click={() => {
-                            document.getElementById("orderConfirmation").classList.remove("pointer-events-none");
-                            document.getElementById("orderConfirmation").classList.remove("opacity-0");
-                            document.getElementById("orderConfirmation").classList.add("opacity-100");
-                        }}
-                        additionalStyle="w-[300px] text-white tracking-wider"
-                        text={"Buy for " + price + "$"}
-                    />
+                    {userData.isLoggedIn ? (
+                        <ButtonGreen
+                            click={() => {
+                                setSelectedItem({ itemData });
+                                document.getElementById("orderConfirmation").classList.remove("pointer-events-none");
+                                document.getElementById("orderConfirmation").classList.remove("opacity-0");
+                                document.getElementById("orderConfirmation").classList.add("opacity-100");
+                            }}
+                            additionalStyle="w-[300px] text-white tracking-wider"
+                            text={"Buy for " + itemData?.price + "$"}
+                        />
+                    ) : (
+                        <div className="bg-dark-purple-200 bg-opacity-80 flex items-center justify-center py-2 px-4 rounded-md gap-2">
+                            <span className="md:text-lg text-sm font-semibold text-gray-500">Please, sign in to buy for</span>
+                            <span className="md:text-xl text-lg text-white font-semibold">{itemData?.price}$</span>
+                        </div>
+                    )}
                 </div>
                 <div
                     id="orderConfirmation"
-                    className="animated-100 absolute w-full h-full flex pointer-events-none opacity-0 justify-center items-center rounded-xl bg-opacity-80 bg-black"
+                    className="animated-100 absolute w-full h-full flex pointer-events-none top-0 opacity-0 justify-center items-center rounded-xl bg-opacity-80 bg-black"
                 >
-                    <div className="text-white flex flex-col gap-6 justify-center items-center rounded-xl bg-dark-purple-400 w-[250px] h-[150px]">
+                    <div className="text-white flex flex-col gap-6 justify-center items-center rounded-xl bg-dark-purple-400 w-[250px] h-[250px]">
                         <div className="">
                             <span className="text-xl font-semibold">Are you sure?</span>
                         </div>
                         <div className="flex gap-5">
-                            <ButtonGreen additionalStyle="w-[70px]" text="Yes" />
+                            <ButtonGreen
+                                click={() => {
+                                    buyItem();
+                                }}
+                                additionalStyle="w-[70px]"
+                                text="Yes"
+                            />
                             <ButtonRed
                                 click={() => {
                                     document.getElementById("orderConfirmation").classList.add("pointer-events-none");
@@ -399,6 +472,10 @@ function PopUpTile({ price, itemName, rarity, username, description, imgLink }) 
                                 additionalStyle="w-[70px]"
                                 text="No"
                             />
+                        </div>
+                        <div className="w-full flex flex-col gap-2 items-center">
+                            <span>Code from your authenticator</span>
+                            <InputDefault id={"item-buy-code"} type={"text"} additionalStyle={"text-center w-[200px] text-lg font-semibold"} />
                         </div>
                     </div>
                 </div>

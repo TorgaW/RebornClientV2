@@ -150,3 +150,7 @@ export function marketplaceLoadLots_EP() {
 export function marketplaceSellItem_EP() {
     return serverAddress + "/api/marketplace/sellObject";
 }
+
+export function marketplaceBuyItem_EP() {
+    return serverAddress + "/api/marketplace/buyItem";
+}
