@@ -114,6 +114,10 @@ function MarketplaceBuyPage() {
         }
     }
 
+    function BuyCallBack() {
+
+    };
+
     useEffect(() => {
         if (lotsData.length > 0) {
             let t = Array.from(lotsData);
@@ -136,6 +140,7 @@ function MarketplaceBuyPage() {
                 a.push(
                     <ItemTile
                         key={getRandomString(12)}
+                        {...i}
                         buyItem={buyItem}
                         imgLink={i.boxItem.imgLink}
                         description={i.boxItem.comment}
@@ -329,7 +334,7 @@ function SearchBar() {
     );
 }
 
-function ItemTile({ itemData, setPopUpData, setSelectedItem }) {
+function ItemTile({ price, itemName, username, rarity, description, imgLink, setPopUpData, setSelectedItem }) {
     // let rarityUpperCase = String(rarity).charAt(0).toUpperCase() + rarity.slice(1);
     return (
         <div
@@ -337,11 +342,11 @@ function ItemTile({ itemData, setPopUpData, setSelectedItem }) {
                 document.getElementById("popUpVision").classList.remove("pointer-events-none");
                 document.getElementById("popUpVision").classList.remove("opacity-0");
                 document.getElementById("popUpVision").classList.add("opacity-100");
-                setPopUpData({ itemData });
+                setPopUpData({ rarity, itemName, price, username, description, imgLink, setSelectedItem });
             }}
             className={
                 "w-full md:h-[130px] h-[100px] px-4 md:px-8 py-2 gap-1 md:gap-5 items-center flex rounded-md group hover:bg-dark-purple-300 hover:border-opacity-100 animated-200 cursor-pointer border-2 justify-center " +
-                rarityColor[itemData?.rarity.toLowerCase()]
+                rarityColor[rarity.toLowerCase()]
             }
         >
             <div className="flex gap-2 items-center justify-between w-[150px] md:w-[250px]">
@@ -351,20 +356,20 @@ function ItemTile({ itemData, setPopUpData, setSelectedItem }) {
                             "h-full w-full object-cover rounded-md animated-200 group-hover:scale-110  " +
                             (getRandomInt(0, 1) ? "group-hover:-rotate-3" : "group-hover:rotate-3")
                         }
-                        src={itemData?.imgLink}
+                        src={imgLink}
                         alt=""
                     />
                 </div>
                 <div className="w-[100px] px-2 md:w-[150px] text-white text-center md:font-bold font-semibold md:text-xl text-xs">
-                    <span>{compactString(itemData?.itemName, 30)}</span>
+                    <span>{compactString(itemName, 30)}</span>
                 </div>
             </div>
             <div className="max-w-[800px] md:gap-0 gap-4 w-full justify-between flex py-2 border-b-2 border-gray-800 items-center">
                 <div className="md:text-sm text-xs font-semibold">
-                    <span>{itemData?.rarity}</span>
+                    <span>{rarity}</span>
                 </div>
                 <div className="text-white text-large md:text-xl">
-                    <span>{itemData?.price}$</span>
+                    <span>{price}$</span>
                 </div>
             </div>
             <div className="max-w-[200px] w-full md:flex hidden items-center justify-center mt-2 gap-1 text-xs md:text-sm">
@@ -372,14 +377,14 @@ function ItemTile({ itemData, setPopUpData, setSelectedItem }) {
                     <span>Owner:</span>
                 </div>
                 <div className="text-white italic md:text-sm text-xs font-light">
-                    <span>{itemData?.username}</span>
+                    <span>{username}</span>
                 </div>
             </div>
         </div>
     );
 }
 
-function PopUpTile({ itemData, setSelectedItem, buyItem }) {
+function PopUpTile({ rarity, itemName, price, username, description, imgLink, setSelectedItem, buyItem }) {
     const userData = useStoreState(UserDataStorage);
 
     return (
@@ -390,7 +395,7 @@ function PopUpTile({ itemData, setSelectedItem, buyItem }) {
             <div
                 className={
                     "relative py-5 md:w-[500px] w-[430px] flex flex-col gap-4 items-center bg-dark-purple-400 border-2 md:mt-0 mt-[110px] rounded-xl shadow-lg mx-6 " +
-                    rarityColor[itemData?.rarity?.toLowerCase()]
+                    rarityColor[rarity?.toLowerCase()]
                 }
             >
                 <div className="absolute w-full top-0 flex justify-end pt-2 pr-2">
@@ -406,44 +411,44 @@ function PopUpTile({ itemData, setSelectedItem, buyItem }) {
                 </div>
                 <div className="flex flex-col justify-center items-center h-full w-full gap-4 px-4">
                     <div className="w-full px-10 md:py-2 text-center flex justify-center">
-                        <span className="md:text-3xl text-2xl font-bold text-white">{itemData?.itemName}</span>
+                        <span className="md:text-3xl text-2xl font-bold text-white">{itemName}</span>
                     </div>
-                    <div className={"md:w-[200px] md:h-[200px] w-[130px] h-[130px] border-4 rounded-md " + rarityColor[itemData?.rarity?.toLowerCase()]}>
-                        <img className="w-full h-full object-cover" src={itemData?.imgLink} alt="" />
+                    <div className={"md:w-[200px] md:h-[200px] w-[130px] h-[130px] border-4 rounded-md " + rarityColor[rarity?.toLowerCase()]}>
+                        <img className="w-full h-full object-cover" src={imgLink} alt="" />
                     </div>
                     <div className="border-t-2 border-b-2 border-gray-800 w-full flex flex-col items-center gap-3 py-2">
-                        <div className={rarityColor[itemData?.rarity?.toLowerCase()]}>
-                            <span className="md:text-xl text-large font-semibold">{itemData?.rarity}</span>
+                        <div className={rarityColor[rarity?.toLowerCase()]}>
+                            <span className="md:text-xl text-large font-semibold">{rarity}</span>
                         </div>
                         <div className="flex justify-center items-center gap-1">
                             <div className="text-gray-500 md:text-base text-sm">
                                 <span>Owner:</span>
                             </div>
                             <div className="text-white italic md:text-sm text-xs font-light">
-                                <span>{itemData?.username}</span>
+                                <span>{username}</span>
                             </div>
                         </div>
                     </div>
                     <div className="text-center flex justify-center items-center py-2">
                         <span className="text-white md:text-base text-sm">
-                            {isTabletOrMobileBrowser() ? compactString(itemData?.description, 150) : itemData?.description}
+                            {isTabletOrMobileBrowser() ? compactString(description, 150) : description}
                         </span>
                     </div>
                     {userData.isLoggedIn ? (
                         <ButtonGreen
                             click={() => {
-                                setSelectedItem({ itemData });
+                                setSelectedItem({ username, price, itemId });
                                 document.getElementById("orderConfirmation").classList.remove("pointer-events-none");
                                 document.getElementById("orderConfirmation").classList.remove("opacity-0");
                                 document.getElementById("orderConfirmation").classList.add("opacity-100");
                             }}
                             additionalStyle="w-[300px] text-white tracking-wider"
-                            text={"Buy for " + itemData?.price + "$"}
+                            text={"Buy for " + price + "$"}
                         />
                     ) : (
                         <div className="bg-dark-purple-200 bg-opacity-80 flex items-center justify-center py-2 px-4 rounded-md gap-2">
                             <span className="md:text-lg text-sm font-semibold text-gray-500">Please, sign in to buy for</span>
-                            <span className="md:text-xl text-lg text-white font-semibold">{itemData?.price}$</span>
+                            <span className="md:text-xl text-lg text-white font-semibold">{price}$</span>
                         </div>
                     )}
                 </div>
