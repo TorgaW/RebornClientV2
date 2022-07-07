@@ -19,6 +19,7 @@ import InventoryPage from "../InventoryPage";
 import { compactString } from "../../Utils/StringUtil";
 import { isTabletOrMobileBrowser } from "../../Utils/BrowserUtil";
 import { UserDataStorage } from "../../Storages/UserDataStorage";
+import useStateRef from "react-usestateref";
 
 const rarityColor = {
     guarantee: "text-gray-400 border-gray-400 border-opacity-50",
@@ -114,10 +115,6 @@ function MarketplaceBuyPage() {
         }
     }
 
-    function BuyCallBack() {
-
-    };
-
     useEffect(() => {
         if (lotsData.length > 0) {
             let t = Array.from(lotsData);
@@ -142,10 +139,9 @@ function MarketplaceBuyPage() {
                         key={getRandomString(12)}
                         {...i}
                         buyItem={buyItem}
+                        setPopUpData={setPopUpData}
                         imgLink={i.boxItem.imgLink}
                         description={i.boxItem.comment}
-                        setSelectedItem={setSelectedItem}
-                        setPopUpData={setPopUpData}
                     />
                 );
             }
@@ -301,7 +297,7 @@ function MarketplaceBuyPage() {
                     <button className={"w-12 p-4 rounded-lg bg-dark-purple-100 bg-opacity-30 hover:bg-dark-purple-100 hover:bg-opacity-50 "}>1</button>
                 </div>
             </div>
-            <PopUpTile {...popUpData} />
+            <PopUpTile popUpData={popUpData} setSelectedItem={setSelectedItem} />
         </>
     );
 }
@@ -334,7 +330,7 @@ function SearchBar() {
     );
 }
 
-function ItemTile({ price, itemName, username, rarity, description, imgLink, setPopUpData, setSelectedItem }) {
+function ItemTile({ rarity, username, itemName, price, description, imgLink, itemId, itemType, setPopUpData }) {
     // let rarityUpperCase = String(rarity).charAt(0).toUpperCase() + rarity.slice(1);
     return (
         <div
@@ -342,7 +338,7 @@ function ItemTile({ price, itemName, username, rarity, description, imgLink, set
                 document.getElementById("popUpVision").classList.remove("pointer-events-none");
                 document.getElementById("popUpVision").classList.remove("opacity-0");
                 document.getElementById("popUpVision").classList.add("opacity-100");
-                setPopUpData({ rarity, itemName, price, username, description, imgLink, setSelectedItem });
+                setPopUpData({ rarity, itemName, price, username, description, imgLink, itemId, itemType });
             }}
             className={
                 "w-full md:h-[130px] h-[100px] px-4 md:px-8 py-2 gap-1 md:gap-5 items-center flex rounded-md group hover:bg-dark-purple-300 hover:border-opacity-100 animated-200 cursor-pointer border-2 justify-center " +
@@ -384,7 +380,7 @@ function ItemTile({ price, itemName, username, rarity, description, imgLink, set
     );
 }
 
-function PopUpTile({ rarity, itemName, price, username, description, imgLink, setSelectedItem, buyItem }) {
+function PopUpTile({ setSelectedItem, popUpData, buyItem }) {
     const userData = useStoreState(UserDataStorage);
 
     return (
@@ -395,7 +391,7 @@ function PopUpTile({ rarity, itemName, price, username, description, imgLink, se
             <div
                 className={
                     "relative py-5 md:w-[500px] w-[430px] flex flex-col gap-4 items-center bg-dark-purple-400 border-2 md:mt-0 mt-[110px] rounded-xl shadow-lg mx-6 " +
-                    rarityColor[rarity?.toLowerCase()]
+                    rarityColor[popUpData?.rarity?.toLowerCase()]
                 }
             >
                 <div className="absolute w-full top-0 flex justify-end pt-2 pr-2">
@@ -411,44 +407,44 @@ function PopUpTile({ rarity, itemName, price, username, description, imgLink, se
                 </div>
                 <div className="flex flex-col justify-center items-center h-full w-full gap-4 px-4">
                     <div className="w-full px-10 md:py-2 text-center flex justify-center">
-                        <span className="md:text-3xl text-2xl font-bold text-white">{itemName}</span>
+                        <span className="md:text-3xl text-2xl font-bold text-white">{popUpData?.itemName}</span>
                     </div>
-                    <div className={"md:w-[200px] md:h-[200px] w-[130px] h-[130px] border-4 rounded-md " + rarityColor[rarity?.toLowerCase()]}>
-                        <img className="w-full h-full object-cover" src={imgLink} alt="" />
+                    <div className={"md:w-[200px] md:h-[200px] w-[130px] h-[130px] border-4 rounded-md " + rarityColor[popUpData?.rarity?.toLowerCase()]}>
+                        <img className="w-full h-full object-cover" src={popUpData?.imgLink} alt="" />
                     </div>
                     <div className="border-t-2 border-b-2 border-gray-800 w-full flex flex-col items-center gap-3 py-2">
-                        <div className={rarityColor[rarity?.toLowerCase()]}>
-                            <span className="md:text-xl text-large font-semibold">{rarity}</span>
+                        <div className={rarityColor[popUpData?.rarity?.toLowerCase()]}>
+                            <span className="md:text-xl text-large font-semibold">{popUpData?.rarity}</span>
                         </div>
                         <div className="flex justify-center items-center gap-1">
                             <div className="text-gray-500 md:text-base text-sm">
                                 <span>Owner:</span>
                             </div>
                             <div className="text-white italic md:text-sm text-xs font-light">
-                                <span>{username}</span>
+                                <span>{popUpData?.username}</span>
                             </div>
                         </div>
                     </div>
                     <div className="text-center flex justify-center items-center py-2">
                         <span className="text-white md:text-base text-sm">
-                            {isTabletOrMobileBrowser() ? compactString(description, 150) : description}
+                            {isTabletOrMobileBrowser() ? compactString(popUpData?.description, 150) : popUpData?.description}
                         </span>
                     </div>
                     {userData.isLoggedIn ? (
                         <ButtonGreen
                             click={() => {
-                                setSelectedItem({ username, price, itemId });
+                                setSelectedItem({ popUpData });
                                 document.getElementById("orderConfirmation").classList.remove("pointer-events-none");
                                 document.getElementById("orderConfirmation").classList.remove("opacity-0");
                                 document.getElementById("orderConfirmation").classList.add("opacity-100");
                             }}
                             additionalStyle="w-[300px] text-white tracking-wider"
-                            text={"Buy for " + price + "$"}
+                            text={"Buy for " + popUpData?.price + "$"}
                         />
                     ) : (
                         <div className="bg-dark-purple-200 bg-opacity-80 flex items-center justify-center py-2 px-4 rounded-md gap-2">
                             <span className="md:text-lg text-sm font-semibold text-gray-500">Please, sign in to buy for</span>
-                            <span className="md:text-xl text-lg text-white font-semibold">{price}$</span>
+                            <span className="md:text-xl text-lg text-white font-semibold">{popUpData?.price}$</span>
                         </div>
                     )}
                 </div>
