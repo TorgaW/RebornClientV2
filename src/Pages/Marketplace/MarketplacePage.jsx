@@ -32,6 +32,12 @@ const rarityColor = {
     heroic: "text-red-500 border-red-500 border-opacity-50",
 };
 
+const lotsTypes = {
+    1: "Boxes",
+    2: "Items",
+    3: "Heroes",
+};
+
 export default function MarketplacePage() {
     const [marketSelectedOption, setMarketSelectedOption] = useState("buy");
 
@@ -71,8 +77,10 @@ export default function MarketplacePage() {
 }
 
 function MarketplaceBuyPage() {
-    const [filter, setFilter] = useState({ rarity: null, price: null, rarityColor: "" });
+    const [filter, setFilter] = useState({ rarity: null, price: null, rarityColor: "", type: null, priceFilter: null });
+
     const ui = useStoreState(UIStorage);
+
     const metamask = useStoreState(MetaMaskStorage);
 
     const [popUpData, setPopUpData] = useState({});
@@ -81,24 +89,41 @@ function MarketplaceBuyPage() {
 
     const [lotsData, setLotsData] = useState([]);
 
-    const [selectedItem, setSelectedItem] = useState({});
+    const [selectedLot, setSelectedLot] = useState({});
 
-    async function start() {
-        let [d, s, e] = await makePost(marketplaceLoadLots_EP(), {}, true);
-        setLotsData(d.items);
+    async function loadLots() {
+        let price = filter.priceFilter ? filter.priceFilter : -1;
+        let type = filter.type ? filter.type : null;
+        let rarity = filter.rarity ? filter.rarity : null;
+
+        let [d, s, e] = await makePost(
+            marketplaceLoadLots_EP(),
+            {
+                price: price,
+                type: type,
+                rarity: rarity,
+            },
+            true
+        );
+        let t = Array.from(d.items);
+        let a = [];
+        for (const i of t) {
+            a.push(<ItemTile key={getRandomString(12)} {...i} buyItem={buyItem} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />);
+        }
+        setLotsView(a);
         console.log(d);
     }
 
     async function buyItem() {
-        if (selectedItem && selectedItem.itemId) {
+        if (selectedLot && selectedLot.itemId) {
             let code = document.getElementById("item-buy-code").value;
             let [d, s, e] = await makePost(
                 marketplaceBuyItem_EP(),
                 {
                     itemType: 2,
-                    sellerName: selectedItem.username,
-                    price: selectedItem.price,
-                    itemId: selectedItem.itemId,
+                    sellerName: selectedLot.username,
+                    price: selectedLot.price,
+                    itemId: selectedLot.itemId,
                     code,
                 },
                 true
@@ -111,42 +136,21 @@ function MarketplaceBuyPage() {
             } else {
                 ui.showError(e);
                 console.log(e);
-                start();
+                loadLots();
             }
         }
     }
 
     useEffect(() => {
-        if (lotsData.length > 0) {
-            let t = Array.from(lotsData);
-            if (filter.price === "To lowest") {
-                t.sort((prev, next) => {
-                    return next.price - prev.price;
-                });
-            } else {
-                t.sort((prev, next) => {
-                    return prev.price - next.price;
-                });
-            }
-            if (filter.rarity) {
-                t = t.filter((a) => {
-                    return a.rarity.toLowerCase() === filter.rarity.toLowerCase();
-                });
-            }
-            let a = [];
-            for (const i of t) {
-                a.push(<ItemTile key={getRandomString(12)} {...i} buyItem={buyItem} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />);
-            }
-            setLotsView(a);
-        }
-    }, [lotsData, filter]);
+        loadLots();
+    }, [filter]);
 
     useEffect(() => {
         ui.showContentLoading();
         setTimeout(() => {
             ui.hideContentLoading();
         }, 500);
-        start();
+        loadLots();
     }, []);
 
     return (
@@ -159,7 +163,7 @@ function MarketplaceBuyPage() {
                         </div>
                         <SearchBar />
                     </div>
-                    <div className="flex justify-center flex-wrap md:max-w-[500px] max-w-[220px] items-center gap-2">
+                    <div className="flex justify-center flex-wrap md:max-w-[800px] max-w-[220px] items-center gap-2">
                         <div className="flex justify-center items-center gap-2">
                             {filter.rarity ? (
                                 <div className="relative h-[42px] md:text-base text-sm px-7 border-2 border-gray-800 rounded-md text-center flex items-center justify-center">
@@ -181,7 +185,22 @@ function MarketplaceBuyPage() {
                                     <span>{filter.price}</span>
                                     <button
                                         onClick={() => {
-                                            setFilter({ ...filter, price: null });
+                                            setFilter({ ...filter, price: null, priceFilter: null });
+                                        }}
+                                        className="absolute p-[2px] top-0 right-0"
+                                    >
+                                        <CrossIcon size="16" />
+                                    </button>
+                                </div>
+                            ) : (
+                                <></>
+                            )}
+                            {filter.type ? (
+                                <div className="relative h-[42px] md:text-base text-sm px-7 border-2 border-gray-800 rounded-md text-center flex items-center justify-center">
+                                    <span>{lotsTypes[filter.type]}</span>
+                                    <button
+                                        onClick={() => {
+                                            setFilter({ ...filter, type: null });
                                         }}
                                         className="absolute p-[2px] top-0 right-0"
                                     >
@@ -265,7 +284,7 @@ function MarketplaceBuyPage() {
                                 <div className="absolute rounded-r-md flex flex-col shadow-lg animated-200 bg-gray-900 w-[140px] rounded-b-md top-10 pointer-events-none hover:pointer-events-auto z-10 opacity-0 group-hover:opacity-100">
                                     <button
                                         onClick={() => {
-                                            setFilter({ ...filter, price: "To highest" });
+                                            setFilter({ ...filter, price: "To highest", priceFilter: 0 });
                                         }}
                                         className="p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100"
                                     >
@@ -273,12 +292,29 @@ function MarketplaceBuyPage() {
                                     </button>
                                     <button
                                         onClick={() => {
-                                            setFilter({ ...filter, price: "To lowest" });
+                                            setFilter({ ...filter, price: "To lowest", priceFilter: 1 });
                                         }}
                                         className="p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100"
                                     >
                                         To lowest
                                     </button>
+                                </div>
+                            </div>
+                            <div className="relative group">
+                                <button className="hover:bg-zinc-800 px-4 animated-100 rounded-md flex flex-shrink-0 items-center gap-2 justify-center w-[100px] h-[42px]">
+                                    <span>Type</span>
+                                    <ArrowIcon />
+                                </button>
+                                <div className="absolute rounded-r-md flex flex-col shadow-lg animated-200 bg-gray-900 w-[120px] rounded-b-md top-10 pointer-events-none hover:pointer-events-auto z-10 opacity-0 group-hover:opacity-100">
+                                    <button onClick={()=>{
+                                        setFilter({...filter, type: 1});
+                                    }} className="p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100">Boxes</button>
+                                    <button onClick={()=>{
+                                        setFilter({...filter, type: 2});
+                                    }} className="p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100">Items</button>
+                                    <button onClick={()=>{
+                                        setFilter({...filter, type: 3});
+                                    }} className="p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100">Heroes</button>
                                 </div>
                             </div>
                         </div>
@@ -289,7 +325,7 @@ function MarketplaceBuyPage() {
                     <button className={"w-12 p-4 rounded-lg bg-dark-purple-100 bg-opacity-30 hover:bg-dark-purple-100 hover:bg-opacity-50 "}>1</button>
                 </div>
             </div>
-            <PopUpTile popUpData={popUpData} setSelectedItem={setSelectedItem} />
+            <PopUpTile popUpData={popUpData} setSelectedLot={setSelectedLot} />
         </>
     );
 }
@@ -382,7 +418,7 @@ function ItemTile({ rarity, username, itemName, price, description, imgLink, ite
     );
 }
 
-function PopUpTile({ setSelectedItem, popUpData, buyItem }) {
+function PopUpTile({ setSelectedLot, popUpData, buyItem }) {
     const userData = useStoreState(UserDataStorage);
 
     const [imgLoaded, setImgLoaded] = useState(false);
@@ -396,7 +432,8 @@ function PopUpTile({ setSelectedItem, popUpData, buyItem }) {
                 }
             >
                 <div className="absolute w-full z-10 top-0 flex justify-end pt-2 pr-2">
-                    <button className="fixed"
+                    <button
+                        className="fixed"
                         onClick={() => {
                             document.getElementById("popUpVision").classList.add("pointer-events-none");
                             document.getElementById("popUpVision").classList.remove("opacity-100");
@@ -446,7 +483,7 @@ function PopUpTile({ setSelectedItem, popUpData, buyItem }) {
                     {userData.isLoggedIn ? (
                         <ButtonGreen
                             click={() => {
-                                setSelectedItem({ popUpData });
+                                setSelectedLot({ popUpData });
                                 document.getElementById("orderConfirmation").classList.remove("pointer-events-none");
                                 document.getElementById("orderConfirmation").classList.remove("opacity-0");
                                 document.getElementById("orderConfirmation").classList.add("opacity-100");
