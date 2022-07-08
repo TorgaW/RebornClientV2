@@ -20,6 +20,7 @@ import { compactString } from "../../Utils/StringUtil";
 import { isTabletOrMobileBrowser } from "../../Utils/BrowserUtil";
 import { UserDataStorage } from "../../Storages/UserDataStorage";
 import useStateRef from "react-usestateref";
+import AdaptiveLoadingComponent from "../../Components/UI/AdaptiveLoadingComponent";
 
 const rarityColor = {
     guarantee: "text-gray-400 border-gray-400 border-opacity-50",
@@ -134,16 +135,7 @@ function MarketplaceBuyPage() {
             }
             let a = [];
             for (const i of t) {
-                a.push(
-                    <ItemTile
-                        key={getRandomString(12)}
-                        {...i}
-                        buyItem={buyItem}
-                        setPopUpData={setPopUpData}
-                        imgLink={i.boxItem.imgLink}
-                        description={i.boxItem.comment}
-                    />
-                );
+                a.push(<ItemTile key={getRandomString(12)} {...i} buyItem={buyItem} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />);
             }
             setLotsView(a);
         }
@@ -332,6 +324,9 @@ function SearchBar() {
 
 function ItemTile({ rarity, username, itemName, price, description, imgLink, itemId, itemType, setPopUpData }) {
     // let rarityUpperCase = String(rarity).charAt(0).toUpperCase() + rarity.slice(1);
+
+    const [imgLoaded, setImgLoaded] = useState(false);
+
     return (
         <div
             onClick={() => {
@@ -346,15 +341,22 @@ function ItemTile({ rarity, username, itemName, price, description, imgLink, ite
             }
         >
             <div className="flex gap-2 items-center justify-between w-[150px] md:w-[250px]">
-                <div className="flex md:w-[95px] md:h-[95px] w-[80px] h-[70px]">
+                <div className="flex relative md:w-[95px] md:h-[95px] w-[80px] h-[70px]">
                     <img
-                        className={
-                            "h-full w-full object-cover rounded-md animated-200 group-hover:scale-110  " +
-                            (getRandomInt(0, 1) ? "group-hover:-rotate-3" : "group-hover:rotate-3")
-                        }
+                        onLoad={() => {
+                            setImgLoaded(true);
+                        }}
+                        className={"h-full w-full object-cover rounded-md animated-200 group-hover:scale-110  " + (getRandomInt(0, 1) ? "group-hover:-rotate-3" : "group-hover:rotate-3")}
                         src={imgLink}
                         alt=""
                     />
+                    {imgLoaded ? (
+                        <></>
+                    ) : (
+                        <div className="absolute inset-0 flex">
+                            <AdaptiveLoadingComponent />
+                        </div>
+                    )}
                 </div>
                 <div className="w-[100px] px-2 md:w-[150px] text-white text-center md:font-bold font-semibold md:text-xl text-xs">
                     <span>{compactString(itemName, 30)}</span>
@@ -383,19 +385,18 @@ function ItemTile({ rarity, username, itemName, price, description, imgLink, ite
 function PopUpTile({ setSelectedItem, popUpData, buyItem }) {
     const userData = useStoreState(UserDataStorage);
 
+    const [imgLoaded, setImgLoaded] = useState(false);
+
     return (
-        <div
-            id="popUpVision"
-            className="flex z-10 pointer-events-none animated-100 inset-0 opacity-0 w-full h-full justify-center items-center bg-black fixed top-0 bg-opacity-70"
-        >
+        <div id="popUpVision" className="flex z-10 pointer-events-none animated-100 inset-0 opacity-0 w-full h-full justify-center items-center bg-black fixed top-0 bg-opacity-70">
             <div
                 className={
-                    "relative py-5 md:w-[500px] w-[430px] flex flex-col gap-4 items-center bg-dark-purple-400 border-2 md:mt-0 mt-[110px] rounded-xl shadow-lg mx-6 " +
+                    "relative py-5 md:w-[500px] w-[430px] max-h-[70vh] overflow-y-auto flex flex-col gap-4 items-center bg-dark-purple-400 border-2 md:mt-[70px] mt-[110px] rounded-xl shadow-lg mx-6 " +
                     rarityColor[popUpData?.rarity?.toLowerCase()]
                 }
             >
-                <div className="absolute w-full top-0 flex justify-end pt-2 pr-2">
-                    <button
+                <div className="absolute w-full z-10 top-0 flex justify-end pt-2 pr-2">
+                    <button className="fixed"
                         onClick={() => {
                             document.getElementById("popUpVision").classList.add("pointer-events-none");
                             document.getElementById("popUpVision").classList.remove("opacity-100");
@@ -410,7 +411,21 @@ function PopUpTile({ setSelectedItem, popUpData, buyItem }) {
                         <span className="md:text-3xl text-2xl font-bold text-white">{popUpData?.itemName}</span>
                     </div>
                     <div className={"md:w-[200px] md:h-[200px] w-[130px] h-[130px] border-4 rounded-md " + rarityColor[popUpData?.rarity?.toLowerCase()]}>
-                        <img className="w-full h-full object-cover" src={popUpData?.imgLink} alt="" />
+                        <img
+                            onLoad={() => {
+                                setImgLoaded(true);
+                            }}
+                            className="w-full h-full object-cover"
+                            src={popUpData?.imgLink}
+                            alt=""
+                        />
+                        {imgLoaded ? (
+                            <></>
+                        ) : (
+                            <div className="absolute inset-0 flex">
+                                <AdaptiveLoadingComponent />
+                            </div>
+                        )}
                     </div>
                     <div className="border-t-2 border-b-2 border-gray-800 w-full flex flex-col items-center gap-3 py-2">
                         <div className={rarityColor[popUpData?.rarity?.toLowerCase()]}>
@@ -426,9 +441,7 @@ function PopUpTile({ setSelectedItem, popUpData, buyItem }) {
                         </div>
                     </div>
                     <div className="text-center flex justify-center items-center py-2">
-                        <span className="text-white md:text-base text-sm">
-                            {isTabletOrMobileBrowser() ? compactString(popUpData?.description, 150) : popUpData?.description}
-                        </span>
+                        <span className="text-white md:text-base text-sm">{isTabletOrMobileBrowser() ? compactString(popUpData?.description, 150) : popUpData?.description}</span>
                     </div>
                     {userData.isLoggedIn ? (
                         <ButtonGreen
@@ -448,10 +461,7 @@ function PopUpTile({ setSelectedItem, popUpData, buyItem }) {
                         </div>
                     )}
                 </div>
-                <div
-                    id="orderConfirmation"
-                    className="animated-100 absolute w-full h-full flex pointer-events-none top-0 opacity-0 justify-center items-center rounded-xl bg-opacity-80 bg-black"
-                >
+                <div id="orderConfirmation" className="animated-100 absolute w-full h-full flex pointer-events-none top-0 opacity-0 justify-center items-center rounded-xl bg-opacity-80 bg-black">
                     <div className="text-white flex flex-col gap-6 justify-center items-center rounded-xl bg-dark-purple-400 w-[250px] h-[250px]">
                         <div className="">
                             <span className="text-xl font-semibold">Are you sure?</span>
