@@ -87,8 +87,6 @@ function MarketplaceBuyPage() {
 
     const [lotsView, setLotsView] = useState([]);
 
-    const [lotsData, setLotsData] = useState([]);
-
     const [selectedLot, setSelectedLot] = useState({});
 
     async function loadLots() {
@@ -454,6 +452,9 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem }) {
                             document.getElementById("popUpVision").classList.add("pointer-events-none");
                             document.getElementById("popUpVision").classList.remove("opacity-100");
                             document.getElementById("popUpVision").classList.add("opacity-0");
+                            // document.getElementById("orderConfirmation").classList.remove("pointer-events-none");
+                            // document.getElementById("orderConfirmation").classList.remove("opacity-0");
+                            // document.getElementById("orderConfirmation").classList.add("opacity-100");
                         }}
                     >
                         <CrossIcon size="32" />
@@ -514,36 +515,36 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem }) {
                         </div>
                     )}
                 </div>
-                <div id="orderConfirmation" className="animated-100 absolute w-full h-full flex pointer-events-none top-0 opacity-0 justify-center items-center rounded-xl bg-opacity-80 bg-black">
-                    <div className="text-white flex flex-col gap-6 justify-center items-center rounded-xl bg-dark-purple-400 w-[250px] h-[250px]">
-                        <div className="">
-                            <span className="text-xl font-semibold">Are you sure?</span>
-                        </div>
-                        <div className="flex gap-5">
-                            <ButtonGreen
-                                click={() => {
-                                    buyItem();
-                                }}
-                                additionalStyle="w-[70px]"
-                                text="Yes"
-                            />
-                            <ButtonRed
-                                click={() => {
-                                    document.getElementById("orderConfirmation").classList.add("pointer-events-none");
-                                    document.getElementById("orderConfirmation").classList.add("opacity-0");
-                                    document.getElementById("orderConfirmation").classList.remove("opacity-100");
-                                }}
-                                additionalStyle="w-[70px]"
-                                text="No"
-                            />
-                        </div>
-                        <div className="w-full flex flex-col gap-2 items-center">
-                            <span>Code from your authenticator</span>
-                            <InputDefault id={"item-buy-code"} type={"text"} additionalStyle={"text-center w-[200px] text-lg font-semibold"} />
+                    <div id="orderConfirmation" className="animated-100 fixed z-10 w-full h-full top-[20px] flex pointer-events-none opacity-0 justify-center items-center rounded-xl bg-opacity-70 bg-black">
+                        <div className="text-white flex flex-col gap-6 justify-center items-center rounded-xl bg-dark-purple-400 w-[280px] h-[250px] border-2 border-gray-800 ">
+                            <div className="">
+                                <span className="text-xl font-semibold">Are you sure?</span>
+                            </div>
+                            <div className="flex gap-5">
+                                <ButtonGreen
+                                    click={() => {
+                                        buyItem();
+                                    }}
+                                    additionalStyle="w-[70px]"
+                                    text="Yes"
+                                />
+                                <ButtonRed
+                                    click={() => {
+                                        document.getElementById("orderConfirmation").classList.add("pointer-events-none");
+                                        document.getElementById("orderConfirmation").classList.add("opacity-0");
+                                        document.getElementById("orderConfirmation").classList.remove("opacity-100");
+                                    }}
+                                    additionalStyle="w-[70px]"
+                                    text="No"
+                                />
+                            </div>
+                            <div className="w-full flex flex-col gap-2 items-center">
+                                <span>Code from your authenticator</span>
+                                <InputDefault id={"item-buy-code"} type={"text"} additionalStyle={"text-center w-[200px] text-lg font-semibold"} />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     );
 }
