@@ -8,7 +8,7 @@ import { saveAuthorizeToken, signIn_EP } from "../../Utils/EndpointsUtil";
 import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
 import { UIStorage } from "../../Storages/UIStorage";
 import { UserDataStorage } from "../../Storages/UserDataStorage";
-import { saveUserNonce } from "../../Utils/LocalStorageManager/LocalStorageManager";
+import { saveUserDataToStorage, saveUserNonce } from "../../Utils/LocalStorageManager/LocalStorageManager";
 import ButtonDefault from "../../Components/UI/StyledComponents/ButtonDefault";
 import InputDefault from "../../Components/UI/StyledComponents/InputDefault";
 import { scrollToTop } from "../../Utils/BrowserUtil";
@@ -58,6 +58,11 @@ export default function SignInPage() {
                 navigate("/auth/" + username + "/" + h);
             } else {
                 ui.hideContentLoading();
+                saveUserDataToStorage(response.data, response.data.accessToken);
+                console.log(response.data);
+                UserDataStorage.update((s)=>{
+                    s.isLoggedIn = true;
+                })
                 saveUserNonce(response.data.nonce);
                 navigate("/");
             }
