@@ -107,22 +107,23 @@ function MarketplaceBuyPage() {
         let t = Array.from(d.items);
         let a = [];
         for (const i of t) {
-            a.push(<ItemTile key={getRandomString(12)} {...i} buyItem={buyItem} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />);
+            a.push(<ItemTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />);
         }
         setLotsView(a);
         console.log(d);
     }
 
     async function buyItem() {
-        if (selectedLot && selectedLot.itemId) {
+        console.log(selectedLot.popUpData);
+        if (selectedLot && selectedLot.popUpData.itemId) {
             let code = document.getElementById("item-buy-code").value;
             let [d, s, e] = await makePost(
                 marketplaceBuyItem_EP(),
                 {
                     itemType: 2,
-                    sellerName: selectedLot.username,
-                    price: selectedLot.price,
-                    itemId: selectedLot.itemId,
+                    sellerName: selectedLot.popUpData.username,
+                    price: selectedLot.popUpData.price,
+                    itemId: selectedLot.popUpData.itemId,
                     code,
                 },
                 true
@@ -283,7 +284,7 @@ function MarketplaceBuyPage() {
                                 <div className="absolute rounded-r-md flex flex-col shadow-lg animated-200 bg-gray-900 w-[140px] rounded-b-md top-10 pointer-events-none hover:pointer-events-auto z-10 opacity-0 group-hover:opacity-100">
                                     <button
                                         onClick={() => {
-                                            setFilter({ ...filter, price: "To highest", priceFilter: 0 });
+                                            setFilter({ ...filter, price: "To highest", priceFilter: 1 });
                                         }}
                                         className="p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100"
                                     >
@@ -291,7 +292,7 @@ function MarketplaceBuyPage() {
                                     </button>
                                     <button
                                         onClick={() => {
-                                            setFilter({ ...filter, price: "To lowest", priceFilter: 1 });
+                                            setFilter({ ...filter, price: "To lowest", priceFilter: 0 });
                                         }}
                                         className="p-3 group-hover:pointer-events-auto hover:bg-zinc-800 rounded-md animated-100"
                                     >
@@ -339,7 +340,7 @@ function MarketplaceBuyPage() {
                     <button className={"w-12 p-4 rounded-lg bg-dark-purple-100 bg-opacity-30 hover:bg-dark-purple-100 hover:bg-opacity-50 "}>1</button>
                 </div>
             </div>
-            <PopUpTile popUpData={popUpData} setSelectedLot={setSelectedLot} />
+            <PopUpTile popUpData={popUpData} buyItem={buyItem} setSelectedLot={setSelectedLot} />
         </>
     );
 }
@@ -396,7 +397,10 @@ function ItemTile({ rarity, username, itemName, price, description, imgLink, ite
                         onLoad={() => {
                             setImgLoaded(true);
                         }}
-                        className={"h-full w-full object-cover rounded-md animated-200 group-hover:scale-110  " + (getRandomInt(0, 1) ? "group-hover:-rotate-3" : "group-hover:rotate-3")}
+                        className={
+                            "h-full w-full object-cover rounded-md animated-200 group-hover:scale-110  " +
+                            (getRandomInt(0, 1) ? "group-hover:-rotate-3" : "group-hover:rotate-3")
+                        }
                         src={imgLink}
                         alt=""
                     />
@@ -417,7 +421,10 @@ function ItemTile({ rarity, username, itemName, price, description, imgLink, ite
                     <span>{rarity}</span>
                 </div>
                 <div className="text-white text-large md:text-xl">
-                    <span>{price}$</span>
+                    <div className="flex justify-center items-center gap-[3px]">
+                        <span className="md:text-xl text-lg text-white font-semibold">{price} </span>
+                        <span className="text-purple-700 font-semibold text-lg">G</span>
+                    </div>
                 </div>
             </div>
             <div className="max-w-[200px] w-full md:flex hidden items-center justify-center mt-2 gap-1 text-xs md:text-sm">
@@ -438,7 +445,10 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem }) {
     const [imgLoaded, setImgLoaded] = useState(false);
 
     return (
-        <div id="popUpVision" className="flex z-10 pointer-events-none animated-100 inset-0 opacity-0 w-full h-full justify-center items-center bg-black fixed top-0 bg-opacity-70">
+        <div
+            id="popUpVision"
+            className="flex z-10 pointer-events-none animated-100 inset-0 opacity-0 w-full h-full justify-center items-center bg-black fixed top-0 bg-opacity-70"
+        >
             <div
                 className={
                     "relative py-5 md:w-[500px] w-[430px] max-h-[70vh] overflow-y-auto flex flex-col gap-4 items-center bg-dark-purple-400 border-2 md:mt-[70px] mt-[110px] rounded-xl shadow-lg mx-6 " +
@@ -495,7 +505,9 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem }) {
                         </div>
                     </div>
                     <div className="text-center flex justify-center items-center py-2">
-                        <span className="text-white md:text-base text-sm">{isTabletOrMobileBrowser() ? compactString(popUpData?.description, 150) : popUpData?.description}</span>
+                        <span className="text-white md:text-base text-sm">
+                            {isTabletOrMobileBrowser() ? compactString(popUpData?.description, 150) : popUpData?.description}
+                        </span>
                     </div>
                     {userData.isLoggedIn ? (
                         <ButtonGreen
@@ -506,45 +518,51 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem }) {
                                 document.getElementById("orderConfirmation").classList.add("opacity-100");
                             }}
                             additionalStyle="w-[300px] text-white tracking-wider"
-                            text={"Buy for " + popUpData?.price + "$"}
+                            text={"Buy for " + popUpData?.price + "G"}
                         />
                     ) : (
                         <div className="bg-dark-purple-200 bg-opacity-80 flex items-center justify-center py-2 px-4 rounded-md gap-2">
                             <span className="md:text-lg text-sm font-semibold text-gray-500">Please, sign in to buy for</span>
-                            <span className="md:text-xl text-lg text-white font-semibold">{popUpData?.price}$</span>
+                            <div className="flex justify-center items-center gap-[3px]">
+                                <span className="md:text-xl text-lg text-white font-semibold">{popUpData?.price} </span>
+                                <span className="text-purple-700 font-semibold text-lg">G</span>
+                            </div>
                         </div>
                     )}
                 </div>
-                    <div id="orderConfirmation" className="animated-100 fixed z-10 w-full h-full top-[20px] flex pointer-events-none opacity-0 justify-center items-center rounded-xl bg-opacity-70 bg-black">
-                        <div className="text-white flex flex-col gap-6 justify-center items-center rounded-xl bg-dark-purple-400 w-[280px] h-[250px] border-2 border-gray-800 ">
-                            <div className="">
-                                <span className="text-xl font-semibold">Are you sure?</span>
-                            </div>
-                            <div className="flex gap-5">
-                                <ButtonGreen
-                                    click={() => {
-                                        buyItem();
-                                    }}
-                                    additionalStyle="w-[70px]"
-                                    text="Yes"
-                                />
-                                <ButtonRed
-                                    click={() => {
-                                        document.getElementById("orderConfirmation").classList.add("pointer-events-none");
-                                        document.getElementById("orderConfirmation").classList.add("opacity-0");
-                                        document.getElementById("orderConfirmation").classList.remove("opacity-100");
-                                    }}
-                                    additionalStyle="w-[70px]"
-                                    text="No"
-                                />
-                            </div>
-                            <div className="w-full flex flex-col gap-2 items-center">
-                                <span>Code from your authenticator</span>
-                                <InputDefault id={"item-buy-code"} type={"text"} additionalStyle={"text-center w-[200px] text-lg font-semibold"} />
-                            </div>
+                <div
+                    id="orderConfirmation"
+                    className="animated-100 fixed z-10 w-full h-full top-[20px] flex pointer-events-none opacity-0 justify-center items-center rounded-xl bg-opacity-70 bg-black"
+                >
+                    <div className="text-white flex flex-col gap-6 justify-center items-center rounded-xl bg-dark-purple-400 w-[280px] h-[250px] border-2 border-gray-800 ">
+                        <div className="">
+                            <span className="text-xl font-semibold">Are you sure?</span>
+                        </div>
+                        <div className="flex gap-5">
+                            <ButtonGreen
+                                click={() => {
+                                    if (typeof buyItem === "function") buyItem();
+                                }}
+                                additionalStyle="w-[70px]"
+                                text="Yes"
+                            />
+                            <ButtonRed
+                                click={() => {
+                                    document.getElementById("orderConfirmation").classList.add("pointer-events-none");
+                                    document.getElementById("orderConfirmation").classList.add("opacity-0");
+                                    document.getElementById("orderConfirmation").classList.remove("opacity-100");
+                                }}
+                                additionalStyle="w-[70px]"
+                                text="No"
+                            />
+                        </div>
+                        <div className="w-full flex flex-col gap-2 items-center">
+                            <span>Code from your authenticator</span>
+                            <InputDefault id={"item-buy-code"} type={"text"} additionalStyle={"text-center w-[200px] text-lg font-semibold"} />
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     );
 }

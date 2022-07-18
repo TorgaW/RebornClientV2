@@ -388,7 +388,6 @@ function InventoryTab() {
             if (filter.includes(i?.rarity?.toLowerCase())) t.push(<ItemTile {...i} callback={itemTileClickCallback} key={getRandomString(32)} />);
         }
         setSelectedItemView(rawCopy[0] ?? {});
-        console.log(rawCopy, "poop");
         // console.log(t);
         setItemsView(t);
     }
@@ -580,10 +579,10 @@ function InventoryTab() {
             </div>
             <div className="w-full flex mt-4 gap-2">
                 <div className="w-full flex flex-col gap-2">{itemsView}</div>
-                <SelectedItemBigScreen sellCallback={sellCallback} selectedItemView={selectedItemView} />
-                <SelectedItemSmallScreen sellCallback={sellCallback} selectedItemView={selectedItemView} />
+                { itemsView.items ? <SelectedItemBigScreen sellCallback={sellCallback} selectedItemView={selectedItemView} /> : <></> }
+                { itemsView.items ? <SelectedItemSmallScreen sellCallback={sellCallback} selectedItemView={selectedItemView} /> : <></> }
             </div>
-            <div id="sell-popup" className="animated-200 p-2 fixed inset-0 top-[120px] flex items-center justify-center bg-black bg-opacity-90 hidden">
+            <div id="sell-popup" className="z-10 animated-200 p-2 fixed inset-0 top-[120px] flex items-center justify-center bg-black bg-opacity-90 hidden">
                 <div
                     className={
                         "w-full max-w-[550px] flex p-4 rounded-md relative bg-dark-purple-500 border-2" +
