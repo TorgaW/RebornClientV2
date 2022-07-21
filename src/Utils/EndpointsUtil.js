@@ -154,3 +154,7 @@ export function marketplaceSellItem_EP() {
 export function marketplaceBuyItem_EP() {
     return serverAddress + "/api/marketplace/buyItem";
 }
+
+export function marketplaceGetLotBack_EP() {
+    return serverAddress + "/api/marketplace/getItemBack";
+}

@@ -85,6 +85,7 @@ function BoxTab() {
     }
 
     function fillBoxes() {
+        ui.showContentLoading();
         let t = [];
         let copyBoxes = Array.from(rawBoxes);
         console.log(copyBoxes, "fuck");
@@ -103,7 +104,38 @@ function BoxTab() {
             // console.log(i.status);
             t.push(<BoxTile key={getRandomString(12)} {...i} selectCallback={selectCallback} />);
         }
+        ui.hideContentLoading();
         setBoxesComponents(t);
+    }
+
+    async function sellBox() {
+        if (selectedBox && selectedBox.type) {
+            let price = document.getElementById("box-sell-price").value;
+            let code = document.getElementById("box-sell-code").value;
+            if (price > 0) {
+                let [d, s, e] = await makePost(
+                    marketplaceSellItem_EP(),
+                    {
+                        itemId: selectedBox.boxId,
+                        price,
+                        type: 1,
+                        code,
+                    },
+                    true
+                );
+                if (d) {
+                    ui.showSuccess("Your box is on marketplace now!");
+                    document.getElementById("box-sell-popup").classList.add("hidden");
+                    fillBoxes();
+                    document.getElementById("box-sell-price").value = NaN;
+                    document.getElementById("box-sell-code").value = "";
+                    scrollToTop();
+                } else {
+                    ui.showError(e);
+                    console.log(e);
+                }
+            } else ui.showError("Price must be more than 0!");
+        }
     }
 
     async function getHeroesIDs() {
@@ -171,7 +203,7 @@ function BoxTab() {
     function selectCallback(serial, number, type, boxId) {
         console.log({ serial, number, type, boxId });
         setSelectedBox({ serial, number, type, boxId });
-        document.getElementById("market-sell-box").classList.toggle("hidden");
+        document.getElementById("box-sell-popup").classList.toggle("hidden");
     }
 
     useEffect(() => {
@@ -236,30 +268,59 @@ function BoxTab() {
                     </div>
                 </div>
                 <div className="flex flex-wrap justify-center gap-6 p-4">{boxesComponents}</div>
-                <div id="market-sell-box" className="fixed inset-0 top-[120px] p-2 flex justify-center items-center bg-black bg-opacity-90 z-10 hidden">
+                <div
+                    id="box-sell-popup"
+                    className="z-10 animated-200 p-2 fixed inset-0 top-[120px] flex items-center justify-center bg-black bg-opacity-90 hidden"
+                >
                     <div
                         className={
-                            "relative w-full max-w-[500px] max-h-[400px] overflow-y-auto p-2 bg-dark-purple-500 flex flex-col rounded-md border-2 " +
-                            (selectedBox?.type === "LUCKY" ? "border-yellow-500" : "border-teal-400")
+                            "w-full max-w-[550px] flex p-4 rounded-md relative bg-dark-purple-500 border-2 border-opacity-50 " +
+                            (selectedBox.type === "LUCKY" ? "border-yellow-500" : "border-teal-400")
                         }
                     >
-                        <div>
-                            
+                        <div className="max-h-[450px] overflow-y-auto md:max-h-[1000px] w-full flex flex-col items-center mt-6">
+                            <span className="font-semibold text-lg self-start ml-2">Box to sell</span>
+                            <div className="w-full border-b-2 border-gray-600"></div>
+                            <div className="w-[150px] h-[150px] flex flex-shrink-0 mt-2">
+                                <img
+                                    src={selectedBox?.type === "LUCKY" ? luckyBoxImage : mysteryBoxImage}
+                                    alt="box"
+                                    className="w-full object-cover rounded-md "
+                                />
+                            </div>
+                            <span className={"no-flick font-semibold text-base " + (selectedBox?.type === "LUCKY" ? "text-yellow-500" : "text-teal-400")}>
+                                {selectedBox?.type?.toUpperCase()} BOX
+                            </span>
+                            <div className="w-full flex flex-col justify-center">
+                                <span className="opacity-80 text-sm text-center">{compactString(selectedBox?.comment, 120)}</span>
+                            </div>
+                            <span className="font-semibold text-lg mt-4 self-start ml-2">Sell price</span>
+                            <div className="w-full border-b-2 border-gray-600"></div>
+                            <div className="w-full flex gap-2 justify-center items-center mt-2">
+                                <InputDefault id={"box-sell-price"} type={"number"} additionalStyle={"max-w-[100px] text-center text-lg font-semibold"} />
+                                <span className="text-purple-700 font-semibold text-lg">GAME</span>
+                            </div>
+                            <span className="font-semibold text-lg mt-4 self-start ml-2">Security</span>
+                            <div className="w-full border-b-2 border-gray-600"></div>
+                            <div className="w-full flex flex-col gap-2 items-center mt-2">
+                                <span>Code from your authenticator</span>
+                                <InputDefault id={"box-sell-code"} type={"text"} additionalStyle={"text-center text-lg font-semibold"} />
+                            </div>
+                            <ButtonGreen
+                                click={() => {
+                                    sellBox();
+                                }}
+                                text="Sell"
+                                additionalStyle={"w-full mt-4 text-lg"}
+                            />
                         </div>
-                        <div className="w-full flex justify-center">
-                            <img src={selectedBox?.type === "MYSTERY" ? mysteryBoxImage:luckyBoxImage} alt="box" className="w-[150px] h-[150px]" />
-                        </div>
-                        <div className="w-full flex flex-col items-center">
-                            <span className={(selectedBox?.type === 'MYSTERY' ? "text-teal-400":"text-yellow-500")+" font-bold"}>{selectedBox?.type} BOX</span>
-                            <span>{selectedBox?.serial}-{selectedBox?.number}</span>
-                        </div>
-                        <div
-                            onClick={() => {
-                                document.getElementById("market-sell-box").classList.toggle("hidden");
-                            }}
-                            className="absolute top-0 right-0 flex p-2 cursor-pointer"
-                        >
-                            <div className="w-6 h-6 flex justify-center items-center">
+                        <div className="absolute flex p-2 top-0 right-0">
+                            <div
+                                onClick={() => {
+                                    document.getElementById("box-sell-popup").classList.toggle("hidden");
+                                }}
+                                className="w-6 h-6 flex justify-center items-center cursor-pointer"
+                            >
                                 <CrossIcon size={32} />
                             </div>
                         </div>
@@ -285,7 +346,7 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId,
     return (
         <div
             className={
-                "relative w-[230px] h-[420px] p-2 gap-2 flex flex-col flex-shrink-0 rounded-md bg-dark-purple-100 bg-opacity-10 animated-200 border-[2px] border-opacity-70 hover:border-opacity-100 " +
+                "relative w-[230px] h-[420px] p-2 gap-2 flex flex-col flex-shrink-0 rounded-md bg-dark-purple-100 bg-opacity-10 animated-200 border-[2px] border-opacity-50 hover:border-opacity-100 " +
                 (type === "LUCKY" ? "border-yellow-500" : "border-teal-400")
             }
         >
@@ -374,7 +435,6 @@ function InventoryTab() {
         rawCopy.sort((a, b) => {
             return rarityToNumber(b.rarity) - rarityToNumber(a.rarity);
         });
-        console.log(rawItems);
         for (const i of rawCopy) {
             for (const j of rawItems.transfers ?? []) {
                 if (i.boxId === j.boxID) {
@@ -457,7 +517,7 @@ function InventoryTab() {
                     ui.showError(e);
                     console.log(e);
                 }
-            } else ui.showError("Price must be than 0!");
+            } else ui.showError("Price must be more than 0!");
         }
     }
 
@@ -579,8 +639,8 @@ function InventoryTab() {
             </div>
             <div className="w-full flex mt-4 gap-2">
                 <div className="w-full flex flex-col gap-2">{itemsView}</div>
-                { itemsView.items ? <SelectedItemBigScreen sellCallback={sellCallback} selectedItemView={selectedItemView} /> : <></> }
-                { itemsView.items ? <SelectedItemSmallScreen sellCallback={sellCallback} selectedItemView={selectedItemView} /> : <></> }
+                {rawItems?.items?.length ? <SelectedItemBigScreen sellCallback={sellCallback} selectedItemView={selectedItemView} /> : <></>}
+                {rawItems?.items?.length ? <SelectedItemSmallScreen sellCallback={sellCallback} selectedItemView={selectedItemView} /> : <></>}
             </div>
             <div id="sell-popup" className="z-10 animated-200 p-2 fixed inset-0 top-[120px] flex items-center justify-center bg-black bg-opacity-90 hidden">
                 <div
@@ -591,7 +651,7 @@ function InventoryTab() {
                 >
                     <div className="max-h-[450px] overflow-y-auto md:max-h-[1000px] w-full flex flex-col items-center mt-6">
                         <span className="font-semibold text-lg self-start ml-2">Item to sell</span>
-                        <div className="w-full border-b-2 border-white"></div>
+                        <div className="w-full border-b-2 border-gray-600"></div>
                         <div className="w-[150px] h-[150px] flex flex-shrink-0 mt-2">
                             <img
                                 src={selectedItemView?.imgLink}
@@ -609,13 +669,13 @@ function InventoryTab() {
                             <span className="opacity-80 text-sm text-center">{compactString(selectedItemView?.comment, 120)}</span>
                         </div>
                         <span className="font-semibold text-lg mt-4 self-start ml-2">Sell price</span>
-                        <div className="w-full border-b-2 border-white"></div>
+                        <div className="w-full border-b-2 border-gray-600"></div>
                         <div className="w-full flex gap-2 justify-center items-center mt-2">
                             <InputDefault id={"item-sell-price"} type={"number"} additionalStyle={"max-w-[100px] text-center text-lg font-semibold"} />
                             <span className="text-purple-700 font-semibold text-lg">GAME</span>
                         </div>
                         <span className="font-semibold text-lg mt-4 self-start ml-2">Security</span>
-                        <div className="w-full border-b-2 border-white"></div>
+                        <div className="w-full border-b-2 border-gray-600"></div>
                         <div className="w-full flex flex-col gap-2 items-center mt-2">
                             <span>Code from your authenticator</span>
                             <InputDefault id={"item-sell-code"} type={"text"} additionalStyle={"text-center text-lg font-semibold"} />

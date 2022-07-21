@@ -6,7 +6,15 @@ import ArrowIcon from "../../Icons/FilterArrow";
 import SearchIcon from "../../Icons/Search";
 import box from "../../Images/Boxes/luckyBox.png";
 import { UIStorage } from "../../Storages/UIStorage";
-import { marketplaceLoadLots_EP, marketplaceSellItem_EP, safeAuthorize_header, marketplaceBuyItem_EP } from "../../Utils/EndpointsUtil";
+import luckyBoxImage from "../../Images/Boxes/luckyBox.png";
+import mysteryBoxImage from "../../Images/Boxes/mysteryBox.png";
+import {
+    marketplaceLoadLots_EP,
+    marketplaceSellItem_EP,
+    safeAuthorize_header,
+    marketplaceBuyItem_EP,
+    marketplaceGetLotBack_EP,
+} from "../../Utils/EndpointsUtil";
 import { getDataFromResponse, makePost } from "../../Utils/NetworkUtil";
 import { getRandomString } from "../../Utils/RandomUtil";
 import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
@@ -78,18 +86,15 @@ export default function MarketplacePage() {
 
 function MarketplaceBuyPage() {
     const [filter, setFilter] = useState({ rarity: null, price: null, rarityColor: "", type: null, priceFilter: null });
-
+    const userData = useStoreState(UserDataStorage);
     const ui = useStoreState(UIStorage);
-
     const metamask = useStoreState(MetaMaskStorage);
-
     const [popUpData, setPopUpData] = useState({});
-
     const [lotsView, setLotsView] = useState([]);
-
     const [selectedLot, setSelectedLot] = useState({});
 
     async function loadLots() {
+        ui.showContentLoading();
         let price = filter.priceFilter ? filter.priceFilter : -1;
         let type = filter.type ? filter.type : null;
         let rarity = filter.rarity ? filter.rarity : null;
@@ -105,12 +110,43 @@ function MarketplaceBuyPage() {
         );
 
         let t = Array.from(d.items);
+        console.log(d);
         let a = [];
         for (const i of t) {
-            a.push(<ItemTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />);
+            if (i.itemType === 2)
+                a.push(<ItemTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />);
+            else if (i.itemType === 1) a.push(<BoxTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} />);
+            // else
+            //     a.push(<ItemTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />)
         }
+        ui.hideContentLoading();
         setLotsView(a);
-        console.log(d);
+    }
+
+    async function getLotBack() {
+        if (selectedLot && selectedLot.popUpData.itemId) {
+            let code = document.getElementById("get-item-back-code").value;
+            let [d, s, e] = await makePost(
+                marketplaceGetLotBack_EP(),
+                {
+                    itemType: selectedLot.popUpData.itemType,
+                    itemName: selectedLot.popUpData.itemName,
+                    itemPrice: selectedLot.popUpData.price,
+                    userAddress: userData.getLocalUserData().id,
+                    code,
+                },
+                true
+            );
+            if (d) {
+                ui.showSuccess("You have successfully canceled your order!");
+                document.getElementById("popUpVision").classList.add("hidden");
+                loadLots();
+                document.getElementById("get-lot-back-code").value = "";
+            } else {
+                ui.showError(e);
+                console.log(e);
+            }
+        }
     }
 
     async function buyItem() {
@@ -133,10 +169,10 @@ function MarketplaceBuyPage() {
                 ui.showSuccess("Congratulations on your purchase!");
                 document.getElementById("popUpVision").classList.add("hidden");
                 document.getElementById("item-buy-code").value = "";
+                loadLots();
             } else {
                 ui.showError(e);
                 console.log(e);
-                loadLots();
             }
         }
     }
@@ -144,14 +180,6 @@ function MarketplaceBuyPage() {
     useEffect(() => {
         loadLots();
     }, [filter]);
-
-    useEffect(() => {
-        ui.showContentLoading();
-        setTimeout(() => {
-            ui.hideContentLoading();
-        }, 500);
-        loadLots();
-    }, []);
 
     return (
         <>
@@ -340,7 +368,7 @@ function MarketplaceBuyPage() {
                     <button className={"w-12 p-4 rounded-lg bg-dark-purple-100 bg-opacity-30 hover:bg-dark-purple-100 hover:bg-opacity-50 "}>1</button>
                 </div>
             </div>
-            <PopUpTile popUpData={popUpData} buyItem={buyItem} setSelectedLot={setSelectedLot} />
+            <PopUpTile popUpData={popUpData} buyItem={buyItem} getLotBack={getLotBack} setSelectedLot={setSelectedLot} />
         </>
     );
 }
@@ -375,7 +403,6 @@ function SearchBar() {
 
 function ItemTile({ rarity, username, itemName, price, description, imgLink, itemId, itemType, setPopUpData }) {
     // let rarityUpperCase = String(rarity).charAt(0).toUpperCase() + rarity.slice(1);
-
     const [imgLoaded, setImgLoaded] = useState(false);
 
     return (
@@ -421,9 +448,9 @@ function ItemTile({ rarity, username, itemName, price, description, imgLink, ite
                     <span>{rarity}</span>
                 </div>
                 <div className="text-white text-large md:text-xl">
-                    <div className="flex justify-center items-center gap-[3px]">
-                        <span className="md:text-xl text-lg text-white font-semibold">{price} </span>
-                        <span className="text-purple-700 font-semibold text-lg">G</span>
+                    <div className="flex justify-center items-center gap-[2px]">
+                        <span className="md:text-xl text-lg text-white font-light">{price} </span>
+                        <span className="text-purple-700 font-extrabold text-xl">G</span>
                     </div>
                 </div>
             </div>
@@ -439,7 +466,72 @@ function ItemTile({ rarity, username, itemName, price, description, imgLink, ite
     );
 }
 
-function PopUpTile({ setSelectedLot, popUpData, buyItem }) {
+function BoxTile({ username, itemName, price, itemId, itemType, setPopUpData }) {
+    // let rarityUpperCase = String(rarity).charAt(0).toUpperCase() + rarity.slice(1);
+    const [imgLoaded, setImgLoaded] = useState(false);
+
+    return (
+        <div
+            onClick={() => {
+                document.getElementById("popUpVision").classList.remove("pointer-events-none");
+                document.getElementById("popUpVision").classList.remove("opacity-0");
+                document.getElementById("popUpVision").classList.add("opacity-100");
+                setPopUpData({ itemName, itemType, itemId, price, username });
+            }}
+            className={
+                "w-full md:h-[130px] h-[100px] px-4 md:px-8 py-2 gap-1 md:gap-5 items-center flex border-opacity-50 rounded-md group hover:bg-dark-purple-300 hover:border-opacity-100 animated-200 cursor-pointer border-2 justify-center " +
+                (itemName === "Mystery" ? "border-teal-400" : "border-yellow-500")
+            }
+        >
+            <div className="flex gap-2 items-center justify-between w-[150px] md:w-[250px]">
+                <div className="flex relative md:w-[95px] md:h-[95px] w-[80px] h-[70px]">
+                    <img
+                        onLoad={() => {
+                            setImgLoaded(true);
+                        }}
+                        className={
+                            "h-full w-full object-cover rounded-md animated-200 group-hover:scale-110  " +
+                            (getRandomInt(0, 1) ? "group-hover:-rotate-3" : "group-hover:rotate-3")
+                        }
+                        src={itemName === "Mystery" ? mysteryBoxImage : luckyBoxImage}
+                        alt="box"
+                    />
+                    {imgLoaded ? (
+                        <></>
+                    ) : (
+                        <div className="absolute inset-0 flex">
+                            <AdaptiveLoadingComponent />
+                        </div>
+                    )}
+                </div>
+                <div className="w-[100px] px-2 md:w-[150px] text-white text-center md:font-bold font-semibold md:text-xl text-xs">
+                    <span>{compactString(itemName, 30)}</span>
+                </div>
+            </div>
+            <div className="max-w-[800px] md:gap-0 gap-4 w-full justify-between flex py-2 border-b-2 border-gray-800 items-center">
+                <div className="md:text-sm text-xs font-semibold">
+                    <span>Box</span>
+                </div>
+                <div className="text-white text-large md:text-xl">
+                    <div className="flex justify-center items-center gap-[2px]">
+                        <span className="md:text-xl text-lg text-white font-light">{price} </span>
+                        <span className="text-purple-700 font-extrabold text-xl">G</span>
+                    </div>
+                </div>
+            </div>
+            <div className="max-w-[200px] w-full md:flex hidden items-center justify-center mt-2 gap-1 text-xs md:text-sm">
+                <div className="text-gray-500">
+                    <span>Owner:</span>
+                </div>
+                <div className="text-white italic md:text-sm text-xs font-light">
+                    <span>{username}</span>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack }) {
     const userData = useStoreState(UserDataStorage);
 
     const [imgLoaded, setImgLoaded] = useState(false);
@@ -510,16 +602,29 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem }) {
                         </span>
                     </div>
                     {userData.isLoggedIn ? (
-                        <ButtonGreen
-                            click={() => {
-                                setSelectedLot({ popUpData });
-                                document.getElementById("orderConfirmation").classList.remove("pointer-events-none");
-                                document.getElementById("orderConfirmation").classList.remove("opacity-0");
-                                document.getElementById("orderConfirmation").classList.add("opacity-100");
-                            }}
-                            additionalStyle="w-[300px] text-white tracking-wider"
-                            text={"Buy for " + popUpData?.price + "G"}
-                        />
+                        userData.getLocalUserData().username === popUpData.username ? (
+                            <ButtonRed
+                                click={() => {
+                                    setSelectedLot({ popUpData });
+                                    document.getElementById("orderCancel").classList.remove("pointer-events-none");
+                                    document.getElementById("orderCancel").classList.remove("opacity-0");
+                                    document.getElementById("orderCancel").classList.add("opacity-100");
+                                }}
+                                additionalStyle="w-[300px] text-white tracking-wider"
+                                text={"Cancel the order"}
+                            />
+                        ) : (
+                            <ButtonGreen
+                                click={() => {
+                                    setSelectedLot({ popUpData });
+                                    document.getElementById("orderConfirmation").classList.remove("pointer-events-none");
+                                    document.getElementById("orderConfirmation").classList.remove("opacity-0");
+                                    document.getElementById("orderConfirmation").classList.add("opacity-100");
+                                }}
+                                additionalStyle="w-[300px] text-white tracking-wider"
+                                text={"Buy for " + popUpData?.price + "G"}
+                            />
+                        )
                     ) : (
                         <div className="bg-dark-purple-200 bg-opacity-80 flex items-center justify-center py-2 px-4 rounded-md gap-2">
                             <span className="md:text-lg text-sm font-semibold text-gray-500">Please, sign in to buy for</span>
@@ -529,6 +634,38 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem }) {
                             </div>
                         </div>
                     )}
+                </div>
+                <div
+                    id="orderCancel"
+                    className="animated-100 fixed z-10 w-full h-full top-[20px] flex pointer-events-none opacity-0 justify-center items-center rounded-xl bg-opacity-70 bg-black"
+                >
+                    <div className="text-white flex flex-col gap-6 justify-center items-center rounded-xl bg-dark-purple-400 w-[280px] h-[250px] border-2 border-gray-800 ">
+                        <div className="">
+                            <span className="text-xl font-semibold">Are you sure?</span>
+                        </div>
+                        <div className="flex gap-5">
+                            <ButtonGreen
+                                click={() => {
+                                    if (typeof buyItem === "function") getLotBack();
+                                }}
+                                additionalStyle="w-[70px]"
+                                text="Yes"
+                            />
+                            <ButtonRed
+                                click={() => {
+                                    document.getElementById("orderCancel").classList.add("pointer-events-none");
+                                    document.getElementById("orderCancel").classList.add("opacity-0");
+                                    document.getElementById("orderCancel").classList.remove("opacity-100");
+                                }}
+                                additionalStyle="w-[70px]"
+                                text="No"
+                            />
+                        </div>
+                        <div className="w-full flex flex-col gap-2 items-center">
+                            <span>Code from your authenticator</span>
+                            <InputDefault id={"get-item-back-code"} type={"text"} additionalStyle={"text-center w-[200px] text-lg font-semibold"} />
+                        </div>
+                    </div>
                 </div>
                 <div
                     id="orderConfirmation"
