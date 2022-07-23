@@ -35,18 +35,18 @@ export default function UpperMenu() {
         <>
             <div className="fixed w-full left-0 top-0 h-20 flex justify-center bg-black overflow-x-auto text-white z-20">
                 <div className="max-w-[1750px] w-full flex px-2">
-                    <div className="hidden gap-3 text-2xl py-2 md:flex">
+                    <div className="hidden gap-3 text-2xl md:flex">
                         <Link to="/">
-                            <div className="flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-800 animated-100">Home</div>
+                            <div className="flex justify-center items-center font-bold h-full px-2 hover:bg-zinc-800 animated-100">Home</div>
                         </Link>
                         <Link to="/heroes">
-                            <div className="flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-800 animated-100">Heroes</div>
+                            <div className="flex justify-center items-center font-bold h-full px-2 hover:bg-zinc-800 animated-100">Heroes</div>
                         </Link>
                         <Link to="/inventory">
-                            <div className="flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-800 animated-100">Inventory</div>
+                            <div className="flex justify-center items-center font-bold h-full px-2 hover:bg-zinc-800 animated-100">Inventory</div>
                         </Link>
                         <Link to="/marketplace">
-                            <div className="flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-800 animated-100">Marketplace</div>
+                            <div className="flex justify-center items-center font-bold h-full px-2 hover:bg-zinc-800 animated-100">Marketplace</div>
                         </Link>
                         {/* <Link to="/about">
                             <div className="text-lg text-gray-300 flex justify-center items-center font-bold h-full px-2 rounded-md hover:bg-zinc-900 animated-100">
