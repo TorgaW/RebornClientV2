@@ -726,7 +726,9 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack, buyBox }) {
                                 click={() => {
                                     console.log(popUpData?.itemType);
                                     if (popUpData?.itemType === 2) {
-                                        if (typeof buyItem === "function") buyItem();
+                                        if (typeof buyItem === "function") {
+                                            buyItem();
+                                        }
                                     } else if (popUpData?.itemType === 1) {
                                         if (typeof buyBox === "function") {
                                             buyBox();
