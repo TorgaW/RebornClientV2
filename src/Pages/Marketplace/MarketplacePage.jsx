@@ -114,8 +114,8 @@ function MarketplaceBuyPage() {
         let a = [];
         for (const i of t) {
             if (i.itemType === 2)
-                a.push(<ItemTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />);
-            else if (i.itemType === 1) a.push(<BoxTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} />);
+                a.push(<LotTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />);
+            else if (i.itemType === 1) a.push(<LotTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} />);
             // else
             //     a.push(<ItemTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />)
         }
@@ -152,7 +152,7 @@ function MarketplaceBuyPage() {
     async function buyItem() {
         console.log(selectedLot.popUpData);
         if (selectedLot && selectedLot.popUpData.itemId) {
-            let code = document.getElementById("item-buy-code").value;
+            let code = document.getElementById("loy-buy-code").value;
             let [d, s, e] = await makePost(
                 marketplaceBuyItem_EP(),
                 {
@@ -168,7 +168,36 @@ function MarketplaceBuyPage() {
             if (d) {
                 ui.showSuccess("Congratulations on your purchase!");
                 document.getElementById("popUpVision").classList.add("hidden");
-                document.getElementById("item-buy-code").value = "";
+                document.getElementById("lot-buy-code").value = "";
+                loadLots();
+            } else {
+                ui.showError(e);
+                console.log(e);
+            }
+        }
+    }
+
+    async function buyBox() {
+        console.log(selectedLot.popUpData);
+        if (selectedLot && selectedLot.popUpData.itemId) {
+            let code = document.getElementById("lot-buy-code").value;
+            let [d, s, e] = await makePost(
+                marketplaceBuyItem_EP(),
+                {
+                    itemType: 1,
+                    sellerName: selectedLot.popUpData.username,
+                    price: selectedLot.popUpData.price,
+                    itemId: selectedLot.popUpData.itemId,
+                    code,
+                    // nftId: ,
+                },
+                true
+            );
+
+            if (d) {
+                ui.showSuccess("Congratulations on your purchase!");
+                document.getElementById("popUpVision").classList.add("hidden");
+                document.getElementById("lot-buy-code").value = "";
                 loadLots();
             } else {
                 ui.showError(e);
@@ -368,7 +397,7 @@ function MarketplaceBuyPage() {
                     <button className={"w-12 p-4 rounded-lg bg-dark-purple-100 bg-opacity-30 hover:bg-dark-purple-100 hover:bg-opacity-50 "}>1</button>
                 </div>
             </div>
-            <PopUpTile popUpData={popUpData} buyItem={buyItem} getLotBack={getLotBack} setSelectedLot={setSelectedLot} />
+            <PopUpTile popUpData={popUpData} buyItem={buyItem} buyBox={buyBox} getLotBack={getLotBack} setSelectedLot={setSelectedLot} />
         </>
     );
 }
@@ -401,7 +430,7 @@ function SearchBar() {
     );
 }
 
-function ItemTile({ rarity, username, itemName, price, description, imgLink, itemId, itemType, setPopUpData }) {
+function LotTile({ rarity, username, itemName, price, description, imgLink, itemId, itemType, setPopUpData }) {
     // let rarityUpperCase = String(rarity).charAt(0).toUpperCase() + rarity.slice(1);
     const [imgLoaded, setImgLoaded] = useState(false);
 
@@ -411,11 +440,16 @@ function ItemTile({ rarity, username, itemName, price, description, imgLink, ite
                 document.getElementById("popUpVision").classList.remove("pointer-events-none");
                 document.getElementById("popUpVision").classList.remove("opacity-0");
                 document.getElementById("popUpVision").classList.add("opacity-100");
-                setPopUpData({ rarity, itemName, price, username, description, imgLink, itemId, itemType });
+                itemType === 2
+                    ? setPopUpData({ rarity, itemName, price, username, description, imgLink, itemId, itemType })
+                    : setPopUpData({ username, price, itemName, itemId, itemType });
             }}
             className={
-                "w-full md:h-[130px] h-[100px] px-4 md:px-8 py-2 gap-1 md:gap-5 items-center flex rounded-md group hover:bg-dark-purple-300 hover:border-opacity-100 animated-200 cursor-pointer border-2 justify-center " +
-                rarityColor[rarity.toLowerCase()]
+                "w-full md:h-[130px] h-[100px] px-4 md:px-8 py-2 gap-1 md:gap-5 items-center flex rounded-md border-opacity-50 group hover:bg-dark-purple-300 hover:border-opacity-100 animated-200 cursor-pointer border-2 justify-center " +
+                (() => {
+                    if (itemType === 2) return rarityColor[rarity.toLowerCase()];
+                    else if (itemType === 1) return itemName === "Lucky" ? "border-yellow-500" : "border-teal-400";
+                })()
             }
         >
             <div className="flex gap-2 items-center justify-between w-[150px] md:w-[250px]">
@@ -428,8 +462,11 @@ function ItemTile({ rarity, username, itemName, price, description, imgLink, ite
                             "h-full w-full object-cover rounded-md animated-200 group-hover:scale-110  " +
                             (getRandomInt(0, 1) ? "group-hover:-rotate-3" : "group-hover:rotate-3")
                         }
-                        src={imgLink}
-                        alt=""
+                        src={(() => {
+                            if (itemType === 2) return imgLink;
+                            else if (itemType === 1) return itemName === "Lucky" ? luckyBoxImage : mysteryBoxImage;
+                        })()}
+                        alt="pic"
                     />
                     {imgLoaded ? (
                         <></>
@@ -440,7 +477,12 @@ function ItemTile({ rarity, username, itemName, price, description, imgLink, ite
                     )}
                 </div>
                 <div className="w-[100px] px-2 md:w-[150px] text-white text-center md:font-bold font-semibold md:text-xl text-xs">
-                    <span>{compactString(itemName, 30)}</span>
+                    <span>
+                        {(() => {
+                            if (itemType === 2) return compactString(itemName, 30);
+                            else if (itemType === 1) return itemName + " Box";
+                        })()}
+                    </span>
                 </div>
             </div>
             <div className="max-w-[800px] md:gap-0 gap-4 w-full justify-between flex py-2 border-b-2 border-gray-800 items-center">
@@ -466,72 +508,7 @@ function ItemTile({ rarity, username, itemName, price, description, imgLink, ite
     );
 }
 
-function BoxTile({ username, itemName, price, itemId, itemType, setPopUpData }) {
-    // let rarityUpperCase = String(rarity).charAt(0).toUpperCase() + rarity.slice(1);
-    const [imgLoaded, setImgLoaded] = useState(false);
-
-    return (
-        <div
-            onClick={() => {
-                document.getElementById("popUpVision").classList.remove("pointer-events-none");
-                document.getElementById("popUpVision").classList.remove("opacity-0");
-                document.getElementById("popUpVision").classList.add("opacity-100");
-                setPopUpData({ itemName, itemType, itemId, price, username });
-            }}
-            className={
-                "w-full md:h-[130px] h-[100px] px-4 md:px-8 py-2 gap-1 md:gap-5 items-center flex border-opacity-50 rounded-md group hover:bg-dark-purple-300 hover:border-opacity-100 animated-200 cursor-pointer border-2 justify-center " +
-                (itemName === "Mystery" ? "border-teal-400" : "border-yellow-500")
-            }
-        >
-            <div className="flex gap-2 items-center justify-between w-[150px] md:w-[250px]">
-                <div className="flex relative md:w-[95px] md:h-[95px] w-[80px] h-[70px]">
-                    <img
-                        onLoad={() => {
-                            setImgLoaded(true);
-                        }}
-                        className={
-                            "h-full w-full object-cover rounded-md animated-200 group-hover:scale-110  " +
-                            (getRandomInt(0, 1) ? "group-hover:-rotate-3" : "group-hover:rotate-3")
-                        }
-                        src={itemName === "Mystery" ? mysteryBoxImage : luckyBoxImage}
-                        alt="box"
-                    />
-                    {imgLoaded ? (
-                        <></>
-                    ) : (
-                        <div className="absolute inset-0 flex">
-                            <AdaptiveLoadingComponent />
-                        </div>
-                    )}
-                </div>
-                <div className="w-[100px] px-2 md:w-[150px] text-white text-center md:font-bold font-semibold md:text-xl text-xs">
-                    <span>{compactString(itemName, 30)}</span>
-                </div>
-            </div>
-            <div className="max-w-[800px] md:gap-0 gap-4 w-full justify-between flex py-2 border-b-2 border-gray-800 items-center">
-                <div className="md:text-sm text-xs font-semibold">
-                    <span>Box</span>
-                </div>
-                <div className="text-white text-large md:text-xl">
-                    <div className="flex justify-center items-center gap-[2px]">
-                        <span className="md:text-xl text-lg text-white font-light">{price} </span>
-                        <span className="text-purple-700 font-extrabold text-xl">G</span>
-                    </div>
-                </div>
-            </div>
-            <div className="max-w-[200px] w-full md:flex hidden items-center justify-center mt-2 gap-1 text-xs md:text-sm">
-                <div className="text-gray-500">
-                    <span>Owner:</span>
-                </div>
-                <div className="text-white italic md:text-sm text-xs font-light">
-                    <span>{username}</span>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack }) {
+function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack, buyBox }) {
     const userData = useStoreState(UserDataStorage);
 
     const [imgLoaded, setImgLoaded] = useState(false);
@@ -543,8 +520,11 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack }) {
         >
             <div
                 className={
-                    "relative py-5 md:w-[500px] w-[430px] max-h-[70vh] overflow-y-auto flex flex-col gap-4 items-center bg-dark-purple-400 border-2 md:mt-[70px] mt-[110px] rounded-xl shadow-lg mx-6 " +
-                    rarityColor[popUpData?.rarity?.toLowerCase()]
+                    "relative border-opacity-50 py-5 md:w-[500px] w-[430px] max-h-[70vh] overflow-y-auto flex flex-col gap-4 items-center bg-dark-purple-400 border-2 md:mt-[70px] mt-[110px] rounded-xl shadow-lg mx-6 " +
+                    (() => {
+                        if (popUpData?.itemType === 2) return rarityColor[popUpData?.rarity.toLowerCase()];
+                        else if (popUpData?.itemType === 1) return popUpData?.itemName === "Lucky" ? "border-yellow-500" : "border-teal-400";
+                    })()
                 }
             >
                 <div className="absolute w-full z-10 top-0 flex justify-end pt-2 pr-2">
@@ -564,15 +544,31 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack }) {
                 </div>
                 <div className="flex flex-col justify-center items-center h-full w-full gap-4 px-4">
                     <div className="w-full px-10 md:py-2 text-center flex justify-center">
-                        <span className="md:text-3xl text-2xl font-bold text-white">{popUpData?.itemName}</span>
+                        <span className="md:text-3xl text-2xl font-bold text-white">{(()=>{
+                            if(popUpData?.itemType === 2)
+                                return popUpData?.itemName;
+                            else if (popUpData?.itemType === 1)
+                                return popUpData?.itemName + " Box"
+                        })()}</span>
                     </div>
-                    <div className={"md:w-[200px] md:h-[200px] w-[130px] h-[130px] border-4 rounded-md " + rarityColor[popUpData?.rarity?.toLowerCase()]}>
+                    <div
+                        className={
+                            "md:w-[200px] md:h-[200px] w-[130px] h-[130px] border-4 border-opacity-50 rounded-md " +
+                            (() => {
+                                if (popUpData?.itemType === 2) return rarityColor[popUpData?.rarity.toLowerCase()];
+                                else if (popUpData?.itemType === 1) return popUpData?.itemName === "Lucky" ? "border-yellow-500" : "border-teal-400";
+                            })()
+                        }
+                    >
                         <img
                             onLoad={() => {
                                 setImgLoaded(true);
                             }}
                             className="w-full h-full object-cover"
-                            src={popUpData?.imgLink}
+                            src={(() => {
+                                if (popUpData?.itemType === 2) return popUpData?.imgLink;
+                                else if (popUpData?.itemType === 1) return popUpData?.itemName === "Lucky" ? luckyBoxImage : mysteryBoxImage;
+                            })()}
                             alt=""
                         />
                         {imgLoaded ? (
@@ -583,9 +579,25 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack }) {
                             </div>
                         )}
                     </div>
-                    <div className="border-t-2 border-b-2 border-gray-800 w-full flex flex-col items-center gap-3 py-2">
-                        <div className={rarityColor[popUpData?.rarity?.toLowerCase()]}>
-                            <span className="md:text-xl text-large font-semibold">{popUpData?.rarity}</span>
+                    <div
+                        className={
+                            "border-t-2 border-b-2 border-gray-800 w-full flex flex-col items-center py-2 " +
+                            (() => {
+                                if (popUpData?.itemType === 2) return "gap-3";
+                                else if (popUpData?.itemType === 1) return "";
+                            })()
+                        }
+                    >
+                        <div
+                            className={(() => {
+                                if (popUpData?.itemType === 2) return rarityColor[popUpData?.rarity.toLowerCase()];
+                                else if (popUpData?.itemType === 1) return popUpData?.itemName === "Lucky" ? "border-yellow-500" : "border-teal-400";
+                            })()}
+                        >
+                            {(() => {
+                                if (popUpData?.itemType === 2) return <span className="md:text-xl text-large font-semibold">{popUpData?.rarity}</span>;
+                                else if (popUpData?.itemType === 1) return <></>;
+                            })()}
                         </div>
                         <div className="flex justify-center items-center gap-1">
                             <div className="text-gray-500 md:text-base text-sm">
@@ -598,7 +610,10 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack }) {
                     </div>
                     <div className="text-center flex justify-center items-center py-2">
                         <span className="text-white md:text-base text-sm">
-                            {isTabletOrMobileBrowser() ? compactString(popUpData?.description, 150) : popUpData?.description}
+                            {(() => {
+                                if (popUpData?.itemType === 2) return isTabletOrMobileBrowser() ? compactString(popUpData?.description, 150) : popUpData?.description;
+                                else if (popUpData?.itemType === 1) return "So much power in this box! Who knows what it holds...";
+                            })()}
                         </span>
                     </div>
                     {userData.isLoggedIn ? (
@@ -678,7 +693,12 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack }) {
                         <div className="flex gap-5">
                             <ButtonGreen
                                 click={() => {
-                                    if (typeof buyItem === "function") buyItem();
+                                    if (popUpData?.itemType === 2)
+                                        if(typeof buyItem === 'function') 
+                                            buyItem();
+                                    else if (popUpData?.itemType === 1)
+                                        if(typeof buyBox === 'function')
+                                            buyBox();
                                 }}
                                 additionalStyle="w-[70px]"
                                 text="Yes"
@@ -695,7 +715,7 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack }) {
                         </div>
                         <div className="w-full flex flex-col gap-2 items-center">
                             <span>Code from your authenticator</span>
-                            <InputDefault id={"item-buy-code"} type={"text"} additionalStyle={"text-center w-[200px] text-lg font-semibold"} />
+                            <InputDefault id={"lot-buy-code"} type={"text"} additionalStyle={"text-center w-[200px] text-lg font-semibold"} />
                         </div>
                     </div>
                 </div>
