@@ -138,7 +138,7 @@ export default function BoxPage() {
                         )}
                         {userData.isLoggedIn ? (
                             isOwner ? (
-                                boxInfo?.status === "Owned" ? (
+                                boxInfo?.status?.toLowerCase() === "owned" ? (
                                     <div className="w-full flex flex-col items-center">
                                         <span className="font-semibold text-purple-400 mt-10">Try to open it for {boxInfo?.priceToOpen}G</span>
                                         <button
@@ -166,7 +166,7 @@ export default function BoxPage() {
                                     </div>
                                 ) : (
                                     <div className="w-full text-center">
-                                        {boxInfo?.status === "Burned" ? (
+                                        {boxInfo?.status?.toLowerCase() === "burned" ? (
                                             <span className="italic text-red-400">This box has been already burned.</span>
                                         ) : (
                                             <span className="italic text-red-400">This box has been already opened.</span>
