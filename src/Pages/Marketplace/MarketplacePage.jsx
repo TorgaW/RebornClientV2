@@ -727,10 +727,11 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack, buyBox }) {
                                     console.log(popUpData?.itemType);
                                     if (popUpData?.itemType === 2) {
                                         if (typeof buyItem === "function") buyItem();
-                                    } else if (popUpData?.itemType === 1)
+                                    } else if (popUpData?.itemType === 1) {
                                         if (typeof buyBox === "function") {
                                             buyBox();
                                         }
+                                    }
                                 }}
                                 additionalStyle="w-[70px]"
                                 text="Yes"

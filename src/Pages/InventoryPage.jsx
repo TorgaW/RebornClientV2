@@ -90,17 +90,17 @@ function BoxTab() {
         let copyBoxes = Array.from(rawBoxes);
         console.log(copyBoxes, "fuck");
         copyBoxes.sort(function (a, b) {
-            if (a.status === "Owned" && b.status !== "Owned") return -1;
-            if (a.status === "Burned" && b.status !== "Burned") return -1;
+            if (a.status.toLowerCase() === "owned" && b.status.toLowerCase() !== "owned") return -1;
+            if (a.status.toLowerCase() === "burned" && b.status.toLowerCase() !== "burned") return -1;
             return 0;
         });
         for (const i of copyBoxes) {
             let safeType = i.type;
             if (i?.type !== "MYSTERY" && i?.type !== "LUCKY") safeType = i.type?.name?.slice(5) ?? "";
             i.type = safeType;
-            if (i.status === "Opened" && !filter.opened) continue;
-            if (i.status === "Burned" && !filter.burned) continue;
-            if (i.status === "Owned" && !filter.unopened) continue;
+            if (i.status.toLowerCase() === "opened" && !filter.opened) continue;
+            if (i.status.toLowerCase() === "burned" && !filter.burned) continue;
+            if (i.status.toLowerCase() === "owned" && !filter.unopened) continue;
             // console.log(i.status);
             t.push(<BoxTile key={getRandomString(12)} {...i} selectCallback={selectCallback} />);
         }
