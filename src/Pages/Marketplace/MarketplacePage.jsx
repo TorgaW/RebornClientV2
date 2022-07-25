@@ -15,11 +15,13 @@ import {
     marketplaceBuyItem_EP,
     marketplaceGetLotBack_EP,
 } from "../../Utils/EndpointsUtil";
-import { getDataFromResponse, makePost } from "../../Utils/NetworkUtil";
+import { getDataFromResponse, makePost, catch401 } from "../../Utils/NetworkUtil";
+import { ERC721Abi, NFTAddress, SBCHProvider } from "../../Utils/BlockchainUtils";
+import { ethers } from "ethers";
+import { MetaMaskStorage } from "../../Storages/MetaMaskStorage";
 import { getRandomString } from "../../Utils/RandomUtil";
 import { isStringEmptyOrSpaces } from "../../Utils/StringUtil";
 import { getRandomInt } from "../../Utils/RandomUtil";
-import { MetaMaskStorage } from "../../Storages/MetaMaskStorage";
 import ButtonGreen from "../../Components/UI/StyledComponents/ButtonGreen";
 import ButtonRed from "../../Components/UI/StyledComponents/ButtonRed";
 import InputDefault from "../../Components/UI/StyledComponents/InputDefault";
@@ -91,6 +93,7 @@ function MarketplaceBuyPage() {
     const metamask = useStoreState(MetaMaskStorage);
     const [popUpData, setPopUpData] = useState({});
     const [lotsView, setLotsView] = useState([]);
+    const [userHeroes, setUserHeroes] = useState([]);
     const [selectedLot, setSelectedLot] = useState({});
 
     async function loadLots() {
@@ -178,9 +181,9 @@ function MarketplaceBuyPage() {
     }
 
     async function buyBox() {
-        console.log(selectedLot.popUpData);
-        if (selectedLot && selectedLot.popUpData.itemId) {
+        if (selectedLot && selectedLot.popUpData.itemId && Array.isArray(userHeroes) && userHeroes.length > 0) {
             let code = document.getElementById("lot-buy-code").value;
+            let nftId = userHeroes[getRandomInt(0, userHeroes.length - 1)];
             let [d, s, e] = await makePost(
                 marketplaceBuyItem_EP(),
                 {
@@ -189,7 +192,7 @@ function MarketplaceBuyPage() {
                     price: selectedLot.popUpData.price,
                     itemId: selectedLot.popUpData.itemId,
                     code,
-                    // nftId: ,
+                    nftId,
                 },
                 true
             );
@@ -206,8 +209,35 @@ function MarketplaceBuyPage() {
         }
     }
 
+    async function findUserHeroes() {
+        if (typeof window.ethereum === "undefined" || !window.ethereum.isMetaMask) {
+            ui.showError("Web3 Network error! Please, install Metamask.");
+            return;
+        }
+        if (!metamask.isConnected) {
+            ui.showError("Please, connect Metamask.");
+            return;
+        }
+        try {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            const contract = new ethers.Contract(NFTAddress(), ERC721Abi(), signer);
+            const address = await signer.getAddress();
+            let userIndexes = await contract.getUsersTokens(address);
+            let a = [];
+            for (const i of userIndexes) {
+                a.push(i.toNumber());
+            }
+            setUserHeroes(a);
+        } catch (error) {
+            console.log(error);
+            ui.showError(error.message);
+        }
+    }
+
     useEffect(() => {
         loadLots();
+        findUserHeroes();
     }, [filter]);
 
     return (
@@ -544,12 +574,12 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack, buyBox }) {
                 </div>
                 <div className="flex flex-col justify-center items-center h-full w-full gap-4 px-4">
                     <div className="w-full px-10 md:py-2 text-center flex justify-center">
-                        <span className="md:text-3xl text-2xl font-bold text-white">{(()=>{
-                            if(popUpData?.itemType === 2)
-                                return popUpData?.itemName;
-                            else if (popUpData?.itemType === 1)
-                                return popUpData?.itemName + " Box"
-                        })()}</span>
+                        <span className="md:text-3xl text-2xl font-bold text-white">
+                            {(() => {
+                                if (popUpData?.itemType === 2) return popUpData?.itemName;
+                                else if (popUpData?.itemType === 1) return popUpData?.itemName + " Box";
+                            })()}
+                        </span>
                     </div>
                     <div
                         className={
@@ -611,7 +641,8 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack, buyBox }) {
                     <div className="text-center flex justify-center items-center py-2">
                         <span className="text-white md:text-base text-sm">
                             {(() => {
-                                if (popUpData?.itemType === 2) return isTabletOrMobileBrowser() ? compactString(popUpData?.description, 150) : popUpData?.description;
+                                if (popUpData?.itemType === 2)
+                                    return isTabletOrMobileBrowser() ? compactString(popUpData?.description, 150) : popUpData?.description;
                                 else if (popUpData?.itemType === 1) return "So much power in this box! Who knows what it holds...";
                             })()}
                         </span>
@@ -693,12 +724,13 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack, buyBox }) {
                         <div className="flex gap-5">
                             <ButtonGreen
                                 click={() => {
-                                    if (popUpData?.itemType === 2)
-                                        if(typeof buyItem === 'function') 
-                                            buyItem();
-                                    else if (popUpData?.itemType === 1)
-                                        if(typeof buyBox === 'function')
+                                    console.log(popUpData?.itemType);
+                                    if (popUpData?.itemType === 2) {
+                                        if (typeof buyItem === "function") buyItem();
+                                    } else if (popUpData?.itemType === 1)
+                                        if (typeof buyBox === "function") {
                                             buyBox();
+                                        }
                                 }}
                                 additionalStyle="w-[70px]"
                                 text="Yes"
