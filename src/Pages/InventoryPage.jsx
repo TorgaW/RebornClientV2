@@ -342,6 +342,9 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId,
         Opened: "text-red-500",
         Burned: "text-amber-500",
         Owned: "text-green-300",
+        opened: "text-red-500",
+        burned: "text-amber-500",
+        owned: "text-green-300",
     };
     return (
         <div
@@ -354,7 +357,7 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId,
                 <div className="w-full h-full flex flex-col group hover:bg-dark-purple-100 rounded-md animated-200">
                     <div className="w-full flex flex-col items-start gap-1 text-left">
                         <span className={"p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md no-flick " + statusPalette[status]}>
-                            {status === "Owned" ? formatDistanceToNowStrict(new Date(eAt)) + " left" : status}
+                            {status?.toLowerCase() === "owned" ? formatDistanceToNowStrict(new Date(eAt)) + " left" : status}
                         </span>
                         <span className="text-green-300 p-1 px-2 bg-dark-purple-100 bg-opacity-80 rounded-md">{owner}</span>
                     </div>
@@ -379,7 +382,7 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId,
                     </div>
                 </div>
             </Link>
-            {status === "Owned" ? (
+            {status?.toLowerCase() === "owned" ? (
                 <ButtonGreen
                     text={"Sell on market"}
                     click={() => {
