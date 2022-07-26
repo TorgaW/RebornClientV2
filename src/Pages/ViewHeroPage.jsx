@@ -3,43 +3,102 @@ import { useStoreState } from "pullstate";
 import React, { useEffect, useState } from "react";
 import { UIStorage } from "../Storages/UIStorage";
 import { useNavigate, useParams } from "react-router-dom";
-import { getNFTsByIndexes_EP, getHeroById_EP, safeAuthorize_header } from "../Utils/EndpointsUtil";
-import { getDataFromResponse } from "../Utils/NetworkUtil";
+import { getNFTsByIndexes_EP, getHeroById_EP, safeAuthorize_header, marketplaceSellItem_EP } from "../Utils/EndpointsUtil";
+import { getDataFromResponse, makePost, catch401 } from "../Utils/NetworkUtil";
+import { ERC721Abi, NFTAddress, SBCHProvider } from "../Utils/BlockchainUtils";
+import { ethers } from "ethers";
+import { MetaMaskStorage } from "../Storages/MetaMaskStorage";
 import { getRandomString } from "../Utils/RandomUtil";
 import AdaptiveLoadingComponent from "../Components/UI/AdaptiveLoadingComponent";
 import ButtonGreen from "../Components/UI/StyledComponents/ButtonGreen";
 import { scrollToTop } from "../Utils/BrowserUtil";
 import NavigationArrow from "../Icons/NavigationArrow";
 import IconComponent from "../Icons/IconComponent";
+import InputDefault from "../Components/UI/StyledComponents/InputDefault";
+import CrossIcon from "../Icons/Cross";
 
 export default function HeroView() {
     const params = useParams();
     const navigate = useNavigate();
 
     const ui = useStoreState(UIStorage);
+    const metamask = useStoreState(MetaMaskStorage);
 
     const [heroData, setHeroData] = useState({});
+    const [userHeroes, setUserHeroes] = useState([]);
 
-    useEffect(() => {
-        async function h() {
-            if (params && params.heroIndex) {
-                let idx = Number(params.heroIndex);
-                if (!isNaN(idx)) {
-                    try {
-                        let realIndex = (idx - 163 * 172) / 727 - 1;
-                        let response = await axios.post(getHeroById_EP(), { index: realIndex });
-                        let data = getDataFromResponse(response);
-                        setHeroData(data);
-                        setTimeout(() => {
-                            ui.hideContentLoading();
-                        }, 250);
-                    } catch (error) {
-                        navigate("/pagenotfound");
-                    }
+    async function sellHero() {
+        let code = (document.getElementById("hero-sell-code").value = "");
+        let price = (document.getElementById("hero-sell-price").value = NaN);
+        let [d, s, e] = await makePost(
+            marketplaceSellItem_EP(),
+            {
+                itemId: heroData.index,
+                code,
+                price,
+                type: 3,
+            },
+            true
+        );
+        if (d) {
+            ui.showSuccess("You have successfully canceled your order!");
+            document.getElementById("hero-sell-popup").classList.add("hidden");
+            h();
+            document.getElementById("hero-sell-code").value = "";
+        } else {
+            ui.showError(e);
+            console.log(e);
+        }
+    }
+
+    async function findUserHeroes() {
+        if (typeof window.ethereum === "undefined" || !window.ethereum.isMetaMask) {
+            ui.showError("Web3 Network error! Please, install Metamask.");
+            return;
+        }
+        if (!metamask.isConnected) {
+            ui.showError("Please, connect Metamask.");
+            return;
+        }
+        try {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            const contract = new ethers.Contract(NFTAddress(), ERC721Abi(), signer);
+            const address = await signer.getAddress();
+            let userIndexes = await contract.getUsersTokens(address);
+            let a = [];
+            for (const i of userIndexes) {
+                a.push(i.toNumber());
+            }
+            setUserHeroes(a);
+        } catch (error) {
+            console.log(error);
+            ui.showError(error.message);
+        }
+    }
+
+    async function h() {
+        if (params && params.heroIndex) {
+            let idx = Number(params.heroIndex);
+            if (!isNaN(idx)) {
+                try {
+                    let realIndex = (idx - 163 * 172) / 727 - 1;
+                    let response = await axios.post(getHeroById_EP(), { index: realIndex });
+                    let data = getDataFromResponse(response);
+                    setHeroData(data);
+                    setTimeout(() => {
+                        ui.hideContentLoading();
+                    }, 250);
+                } catch (error) {
+                    navigate("/pagenotfound");
                 }
             }
         }
+    }
+
+    useEffect(() => {
         ui.showContentLoading();
+        findUserHeroes();
         h();
         scrollToTop();
         return () => {
@@ -50,7 +109,7 @@ export default function HeroView() {
     return (
         <div className="w-full flex justify-center items-center">
             <div className="w-full lg:w-[1000px] bg-dark-purple-100 bg-opacity-10 flex items-center justify-center p-4">
-                <HeroTile {...heroData} />
+                <HeroTile {...heroData} userHeroes={userHeroes} />
                 <button
                     onClick={() => {
                         navigate(-1);
@@ -98,7 +157,7 @@ function SkillTile({ skillVal, skillTitle }) {
     );
 }
 
-function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, origin }) {
+function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, origin, userHeroes }) {
     const tribePalette = {
         text: {
             "Law Tribe": "text-orange-500",
@@ -181,7 +240,66 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
                     </div>
                 </div>
             </div>
-            {/* <ButtonGreen additionalStyle={"md:w-[350px] w-full"} text={"View on Marketplace"} /> */}
+            {(() => {
+                for (const i of userHeroes) {
+                    if (i === index)
+                        return (
+                            <ButtonGreen
+                                click={() => {
+                                    document.getElementById("hero-sell-popup").classList.remove("hidden");
+                                }}
+                                additionalStyle={"md:w-[350px] w-full"}
+                                text={"Sell on Marketplace"}
+                            />
+                        );
+                    else return <></>;
+                }
+            })()}
+            <div
+                id="hero-sell-popup"
+                className="z-10 animated-200 p-2 fixed inset-0 top-[120px] flex items-center justify-center bg-black bg-opacity-90 hidden"
+            >
+                <div
+                    className={
+                        "w-full max-w-[550px] flex p-4 rounded-md relative bg-dark-purple-500 border-2 border-opacity-50 " + tribePalette["border"][tribe]
+                    }
+                >
+                    <div className="max-h-[450px] overflow-y-auto md:max-h-[1000px] w-full flex flex-col items-center mt-6">
+                        <span className="font-semibold text-lg self-start ml-2">Hero to sell</span>
+                        <div className="w-full border-b-2 border-gray-600"></div>
+                        <div className="w-[150px] h-[150px] flex flex-shrink-0 mt-2">
+                            <img src={imageLink} alt="hero" className="w-full object-cover rounded-md " />
+                        </div>
+                        <span className="no-flick font-semibold text-base">{name}</span>
+                        <div className="w-full flex flex-col justify-center">
+                            <span className="opacity-80 text-sm text-center">{}</span>
+                        </div>
+                        <span className="font-semibold text-lg mt-4 self-start ml-2">Sell price</span>
+                        <div className="w-full border-b-2 border-gray-600"></div>
+                        <div className="w-full flex gap-2 justify-center items-center mt-2">
+                            <InputDefault id={"hero-sell-price"} type={"number"} additionalStyle={"max-w-[100px] text-center text-lg font-semibold"} />
+                            <span className="text-purple-700 font-semibold text-lg">GAME</span>
+                        </div>
+                        <span className="font-semibold text-lg mt-4 self-start ml-2">Security</span>
+                        <div className="w-full border-b-2 border-gray-600"></div>
+                        <div className="w-full flex flex-col gap-2 items-center mt-2">
+                            <span>Code from your authenticator</span>
+                            <InputDefault id={"hero-sell-code"} type={"text"} additionalStyle={"text-center text-lg font-semibold"} />
+                        </div>
+                        <ButtonGreen click={() => {}} text="Sell" additionalStyle={"w-full mt-4 text-lg"} />
+                    </div>
+                    <div className="absolute flex p-2 top-0 right-0">
+                        <div
+                            onClick={() => {
+                                document.getElementById("hero-sell-popup").classList.toggle("hidden");
+                            }}
+                            className="w-6 h-6 flex justify-center items-center cursor-pointer"
+                        >
+                            <CrossIcon size={32} />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
