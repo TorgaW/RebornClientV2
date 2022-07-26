@@ -35,7 +35,6 @@ import TemporaryLinkComponent from "./Components/TemporaryLinks/TemporaryLinkCom
 // import OpenBoxPage from "./Pages/OpenBoxPage";
 // import MarketplacePage from "./Pages/Marketplace/MarketplacePage";
 // import ViewHeroPage from "./Pages/ViewHeroPage";
-// import MarketplaceSellPage from "./Pages/Marketplace/MarketplaceSellPage";
 // import TwoFAEnabledPage from "./Pages/Authorization/TwoFAEnabledPage";
 // import ItemPhysicalViewPage from "./Pages/ItemPhysicalViewPage";
 // import TestHomePage from "./Pages/TestPages/TestHomePage";
@@ -60,7 +59,6 @@ const MetaMaskPage = React.lazy(()=>import("./Pages/MetaMaskPage"));
 const OpenBoxPage = React.lazy(()=>import("./Pages/OpenBoxPage"));
 const MarketplacePage = React.lazy(()=>import("./Pages/Marketplace/MarketplacePage"));
 const ViewHeroPage = React.lazy(()=>import("./Pages/ViewHeroPage"));
-const MarketplaceSellPage = React.lazy(()=>import("./Pages/Marketplace/MarketplaceSellPage"));
 const TwoFAEnabledPage = React.lazy(()=>import("./Pages/Authorization/TwoFAEnabledPage"));
 const ItemPhysicalViewPage = React.lazy(()=>import("./Pages/ItemPhysicalViewPage"));
 const TestHomePage = React.lazy(()=>import("./Pages/TestPages/TestHomePage"));
@@ -120,7 +118,6 @@ function App() {
                         <Route path="/profile/uisettings" element={<UIOption />} />
                         <Route path="/profile/deposit" element={<DepositOption />} />
                         <Route path="/marketplace" element={<MarketplacePage />} />
-                        <Route path="/marketplace/sell" element={<MarketplaceSellPage />} />
                         <Route path="/news/:newsIndex" element={<ViewNewsPage />} />
                         <Route path="/comics/:comicsIndex" element={<ViewComicsPage />} />
                         <Route path="/hero/:heroIndex" element={<ViewHeroPage />} />
