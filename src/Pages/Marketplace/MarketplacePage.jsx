@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import CrossIcon from "../../Icons/Cross";
 import ArrowIcon from "../../Icons/FilterArrow";
 import SearchIcon from "../../Icons/Search";
-import box from "../../Images/Boxes/luckyBox.png";
 import { UIStorage } from "../../Storages/UIStorage";
 import luckyBoxImage from "../../Images/Boxes/luckyBox.png";
 import mysteryBoxImage from "../../Images/Boxes/mysteryBox.png";
@@ -80,7 +79,7 @@ export default function MarketplacePage() {
                         My lots
                     </button>
                 </div>
-                {marketSelectedOption === "buy" ? <MarketplaceBuyPage /> : marketSelectedOption === "sell" ? <InventoryPage /> : <></>}
+                {marketSelectedOption === "buy" ? <MarketplaceBuyPage /> : marketSelectedOption === "sell" ? <InventoryPage inventoryTabStyle={"border-t-[1px] border-slate-500 hover:bg-slate-600 rounded-lg hover:bg-opacity-40"} /> : <></>}
             </div>
         </div>
     );
@@ -119,8 +118,6 @@ function MarketplaceBuyPage() {
             if (i.itemType === 2)
                 a.push(<LotTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />);
             else if (i.itemType === 1) a.push(<LotTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} />);
-            // else
-            //     a.push(<ItemTile key={getRandomString(12)} {...i} setPopUpData={setPopUpData} imgLink={i.boxItem.imgLink} description={i.boxItem.comment} />)
         }
         ui.hideContentLoading();
         setLotsView(a);

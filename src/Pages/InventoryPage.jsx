@@ -31,7 +31,7 @@ import CancelIWhite from "../Icons/CancelWhite";
 import CrossIcon from "../Icons/Cross";
 import InputDefault from "../Components/UI/StyledComponents/InputDefault";
 
-export default function InventoryPage() {
+export default function InventoryPage({ inventoryTabStyle }) {
     const ui = useStoreState(UIStorage);
 
     const [selectedOption, setSelectedOption] = useState(isTabletOrMobileBrowser() ? "items" : "boxes");
@@ -49,7 +49,15 @@ export default function InventoryPage() {
                         onClick={() => {
                             setSelectedOption("boxes");
                         }}
-                        className={"w-32 h-10 border-b-[1px] animated-100 " + (selectedOption === "boxes" ? "text-teal-400 border-teal-400" : "")}
+                        c
+                        className={
+                            "w-32 h-10 border-b-[1px] animated-100 " +
+                            inventoryTabStyle +
+                            (() => {
+                                if (selectedOption === "boxes" && inventoryTabStyle) return " text-teal-400 bg-slate-600 hover:bg-slate-400 hover:bg-opacity-60 bg-opacity-40";
+                                else if (selectedOption === "boxes") return " text-teal-400 border-teal-400";
+                            })()
+                        }
                     >
                         Boxes
                     </button>
@@ -60,7 +68,14 @@ export default function InventoryPage() {
                     onClick={() => {
                         setSelectedOption("items");
                     }}
-                    className={"w-32 h-10 border-b-[1px] animated-100 " + (selectedOption === "items" ? "text-teal-400 border-teal-400" : "")}
+                    className={
+                        "w-32 h-10 border-b-[1px] animated-100 " +
+                        inventoryTabStyle +
+                        (() => {
+                            if (selectedOption === "items" && inventoryTabStyle) return " text-teal-400 bg-slate-600 hover:bg-slate-400 hover:bg-opacity-60 bg-opacity-40";
+                            else if (selectedOption === "items") return " text-teal-400 border-teal-400";
+                        })()
+                    }
                 >
                     Items
                 </button>
