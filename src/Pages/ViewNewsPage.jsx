@@ -6,6 +6,8 @@ import { UIStorage } from "../Storages/UIStorage";
 import { scrollToTop } from "../Utils/BrowserUtil";
 import { getSpecificNews_EP } from "../Utils/EndpointsUtil";
 import { getDataFromResponse } from "../Utils/NetworkUtil";
+import IconComponent from "../Icons/IconComponent";
+import NavigationArrow from "../Icons/NavigationArrow";
 
 export default function ViewNewsPage() {
     const params = useParams();
@@ -21,12 +23,14 @@ export default function ViewNewsPage() {
                 let idx = Number(params.newsIndex);
                 if (!isNaN(idx)) {
                     try {
-                        let realIndex = ((idx-(89*621))/8984) - 1;
+                        let realIndex = (idx - 89 * 621) / 8984 - 1;
                         // console.log(realIndex);
                         let response = await axios.post(getSpecificNews_EP(), { index: realIndex });
                         let data = getDataFromResponse(response);
                         setArticleData(data);
-                        setTimeout(()=>{ui.hideContentLoading()},250)
+                        setTimeout(() => {
+                            ui.hideContentLoading();
+                        }, 250);
                     } catch (error) {
                         navigate("/pagenotfound");
                     }
@@ -41,9 +45,9 @@ export default function ViewNewsPage() {
         };
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
         document.getElementById("content-wrapper").scrollTop = 0;
-    },[])
+    }, []);
 
     return (
         <div className="w-full flex p-4 justify-center text-white">
@@ -57,23 +61,35 @@ export default function ViewNewsPage() {
                     </div>
                 </div>
                 <div className="w-full flex justify-end">
-                <button onClick={()=>{
-                      navigator.clipboard.writeText(window.location.href);
-                      ui.showSuccess('Link has been copied to your clipboard!')
-                      }} className="p-2 text-teal-400 underline">
-                      Share via link
+                    <button
+                        onClick={() => {
+                            navigator.clipboard.writeText(window.location.href);
+                            ui.showSuccess("Link has been copied to your clipboard!");
+                        }}
+                        className="p-2 text-teal-400 underline"
+                    >
+                        Share via link
                     </button>
                 </div>
                 <div className="w-full h-[300px] md:w-[700px] md:h-[300px] flex self-center">
-                  <img src={articleData.previewImage} alt="preview" className="w-full h-full object-cover rounded-lg"/>
+                    <img src={articleData.previewImage} alt="preview" className="w-full h-full object-cover rounded-lg" />
                 </div>
-                <div dangerouslySetInnerHTML={{__html: articleData.articleText}}>
-                </div>
-                <div className="w-full flex">
-                    <button onClick={()=>{navigate('/')}} className="p-4 text-teal-400 border-2 border-teal-600 bg-dark-purple-100 bg-opacity-30 animated-100 hover:bg-opacity-60 rounded-lg">
-                      Back home
-                    </button>
-                </div>
+                <div dangerouslySetInnerHTML={{ __html: articleData.articleText }}></div>
+                <button
+                    onClick={() => {
+                        navigate(-1);
+                    }}
+                    className="fixed mt-4 ml-4 left-0 top-[120px]"
+                >
+                    <IconComponent
+                        Icon={NavigationArrow}
+                        size={40}
+                        color={"#dcf5ed"}
+                        hoveredColor={"#31cc9b"}
+                        animation={"animated-100"}
+                        buttonStyle={"w-14 h-14 mt-3 ml-3 hover:bg-slate-700 bg-slate-800 shadow-lg animated-100 p-2 rounded-full"}
+                    />
+                </button>
             </div>
         </div>
     );

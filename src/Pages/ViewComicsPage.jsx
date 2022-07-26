@@ -7,6 +7,8 @@ import { scrollToTop } from "../Utils/BrowserUtil";
 import { getSpecificComics_EP, getSpecificNews_EP } from "../Utils/EndpointsUtil";
 import { getDataFromResponse } from "../Utils/NetworkUtil";
 import { getRandomString } from "../Utils/RandomUtil";
+import IconComponent from "../Icons/IconComponent";
+import NavigationArrow from "../Icons/NavigationArrow";
 
 export default function ViewComicsPage() {
     const params = useParams();
@@ -90,11 +92,21 @@ export default function ViewComicsPage() {
                 <div className="w-full flex flex-col">
                   {parsedImages}
                 </div>
-                <div className="w-full flex">
-                    <button onClick={()=>{navigate('/')}} className="p-4 text-teal-400 border-2 border-teal-600 bg-dark-purple-100 bg-opacity-30 animated-100 hover:bg-opacity-60 rounded-lg">
-                      Back home
-                    </button>
-                </div>
+                <button
+                    onClick={() => {
+                        navigate(-1);
+                    }}
+                    className="fixed mt-4 ml-4 left-0 top-[120px]"
+                >
+                    <IconComponent
+                        Icon={NavigationArrow}
+                        size={40}
+                        color={"#dcf5ed"}
+                        hoveredColor={"#31cc9b"}
+                        animation={"animated-100"}
+                        buttonStyle={"w-14 h-14 mt-3 ml-3 hover:bg-slate-700 bg-slate-800 shadow-lg animated-100 p-2 rounded-full"}
+                    />
+                </button>
             </div>
         </div>
     );

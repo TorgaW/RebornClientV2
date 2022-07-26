@@ -80,7 +80,13 @@ export default function MarketplacePage() {
                         My lots
                     </button>
                 </div>
-                {marketSelectedOption === "buy" ? <MarketplaceBuyPage /> : marketSelectedOption === "sell" ? <InventoryPage inventoryTabStyle={"border-t-[1px] border-slate-500 hover:bg-slate-600 rounded-lg hover:bg-opacity-40"} /> : <></>}
+                {marketSelectedOption === "buy" ? (
+                    <MarketplaceBuyPage />
+                ) : marketSelectedOption === "sell" ? (
+                    <InventoryPage inventoryTabStyle={"border-t-[1px] border-slate-500 hover:bg-slate-600 rounded-lg hover:bg-opacity-40"} />
+                ) : (
+                    <></>
+                )}
             </div>
         </div>
     );
@@ -427,9 +433,6 @@ function MarketplaceBuyPage() {
                     </div>
                 </div>
                 <div className="w-full lg:w-[1000px] flex justify-center p-4 flex-wrap gap-6">{lotsView}</div>
-                <div className="w-full flex justify-center gap-4">
-                    <button className={"w-12 p-4 rounded-lg bg-dark-purple-100 bg-opacity-30 hover:bg-dark-purple-100 hover:bg-opacity-50 "}>1</button>
-                </div>
             </div>
             <PopUpTile popUpData={popUpData} buyItem={buyItem} buyBox={buyBox} getLotBack={getLotBack} setSelectedLot={setSelectedLot} />
         </>
@@ -568,9 +571,6 @@ function PopUpTile({ setSelectedLot, popUpData, buyItem, getLotBack, buyBox }) {
                             document.getElementById("popUpVision").classList.add("pointer-events-none");
                             document.getElementById("popUpVision").classList.remove("opacity-100");
                             document.getElementById("popUpVision").classList.add("opacity-0");
-                            // document.getElementById("orderConfirmation").classList.remove("pointer-events-none");
-                            // document.getElementById("orderConfirmation").classList.remove("opacity-0");
-                            // document.getElementById("orderConfirmation").classList.add("opacity-100");
                         }}
                     >
                         <CrossIcon size="32" />

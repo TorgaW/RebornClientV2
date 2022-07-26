@@ -11,6 +11,8 @@ import mysteryBox from "../Images/Boxes/mysteryBox.png";
 import InputDefault from "../Components/UI/StyledComponents/InputDefault";
 import ButtonGreen from "../Components/UI/StyledComponents/ButtonGreen";
 import { scrollToTop } from "../Utils/BrowserUtil";
+import IconComponent from "../Icons/IconComponent";
+import NavigationArrow from "../Icons/NavigationArrow";
 
 export default function ItemPhysicalViewPage() {
     const params = useParams();
@@ -229,6 +231,21 @@ export default function ItemPhysicalViewPage() {
                     </div>
                 )}
             </div>
+            <button
+                    onClick={() => {
+                        navigate(-1);
+                    }}
+                    className="fixed mt-4 ml-4 left-0 top-[120px]"
+                >
+                    <IconComponent
+                        Icon={NavigationArrow}
+                        size={40}
+                        color={"#dcf5ed"}
+                        hoveredColor={"#31cc9b"}
+                        animation={"animated-100"}
+                        buttonStyle={"w-14 h-14 mt-3 ml-3 hover:bg-slate-700 bg-slate-800 shadow-lg animated-100 p-2 rounded-full"}
+                    />
+                </button>
         </div>
     );
 }

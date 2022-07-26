@@ -9,6 +9,8 @@ import { getRandomString } from "../Utils/RandomUtil";
 import AdaptiveLoadingComponent from "../Components/UI/AdaptiveLoadingComponent";
 import ButtonGreen from "../Components/UI/StyledComponents/ButtonGreen";
 import { scrollToTop } from "../Utils/BrowserUtil";
+import NavigationArrow from "../Icons/NavigationArrow";
+import IconComponent from "../Icons/IconComponent";
 
 export default function HeroView() {
     const params = useParams();
@@ -49,6 +51,21 @@ export default function HeroView() {
         <div className="w-full flex justify-center items-center">
             <div className="w-full lg:w-[1000px] bg-dark-purple-100 bg-opacity-10 flex items-center justify-center p-4">
                 <HeroTile {...heroData} />
+                <button
+                    onClick={() => {
+                        navigate(-1);
+                    }}
+                    className="fixed mt-4 ml-4 left-0 top-[120px]"
+                >
+                    <IconComponent
+                        Icon={NavigationArrow}
+                        size={40}
+                        color={"#dcf5ed"}
+                        hoveredColor={"#31cc9b"}
+                        animation={"animated-100"}
+                        buttonStyle={"w-14 h-14 mt-3 ml-3 hover:bg-slate-700 bg-slate-800 shadow-lg animated-100 p-2 rounded-full"}
+                    />
+                </button>
             </div>
         </div>
     );

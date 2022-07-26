@@ -466,7 +466,6 @@ function InventoryTab({ rawCopy }) {
             if (filter.includes(i?.rarity?.toLowerCase())) t.push(<ItemTile {...i} callback={itemTileClickCallback} key={getRandomString(32)} />);
         }
         setSelectedItemView(rawCopy[0] ?? {});
-        console.log(rawCopy);
         setItemsView(t);
     }
 
