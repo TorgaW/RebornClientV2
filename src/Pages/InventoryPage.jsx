@@ -411,7 +411,7 @@ function BoxTile({ serial, number, owner, type, priceToOpen, status, eAt, boxId,
     );
 }
 
-function InventoryTab() {
+function InventoryTab({ rawCopy }) {
     const ui = useStoreState(UIStorage);
     const metamask = useStoreState(MetaMaskStorage);
     const userData = useStoreState(UserDataStorage);
@@ -466,7 +466,7 @@ function InventoryTab() {
             if (filter.includes(i?.rarity?.toLowerCase())) t.push(<ItemTile {...i} callback={itemTileClickCallback} key={getRandomString(32)} />);
         }
         setSelectedItemView(rawCopy[0] ?? {});
-        // console.log(t);
+        console.log(rawCopy);
         setItemsView(t);
     }
 

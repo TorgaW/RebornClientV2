@@ -13,6 +13,7 @@ import {
     safeAuthorize_header,
     marketplaceBuyItem_EP,
     marketplaceGetLotBack_EP,
+    marketplaceLoadUserLots_EP,
 } from "../../Utils/EndpointsUtil";
 import { getDataFromResponse, makePost, catch401 } from "../../Utils/NetworkUtil";
 import { ERC721Abi, NFTAddress, SBCHProvider } from "../../Utils/BlockchainUtils";
@@ -232,21 +233,27 @@ function MarketplaceBuyPage() {
         }
     }
 
+    async function start() {
+        let [d, s, e] = await makePost(marketplaceLoadUserLots_EP(), {}, true);
+        console.log(d);
+    }
+
     useEffect(() => {
         loadLots();
         findUserHeroes();
+        start();
     }, [filter]);
 
     return (
         <>
             <div className="pb-4 w-full flex flex-col items-center">
-                <div className="w-full lg:w-[1000px] flex md:flex-row flex-col items-center flex-wrap gap-4 justify-center md:justify-between p-4 px-0 md:px-8 pb-6">
-                    <div className="flex justify-start items-center relative">
+                <div className="w-full lg:w-[1000px] flex md:flex-row flex-col items-center flex-wrap gap-4 justify-end p-4 px-0 md:px-8 pb-6">
+                    {/* <div className="flex justify-start items-center relative">
                         <div className="absolute left-1">
                             <SearchIcon />
                         </div>
                         <SearchBar />
-                    </div>
+                    </div> */}
                     <div className="flex justify-center flex-wrap md:max-w-[800px] max-w-[328px] items-center gap-2">
                         <div className="flex justify-center items-center gap-2">
                             {filter.rarity ? (
@@ -429,33 +436,33 @@ function MarketplaceBuyPage() {
     );
 }
 
-function SearchBar() {
-    function checkText() {
-        let t = document.getElementById("input");
-        let val = t.value;
-        if (isStringEmptyOrSpaces(val)) t.classList.remove("min-w-[270px]");
-        else t.classList.add("min-w-[270px]");
-    }
-    function filterText() {
-        let input = document.getElementById("input").value.toLowerCase();
-    }
+// function SearchBar() {
+//     function checkText() {
+//         let t = document.getElementById("input");
+//         let val = t.value;
+//         if (isStringEmptyOrSpaces(val)) t.classList.remove("min-w-[270px]");
+//         else t.classList.add("min-w-[270px]");
+//     }
+//     function filterText() {
+//         let input = document.getElementById("input").value.toLowerCase();
+//     }
 
-    return (
-        <input
-            onKeyUp={() => {
-                filterText();
-            }}
-            onChange={() => {
-                checkText();
-            }}
-            className="animated-300 pl-10 placeholder:italic placeholder:text-slate-500 text-white rounded-md shadow-none bg-black bg-opacity-70 ring-2 ring-teal-800 focus:ring-teal-400 focus:outline-none w-[141px] focus:w-[270px]"
-            placeholder="Search for..."
-            type="text"
-            name="search"
-            id="input"
-        />
-    );
-}
+//     return (
+//         <input
+//             onKeyUp={() => {
+//                 filterText();
+//             }}
+//             onChange={() => {
+//                 checkText();
+//             }}
+//             className="animated-300 pl-10 placeholder:italic placeholder:text-slate-500 text-white rounded-md shadow-none bg-black bg-opacity-70 ring-2 ring-teal-800 focus:ring-teal-400 focus:outline-none w-[141px] focus:w-[270px]"
+//             placeholder="Search for..."
+//             type="text"
+//             name="search"
+//             id="input"
+//         />
+//     );
+// }
 
 function LotTile({ rarity, username, itemName, price, description, imgLink, itemId, itemType, setPopUpData }) {
     // let rarityUpperCase = String(rarity).charAt(0).toUpperCase() + rarity.slice(1);
