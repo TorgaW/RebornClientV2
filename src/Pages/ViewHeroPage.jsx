@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useStoreState } from "pullstate";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import { UIStorage } from "../Storages/UIStorage";
 import { useNavigate, useParams } from "react-router-dom";
 import { getNFTsByIndexes_EP, getHeroById_EP, safeAuthorize_header, marketplaceSellItem_EP } from "../Utils/EndpointsUtil";
@@ -26,6 +26,13 @@ export default function HeroView() {
 
     const [heroData, setHeroData] = useState({});
     const [userHeroes, setUserHeroes] = useState([]);
+    const [isUserHero, setIsUserHero] = useState(false);
+
+    function checkUserHeroes() {
+        for (const i of userHeroes) {
+            if (i === heroData.index) setIsUserHero(true);
+        }
+    }
 
     async function sellHero() {
         let code = (document.getElementById("hero-sell-code").value = "");
@@ -65,6 +72,7 @@ export default function HeroView() {
             const signer = provider.getSigner();
             const contract = new ethers.Contract(NFTAddress(), ERC721Abi(), signer);
             const address = await signer.getAddress();
+            let tx = await contract.safeTransferFrom();
             let userIndexes = await contract.getUsersTokens(address);
             let a = [];
             for (const i of userIndexes) {
@@ -100,16 +108,18 @@ export default function HeroView() {
         ui.showContentLoading();
         findUserHeroes();
         h();
+        console.log(ui.userData);
+        checkUserHeroes();
         scrollToTop();
         return () => {
             ui.hideContentLoading();
         };
-    }, []);
+    }, [metamask]);
 
     return (
         <div className="w-full flex justify-center items-center">
             <div className="w-full lg:w-[1000px] bg-dark-purple-100 bg-opacity-10 flex items-center justify-center p-4">
-                <HeroTile {...heroData} userHeroes={userHeroes} />
+                <HeroTile {...heroData} isUserHero={isUserHero} />
                 <button
                     onClick={() => {
                         navigate(-1);
@@ -147,17 +157,14 @@ function SkillTile({ skillVal, skillTitle }) {
                 <span className="font-semibold">{skillVal}</span>
             </div>
             <div
-                className={
-                    "absolute inset-0 h-full rounded-md bg-opacity-30 font-semibold group-hover:bg-opacity-60 animated-100 " +
-                    skillsPalette[skillTitle.toLowerCase()]
-                }
+                className={"absolute inset-0 h-full rounded-md bg-opacity-30 font-semibold group-hover:bg-opacity-60 animated-100 " + skillsPalette[skillTitle.toLowerCase()]}
                 style={{ width: skillVal + "%" }}
             ></div>
         </div>
     );
 }
 
-function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, origin, userHeroes }) {
+function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, origin, isUserHero }) {
     const tribePalette = {
         text: {
             "Law Tribe": "text-orange-500",
@@ -196,11 +203,7 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
 
     return (
         <div className="w-full mt-6 flex flex-col justify-center items-center gap-6 text-white px-4">
-            <div
-                className={
-                    "w-full flex flex-col justify-center items-center gap-6 px-6 py-6 border-t-2 border-b-2 border-opacity-80 " + tribePalette["border"][tribe]
-                }
-            >
+            <div className={"w-full flex flex-col justify-center items-center gap-6 px-6 py-6 border-t-2 border-b-2 border-opacity-80 " + tribePalette["border"][tribe]}>
                 <div className="w-full flex px-4 flex-col justify-center items-center gap-3">
                     <div className="flex flex-col gap-2 justify-center items-center">
                         <div className={"h-[300px] w-[300px] border-[6px] border-opacity-50 rounded-lg relative " + tribePalette["border"][tribe]}>
@@ -240,30 +243,19 @@ function HeroTile({ index, name, tribe, status, imageLink, age, breed, skills, o
                     </div>
                 </div>
             </div>
-            {(() => {
-                for (const i of userHeroes) {
-                    if (i === index)
-                        return (
-                            <ButtonGreen
-                                click={() => {
-                                    document.getElementById("hero-sell-popup").classList.remove("hidden");
-                                }}
-                                additionalStyle={"md:w-[350px] w-full"}
-                                text={"Sell on Marketplace"}
-                            />
-                        );
-                    else return <></>;
-                }
-            })()}
-            <div
-                id="hero-sell-popup"
-                className="z-10 animated-200 p-2 fixed inset-0 top-[120px] flex items-center justify-center bg-black bg-opacity-90 hidden"
-            >
-                <div
-                    className={
-                        "w-full max-w-[550px] flex p-4 rounded-md relative bg-dark-purple-500 border-2 border-opacity-50 " + tribePalette["border"][tribe]
-                    }
-                >
+            {isUserHero ? (
+                <ButtonGreen
+                    click={() => {
+                        document.getElementById("hero-sell-popup").classList.remove("hidden");
+                    }}
+                    additionalStyle={"md:w-[350px] w-full"}
+                    text={"Sell on Marketplace"}
+                />
+            ) : (
+                <></>
+            )}
+            <div id="hero-sell-popup" className="z-10 animated-200 p-2 fixed inset-0 top-[120px] flex items-center justify-center bg-black bg-opacity-90 hidden">
+                <div className={"w-full max-w-[550px] flex p-4 max-h-[70vh] overflow-y-auto rounded-md relative bg-dark-purple-500 border-2 border-opacity-50 " + tribePalette["border"][tribe]}>
                     <div className="max-h-[450px] overflow-y-auto md:max-h-[1000px] w-full flex flex-col items-center mt-6">
                         <span className="font-semibold text-lg self-start ml-2">Hero to sell</span>
                         <div className="w-full border-b-2 border-gray-600"></div>

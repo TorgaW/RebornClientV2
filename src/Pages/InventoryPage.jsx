@@ -289,7 +289,7 @@ function BoxTab() {
                 >
                     <div
                         className={
-                            "w-full max-w-[550px] flex p-4 rounded-md relative bg-dark-purple-500 border-2 border-opacity-50 " +
+                            "w-full max-w-[550px] max-h-[70vh] overflow-y-auto flex p-4 rounded-md relative bg-dark-purple-500 border-2 border-opacity-50 " +
                             (selectedBox.type === "LUCKY" ? "border-yellow-500" : "border-teal-400")
                         }
                     >
@@ -662,7 +662,7 @@ function InventoryTab({ rawCopy }) {
             <div id="sell-popup" className="z-10 animated-200 p-2 fixed inset-0 top-[120px] flex items-center justify-center bg-black bg-opacity-90 hidden">
                 <div
                     className={
-                        "w-full max-w-[550px] flex p-4 rounded-md relative bg-dark-purple-500 border-2" +
+                        "w-full max-w-[550px] max-h-[70vh] overflow-y-auto flex p-4 rounded-md relative bg-dark-purple-500 border-2" +
                         RARITY_PALETTE.border[selectedItemView?.rarity?.toLowerCase()]
                     }
                 >
