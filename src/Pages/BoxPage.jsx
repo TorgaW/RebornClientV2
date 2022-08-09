@@ -17,6 +17,8 @@ import { TempLinkStorage } from "../Storages/Stuff/TempLinkStorage";
 import { sleepFor } from "../Utils/CodeUtils";
 import { UserBalanceStorage } from "../Storages/UserBalanceStorage";
 import { isTabletOrMobileBrowser } from "../Utils/BrowserUtil";
+import NavigationArrow from "../Icons/NavigationArrow";
+import IconComponent from "../Icons/IconComponent";
 
 export default function BoxPage() {
     const params = useParams();
@@ -122,7 +124,7 @@ export default function BoxPage() {
     return (
         <div className="w-full flex flex-col items-center px-2 gap-4 text-white">
             <div className="w-full lg:w-[1000px] flex flex-col bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative mt-4">
-                <div className={"w-full flex flex-wrap md:flex-nowrap gap-4"}>
+                <div className="w-full flex flex-wrap md:flex-nowrap gap-4 relative">
                     <div className="w-full max-h-[400px] md:w-[400px] md:h-[400px] flex-shrink-0">
                         <img src={boxInfo?.type === "LUCKY" ? luckyBoxImage : mysteryBoxImage} alt="box" className="w-full h-full object-contain" />
                     </div>
@@ -138,7 +140,7 @@ export default function BoxPage() {
                         )}
                         {userData.isLoggedIn ? (
                             isOwner ? (
-                                boxInfo?.status === "Owned" ? (
+                                boxInfo?.status?.toLowerCase() === "owned" ? (
                                     <div className="w-full flex flex-col items-center">
                                         <span className="font-semibold text-purple-400 mt-10">Try to open it for {boxInfo?.priceToOpen}G</span>
                                         <button
@@ -166,7 +168,7 @@ export default function BoxPage() {
                                     </div>
                                 ) : (
                                     <div className="w-full text-center">
-                                        {boxInfo?.status === "Burned" ? (
+                                        {boxInfo?.status?.toLowerCase() === "burned" ? (
                                             <span className="italic text-red-400">This box has been already burned.</span>
                                         ) : (
                                             <span className="italic text-red-400">This box has been already opened.</span>
@@ -198,6 +200,21 @@ export default function BoxPage() {
                     <HeroTile {...ownerHero} />
                 </div>
             </div>
+            <button
+                onClick={() => {
+                    navigate(-1);
+                }}
+                className="fixed mt-4 ml-4 left-0"
+            >
+                <IconComponent
+                    Icon={NavigationArrow}
+                    size={40}
+                    color={"#dcf5ed"}
+                    hoveredColor={"#31cc9b"}
+                    animation={"animated-100"}
+                    buttonStyle={"w-14 h-14 mt-3 ml-3 hover:bg-slate-700 bg-slate-800 shadow-lg animated-100 p-2 rounded-full"}
+                />
+            </button>
         </div>
     );
 }

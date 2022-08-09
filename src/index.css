@@ -2,8 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+img {
+    -webkit-backface-visibility: hidden;
+    -ms-transform: translateZ(0); /* IE 9 */
+    -webkit-transform: translateZ(0); /* Chrome, Safari, Opera */
+    transform: translateZ(0);
+}
+
 .poppins {
     font-family: "Poppins", sans-serif;
+}
+
+.merriweather {
+    font-family: "Merriweather Sans", sans-serif;
 }
 
 .root {
@@ -51,9 +62,6 @@
     100% {
         left: -1050px;
     }
-}
-
-.search-border {
 }
 
 .grecaptcha-badge {
@@ -184,3 +192,46 @@
     -moz-backface-visibility: hidden;
     -ms-backface-visibility: hidden;
 }
+span {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -ms-backface-visibility: hidden;
+}
+
+/* end of flickering fix */
+
+/* media quarries for 500 error */
+.span-1 {
+    font-size: xxx-large;
+    font-weight: 600;
+    color: white;
+}
+.span-2 {
+    font-size: xx-large;
+    font-weight: 500;
+    color: rgb(236, 79, 79);
+}
+.span-3 {
+    margin-top: 6px;
+    font-size: x-large;
+    color: rgb(45, 212, 191);
+    font-weight: 400;
+}
+.span-4 {
+    font-size: x-large;
+    color: rgb(45, 212, 191);
+    font-weight: 400;
+}
+
+@media only screen and (max-width: 500px) {
+    .span-2 {
+        font-size: x-large;
+    }
+    .span-3 {
+        font-size: large;
+    }
+    .span-4 {
+        font-size: large;
+    }
+}
+/* end of media quarries for 500 error */

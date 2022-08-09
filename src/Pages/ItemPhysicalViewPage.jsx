@@ -11,6 +11,8 @@ import mysteryBox from "../Images/Boxes/mysteryBox.png";
 import InputDefault from "../Components/UI/StyledComponents/InputDefault";
 import ButtonGreen from "../Components/UI/StyledComponents/ButtonGreen";
 import { scrollToTop } from "../Utils/BrowserUtil";
+import IconComponent from "../Icons/IconComponent";
+import NavigationArrow from "../Icons/NavigationArrow";
 
 export default function ItemPhysicalViewPage() {
     const params = useParams();
@@ -102,7 +104,7 @@ export default function ItemPhysicalViewPage() {
     return (
         <div className="w-full lg:w-[1000px] self-center px-4 flex flex-col text-white bg-dark-purple-100 bg-opacity-10 shadow-lg rounded-xl relative">
             <div className="w-full flex flex-col items-center text-center gap-4">
-                <span className={"text-2xl font-semibold" + RARITY_PALETTE.text[rawData.item?.rarity?.toLowerCase()]}>{rawData.item?.name}</span>
+                <span className={"mt-2 text-2xl font-semibold" + RARITY_PALETTE.text[rawData.item?.rarity?.toLowerCase()]}>{rawData.item?.name}</span>
                 <div className="w-[200px] h-[200px] flex">
                     <img
                         src={rawData.item?.imgLink}
@@ -229,6 +231,21 @@ export default function ItemPhysicalViewPage() {
                     </div>
                 )}
             </div>
+            <button
+                    onClick={() => {
+                        navigate(-1);
+                    }}
+                    className="fixed mt-4 ml-4 left-0 top-[120px]"
+                >
+                    <IconComponent
+                        Icon={NavigationArrow}
+                        size={40}
+                        color={"#dcf5ed"}
+                        hoveredColor={"#31cc9b"}
+                        animation={"animated-100"}
+                        buttonStyle={"w-14 h-14 mt-3 ml-3 hover:bg-slate-700 bg-slate-800 shadow-lg animated-100 p-2 rounded-full"}
+                    />
+                </button>
         </div>
     );
 }

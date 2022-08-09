@@ -39,10 +39,10 @@ export default function CurrenciesUpdateComponent() {
 
         CurrenciesStorage.update((s) => {
             // s.BCHPrice = BCHPrice.toFixed(2);
-            s.GAMEPrice = gamePrice.toFixed(5);
+            s.GAMEPrice = "-";
         });
 
-        return gamePrice;
+        return "-";
     }
 
     async function updatePrices() {
