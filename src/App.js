@@ -57,7 +57,7 @@ const AccountOption = React.lazy(()=>import("./Pages/UserProfileOptions/AccountO
 const DepositOption = React.lazy(()=>import("./Pages/UserProfileOptions/DepositOption"));
 const MetaMaskPage = React.lazy(()=>import("./Pages/MetaMaskPage"));
 const OpenBoxPage = React.lazy(()=>import("./Pages/OpenBoxPage"));
-const MarketplacePage = React.lazy(()=>import("./Pages/Marketplace/MarketplacePage"));
+// const MarketplacePage = React.lazy(()=>import("./Pages/Marketplace/MarketplacePage"));
 const ViewHeroPage = React.lazy(()=>import("./Pages/ViewHeroPage"));
 const TwoFAEnabledPage = React.lazy(()=>import("./Pages/Authorization/TwoFAEnabledPage"));
 const ItemPhysicalViewPage = React.lazy(()=>import("./Pages/ItemPhysicalViewPage"));
@@ -117,7 +117,7 @@ function App() {
                         {/* <Route path="/profile/privacysettings" element={<UserProfilePage />}/> */}
                         <Route path="/profile/uisettings" element={<UIOption />} />
                         <Route path="/profile/deposit" element={<DepositOption />} />
-                        <Route path="/marketplace" element={<MarketplacePage />} />
+                        {/* <Route path="/marketplace" element={<MarketplacePage />} /> */}
                         <Route path="/news/:newsIndex" element={<ViewNewsPage />} />
                         <Route path="/comics/:comicsIndex" element={<ViewComicsPage />} />
                         <Route path="/hero/:heroIndex" element={<ViewHeroPage />} />
